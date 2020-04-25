@@ -10,7 +10,7 @@ public class OrderProductStore {
     @Column(name = "id")
     private Long id;
     private Long orderId;
-    private Long productOrderStoreId;
+    private Long productStoreId;
     private Integer quantity;
 
     public Long getId() {
@@ -30,11 +30,11 @@ public class OrderProductStore {
     }
 
     public Long getProductOrderStoreId() {
-        return productOrderStoreId;
+        return productStoreId;
     }
 
-    public void setProductOrderStoreId(Long productOrderStoreId) {
-        this.productOrderStoreId = productOrderStoreId;
+    public void setProductOrderStoreId(Long productStoreId) {
+        this.productStoreId = productStoreId;
     }
 
     public Integer getQuantity() {
