@@ -13,7 +13,7 @@ public class Pool {
     private String neighbourhood;
     private String description;
     private String zip;
-    private Integer poolLeader;
+    private Long poolLeader;
 
 
     public String getId() {
@@ -56,11 +56,11 @@ public class Pool {
         this.zip = zip;
     }
 
-    public Integer getPoolLeader() {
+    public Long getPoolLeader() {
         return poolLeader;
     }
 
-    public void setPoolLeader(Integer poolLeader) {
+    public void setPoolLeader(Long poolLeader) {
         this.poolLeader = poolLeader;
     }
 }

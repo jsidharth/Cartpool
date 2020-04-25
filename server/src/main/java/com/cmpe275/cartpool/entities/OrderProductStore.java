@@ -1,27 +1,39 @@
 package com.cmpe275.cartpool.entities;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
 public class OrderProductStore {
 
-    private Integer orderId;
-    private Integer productOrderStoreId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+    private Long orderId;
+    private Long productOrderStoreId;
     private Integer quantity;
 
-    public Integer getOrderId() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 
-    public Integer getProductOrderStoreId() {
+    public Long getProductOrderStoreId() {
         return productOrderStoreId;
     }
 
-    public void setProductOrderStoreId(Integer productOrderStoreId) {
+    public void setProductOrderStoreId(Long productOrderStoreId) {
         this.productOrderStoreId = productOrderStoreId;
     }
 

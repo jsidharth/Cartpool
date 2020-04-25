@@ -9,48 +9,48 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Integer id;
-    private Integer storeId;
-    private Integer userId;
-    private Integer poolId;
+    private Long id;
+    private Long storeId;
+    private Long userId;
+    private String poolId;
     @Enumerated(EnumType.STRING)
     private Status status;
-    private Integer pickedBy;
+    private Long pickedBy;
     private Float total;
     @Temporal(TemporalType.TIMESTAMP)
     private Date pickedTime;
     @Temporal(TemporalType.TIMESTAMP)
     private Date deliveredTime;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getStoreId() {
+    public Long getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(Integer storeId) {
+    public void setStoreId(Long storeId) {
         this.storeId = storeId;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Integer getPoolId() {
+    public String getPoolId() {
         return poolId;
     }
 
-    public void setPoolId(Integer poolId) {
+    public void setPoolId(String poolId) {
         this.poolId = poolId;
     }
 
@@ -62,11 +62,11 @@ public class Order {
         this.status = status;
     }
 
-    public Integer getPickedBy() {
+    public Long getPickedBy() {
         return pickedBy;
     }
 
-    public void setPickedBy(Integer pickedBy) {
+    public void setPickedBy(Long pickedBy) {
         this.pickedBy = pickedBy;
     }
 
