@@ -18,7 +18,14 @@ public class Store {
     private String state;
     private String zip;
 
-
+    public Store(String name, String logoUrl, String street, String city, String state, String zip) {
+        this.name = name;
+        this.logoUrl = logoUrl;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+    }
 
     public Long getId() {
         return id;

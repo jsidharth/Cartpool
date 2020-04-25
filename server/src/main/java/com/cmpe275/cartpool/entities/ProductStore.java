@@ -22,6 +22,11 @@ public class ProductStore {
     @JoinColumn(name = "storeId",insertable=false,updatable = false)
     Store store;
 
+    public ProductStore(Long productId, Long storeId) {
+        this.productId = productId;
+        this.storeId = storeId;
+    }
+
     public Store getStore() {
         return store;
     }

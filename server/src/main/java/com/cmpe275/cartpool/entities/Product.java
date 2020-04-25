@@ -18,8 +18,14 @@ public class Product {
     private String unit;
     private Integer price;
 
-
-
+    public Product(String name, String description, String imgUrl, String brand, String unit, Integer price) {
+        this.name = name;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.brand = brand;
+        this.unit = unit;
+        this.price = price;
+    }
 
     public Long getId() {
         return id;
