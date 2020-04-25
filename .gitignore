@@ -23,5 +23,5 @@
 ./client/yarn-debug.log*
 ./client/yarn-error.log*
 #server
-./server/target
-./server/.idea
+server/target
+server/.idea
