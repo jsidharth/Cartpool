@@ -4,23 +4,25 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class Order {
+public class Orders {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id; // Adding comment for testing 
+    private Long id;
     private Long storeId;
     private Long userId;
     private String poolId;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status orderStatus;
     private Long pickedBy;
     private Float total;
     @Temporal(TemporalType.TIMESTAMP)
     private Date pickedTime;
     @Temporal(TemporalType.TIMESTAMP)
     private Date deliveredTime;
+
+   
 
     public Long getId() {
         return id;
@@ -54,12 +56,13 @@ public class Order {
         this.poolId = poolId;
     }
 
-    public Status getStatus() {
-        return status;
+
+    public Status getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setOrderStatus(Status orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public Long getPickedBy() {

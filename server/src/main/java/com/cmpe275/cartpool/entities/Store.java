@@ -1,6 +1,8 @@
 package com.cmpe275.cartpool.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Store {
@@ -15,6 +17,8 @@ public class Store {
     private String city;
     private String state;
     private String zip;
+
+
 
     public Long getId() {
         return id;

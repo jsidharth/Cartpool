@@ -1,6 +1,8 @@
 package com.cmpe275.cartpool.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -15,6 +17,9 @@ public class Product {
     private String brand;
     private String unit;
     private Integer price;
+
+
+
 
     public Long getId() {
         return id;
