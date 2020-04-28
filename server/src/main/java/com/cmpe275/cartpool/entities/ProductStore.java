@@ -2,27 +2,30 @@ package com.cmpe275.cartpool.entities;
 
 import javax.persistence.*;
 
-@Entity
+@Entity()
 public class ProductStore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
-    private Long productId;
+    private Integer productId;
 
-    private Long storeId;
+    private Integer storeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "productId",insertable=false,updatable = false)
     Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "storeId",insertable=false,updatable = false)
     Store store;
 
-    public ProductStore(Long productId, Long storeId) {
+    public ProductStore() {
+    }
+
+    public ProductStore(Integer productId, Integer storeId) {
         this.productId = productId;
         this.storeId = storeId;
     }
@@ -43,27 +46,27 @@ public class ProductStore {
         this.product = product;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
-    public Long getStoreId() {
+    public Integer getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(Long storeId) {
+    public void setStoreId(Integer storeId) {
         this.storeId = storeId;
     }
 }

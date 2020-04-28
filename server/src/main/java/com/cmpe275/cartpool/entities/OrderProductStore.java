@@ -8,34 +8,61 @@ public class OrderProductStore {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
-    private Long orderId;
-    private Long productStoreId;
+    private Integer id;
+    //private Integer orderId;
+    //private Integer productStoreId;
     private Integer quantity;
 
-    public Long getId() {
+    @ManyToOne
+    @JoinColumn(name="belongsToOrder",referencedColumnName = "id")
+    private Orders belongsToOrder;
+
+    @ManyToOne
+    @JoinColumn(name = "productStore",referencedColumnName = "id")
+    private ProductStore productStore;
+
+    public OrderProductStore() {
+    }
+
+    public ProductStore getProductStore() {
+        return productStore;
+    }
+
+    public void setProductStore(ProductStore productStore) {
+        this.productStore = productStore;
+    }
+
+    public Orders getOrder() {
+        return belongsToOrder;
+    }
+
+    public void setOrder(Orders order) {
+        this.belongsToOrder = order;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getOrderId() {
-        return orderId;
-    }
+//    public Integer getOrderId() {
+//        return orderId;
+//    }
+//
+//    public void setOrderId(Integer orderId) {
+//        this.orderId = orderId;
+//    }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public Long getProductOrderStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductOrderStoreId(Long productStoreId) {
-        this.productStoreId = productStoreId;
-    }
+//    public Integer getProductOrderStoreId() {
+//        return productStoreId;
+//    }
+//
+//    public void setProductOrderStoreId(Integer productStoreId) {
+//        this.productStoreId = productStoreId;
+//    }
 
     public Integer getQuantity() {
         return quantity;

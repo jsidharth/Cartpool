@@ -1,6 +1,7 @@
 package com.cmpe275.cartpool.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -8,7 +9,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     private String screenName;
     @Column(unique = true)
     private String nickName;
@@ -23,12 +24,47 @@ public class User {
     private String city;
     private String state;
     private String zip;
+    @OneToOne(mappedBy = "user")
+    private PoolMember poolMember;
 
-    public Long getId() {
+    @OneToMany(mappedBy = "assignedToUser")
+    private List<Orders> assignedOrders;
+
+    @OneToMany(mappedBy = "orderedByUser")
+    private List<Orders> ordersPlaced;
+
+    public User() {
+    }
+
+    public List<Orders> getOrdersPlaced() {
+        return ordersPlaced;
+    }
+
+    public void setOrdersPlaced(List<Orders> ordersPlaced) {
+        this.ordersPlaced = ordersPlaced;
+    }
+
+    public List<Orders> getAssignedOrders() {
+        return assignedOrders;
+    }
+
+    public void setAssignedOrders(List<Orders> assignedOrders) {
+        this.assignedOrders = assignedOrders;
+    }
+
+    public PoolMember getPoolMember() {
+        return poolMember;
+    }
+
+    public void setPoolMember(PoolMember poolMember) {
+        this.poolMember = poolMember;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
