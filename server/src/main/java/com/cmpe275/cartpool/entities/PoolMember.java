@@ -13,6 +13,15 @@ public class PoolMember {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user",referencedColumnName = "id")
     private User user;
+
+    public PoolMember(User user, Integer reference, Boolean isRefApproved, Boolean isPlApproved, Pool pool) {
+        this.user = user;
+        this.reference = reference;
+        this.isRefApproved = isRefApproved;
+        this.isPlApproved = isPlApproved;
+        this.pool = pool;
+    }
+
     private Integer reference;
     private Boolean isRefApproved;
     private Boolean isPlApproved;

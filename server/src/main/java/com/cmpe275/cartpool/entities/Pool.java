@@ -9,7 +9,8 @@ public class Pool {
 
     @Id
     @Column(name = "id")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     @Column(unique = true)
     private String name;
     private String neighbourhood;
@@ -31,8 +32,7 @@ public class Pool {
     public Pool() {
     }
 
-    public Pool(String id, String name, String neighbourhood, String description, String zip) {
-        this.id = id;
+    public Pool( String name, String neighbourhood, String description, String zip) {
         this.name = name;
         this.neighbourhood = neighbourhood;
         this.description = description;
@@ -63,12 +63,8 @@ public class Pool {
         this.poolMembers = poolMembers;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {

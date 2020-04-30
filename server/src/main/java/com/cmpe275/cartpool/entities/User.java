@@ -22,6 +22,21 @@ public class User {
     private Integer credit;
     private String street;
     private String city;
+
+    public User(String screenName, String nickName, String email, Role role, Boolean isVerified, String imgUrl, Integer credit, String street, String city, String state, String zip) {
+        this.screenName = screenName;
+        this.nickName = nickName;
+        this.email = email;
+        this.role = role;
+        this.isVerified = isVerified;
+        this.imgUrl = imgUrl;
+        this.credit = credit;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+    }
+
     private String state;
     private String zip;
     @OneToOne(mappedBy = "user")
@@ -35,6 +50,7 @@ public class User {
 
     public User() {
     }
+
 
     public List<Orders> getOrdersPlaced() {
         return ordersPlaced;
