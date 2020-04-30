@@ -35,14 +35,6 @@ public class Test {
         return productStoreRepo.findAll();
     }
 
-
-
-    @GetMapping("/insert")
-    public void storeProduct(){
-
-        //return productStoreRepo.findAll();
-    }
-
     @GetMapping("/get")
     public List<ProductStore> getProducts(){
        return productStoreRepo.findAll();
