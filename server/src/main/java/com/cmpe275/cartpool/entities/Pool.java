@@ -1,5 +1,8 @@
 package com.cmpe275.cartpool.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,7 +19,8 @@ public class Pool {
     private String description;
     private String zip;
 
-    @OneToOne(cascade = CascadeType.ALL)
+
+    @OneToOne
     @JoinColumn(name = "poolLeader",referencedColumnName = "id")
     private User poolLeader;
 

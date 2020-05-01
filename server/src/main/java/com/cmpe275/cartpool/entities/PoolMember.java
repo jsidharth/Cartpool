@@ -10,18 +10,25 @@ public class PoolMember {
     private Integer id;
     //@Column(nullable=false)
     //private String poolId;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user",referencedColumnName = "id")
     private User user;
     private Integer reference;
     private Boolean isRefApproved;
     private Boolean isPlApproved;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="pool",referencedColumnName = "id")
     private Pool pool;
 
     public PoolMember() {
+    }
+    public PoolMember(User user, Integer reference, Boolean isRefApproved, Boolean isPlApproved, Pool pool) {
+        this.user = user;
+        this.reference = reference;
+        this.isRefApproved = isRefApproved;
+        this.isPlApproved = isPlApproved;
+        this.pool = pool;
     }
 
     public User getUser() {
