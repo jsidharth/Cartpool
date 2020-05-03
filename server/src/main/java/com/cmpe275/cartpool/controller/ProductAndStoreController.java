@@ -1,7 +1,11 @@
 package com.cmpe275.cartpool.controller;
 
 import com.cmpe275.cartpool.entities.Product;
+import com.cmpe275.cartpool.entities.ProductStore;
+import com.cmpe275.cartpool.entities.Store;
 import com.cmpe275.cartpool.services.ProductService;
+import com.cmpe275.cartpool.services.ProductStoreService;
+import com.cmpe275.cartpool.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +17,12 @@ public class ProductAndStoreController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    StoreService storeService;
+
+    @Autowired
+    ProductStoreService productStoreService;
 
     //Product endpoints
 
@@ -56,8 +66,84 @@ public class ProductAndStoreController {
 
     // Store endpoints
 
+    /**
+    * Used for adding a product
+     * @param store
+     * @return storeId
+    * */
+    @PostMapping("/store")
+    public int addStore(@RequestBody Store store){
+        if(storeService.storeExistsByName(store.getName())){
+            //Throw exception
+        }else{
+            return storeService.addStore(store);
+        }
+        //TODO: Throw exception that store already exists
+        return -1;
+    }
 
+    /**
+     * To find a store by name
+     * @param store
+     * @return storeObject
+     */
 
+    @GetMapping("/store/{store}")
+    Store getStoreByName(@PathVariable String store){
+        if(storeService.storeExistsByName(store)){
+            return storeService.getStoreByName(store);
+        }
+        //TODO: Throw exception that store doesn't exist
+        return new Store();
+    }
+
+    @GetMapping("/store")
+    List<Store> getAllStores(){
+        return storeService.getAllStores();
+    }
+
+    /**
+     * To delete a store by name
+     * @param store
+     * @return storeId
+     */
+    @DeleteMapping("/store/{store}")
+    int deleteStoreByName(@PathVariable String store){
+        if(storeService.storeExistsByName(store)){
+            return storeService.deleteStore(store);
+        }else{
+            //TODO: Throw exception here
+            return -1;
+        }
+    }
+
+    //ProductStore mappings
+
+    /**
+     * To add a product store mapping
+     * @param store
+     * @param product
+     * @return productStoreAddress
+     */
     //ProductStore endpoints
+    @PostMapping("/productstore/{store}/{product}")
+    ProductStore addProductToStore(@PathVariable int store, @PathVariable int product){
+        ProductStore savedProductStore = productStoreService.addProductToStore(store,product);
+        return  savedProductStore;
+    }
 
+    /**
+     * Get all the product store mappings
+     * @return AllProcutStoreMapping
+     */
+
+    @GetMapping("/productstore")
+    List<ProductStore> getAllProductStore(){
+        return productStoreService.getAllProductStore();
+    }
+
+    @DeleteMapping("/productstore/{store}/{product}")
+    int deleteProductStoreMapping(@PathVariable int store, @PathVariable int product){
+        return productStoreService.deleteProductFromStore(store,product);
+    }
 }
