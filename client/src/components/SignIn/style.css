@@ -1,0 +1,14 @@
+.signinContainer{
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.signinCard {
+    display: flex;
+    flex-direction: column;
+}
+
+.orclass {
+    margin: 10px;
+}
