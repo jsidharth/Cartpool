@@ -19,4 +19,14 @@ public class PoolMemberServiceImpl implements PoolMemberService {
     public PoolMember createPoolMember(PoolMember poolMember) {
         return poolMemberRepo.save(poolMember);
     }
+
+    @Override
+    public PoolMember getPoolMemberById(Integer Id) {
+        return poolMemberRepo.findPoolMemberById(Id).orElse(null);
+    }
+
+    @Override
+    public void deletePoolMember(PoolMember poolMember) {
+        poolMemberRepo.delete(poolMember);
+    }
 }

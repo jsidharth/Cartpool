@@ -37,12 +37,20 @@ public class AuthenticationAspect {
             try {
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(authHeader);
                 User user = userService.getUserByEmail(decodedToken.getEmail());
-                if (user!= null){
-                    joinPoint.proceed(new Object[]{user, joinPoint.getArgs()});
+                if (joinPoint.getSignature().getName() != "createUser"){
+                    if (user!= null){
+                        Object[] newargs = joinPoint.getArgs();
+                        if (newargs[0] instanceof User) {
+                            newargs[0] = user;
+                        }
+                        joinPoint.proceed(newargs);
+                    } else {
+                        //Do this only if joinPoint is not register
+                        //register should proceed
+                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Not authorized");
+                    }
                 } else {
-                    //Do this only if joinPoint is not register
-                    //register should proceed
-                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Not authorized");
+                    joinPoint.proceed();
                 }
             }
             catch (Exception e) {

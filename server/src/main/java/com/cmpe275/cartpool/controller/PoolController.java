@@ -2,9 +2,11 @@ package com.cmpe275.cartpool.controller;
 
 import com.cmpe275.cartpool.entities.Pool;
 import com.cmpe275.cartpool.entities.PoolMember;
+import com.cmpe275.cartpool.entities.Role;
 import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.repos.PoolMemberRepo;
 import com.cmpe275.cartpool.repos.PoolRepo;
+import com.cmpe275.cartpool.services.EmailService;
 import com.cmpe275.cartpool.services.PoolMemberService;
 import com.cmpe275.cartpool.services.PoolService;
 import com.cmpe275.cartpool.services.UserService;
@@ -28,6 +30,9 @@ public class PoolController {
 
     @Autowired
     PoolMemberService poolMemberService;
+
+    @Autowired
+    EmailService emailService;
 
     @PostMapping("/pool")
     public ResponseEntity createPool( User user, @RequestBody Pool pool)
@@ -58,15 +63,21 @@ public class PoolController {
     }
 
     @GetMapping("/pools")
-    public List<Pool> getPools() {
+    public ResponseEntity getPools(User user) {
         //Check if admin then return pools
-        return poolService.getPools();
+        if (user.getRole() == Role.ADMIN){
+            return ResponseEntity.ok(poolService.getPools());
+        } else {
+            return new ResponseEntity<>("Not admin", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping("/joinpool")
     public ResponseEntity joinPool(User user, @RequestParam String id, @RequestParam(required = false) String nickName) {
         //get current user object
         //check if current user is in a pool
+        //create a poolmember object to save
+        PoolMember poolMember_for_user;
         if (user != null){
             if (user.getPoolMember() != null) {
                 return new ResponseEntity<>("user already part of a pool", HttpStatus.BAD_REQUEST);
@@ -80,10 +91,11 @@ public class PoolController {
         if (pool != null) {
             //if nick name is given, check if nick name is in pool
             Boolean flag = false;
+            User user_ = null;
             if (nickName != null) {
                 List<PoolMember> poolMembers = pool.getPoolMembers();
                 for (PoolMember poolMember: poolMembers) {
-                    User user_ = userService.getUserById(poolMember.getId());
+                    user_ = userService.getUserById(poolMember.getId());
                     if ( user_ !=null) {
                         if (user_.getNickName().equals(nickName)) {
                             flag = true;
@@ -94,8 +106,9 @@ public class PoolController {
                 if (flag) {
                     //send email to the guy
                     //TODO email
-                    //once email is confirmed by admin/other user
-                    //then you can call the other id
+                    poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
+                    poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
+                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool "+ poolMember_for_user.getId());
                     return ResponseEntity.ok("Email sent to user. Wait for approval");
                 } else {
                     return new ResponseEntity<>("This nick name is not in given pool", HttpStatus.BAD_REQUEST);
@@ -103,10 +116,67 @@ public class PoolController {
             } else {
                 //need to send email to the pool leader if nick name is not given
                 //TODO
-                return ResponseEntity.ok("Email sent to PoolAdmin. Wait for approval");
+                //find admin of this pool
+                user_ = pool.getPoolLeader();
+                if(user_ != null) {
+                    poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
+                    poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
+                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool. You are admin. "+ poolMember_for_user.getId());
+                    return ResponseEntity.ok("Email sent to PoolAdmin. Wait for approval");
+                } else {
+                    return new ResponseEntity<>("Cannot find admin of this pool", HttpStatus.NOT_FOUND);
+                }
             }
         } else {
             return new ResponseEntity<>("pool does not exist", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/pool")
+    public ResponseEntity getPool(User user) {
+        //Return current users pool
+        if (user.getPoolMember() != null ){
+            return ResponseEntity.ok(user.getPoolMember().getPool());
+        } else {
+            return new ResponseEntity<>("No pools found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/approve_pool")
+    public ResponseEntity approvePool(User user, @RequestParam Integer poolMemberId) {
+        //check if this request is there
+        PoolMember poolMember = poolMemberService.getPoolMemberById(poolMemberId);
+        if (poolMember != null) {
+            if (poolMember.getReference().equals(user.getId())) {
+                if (poolMember.getPlApproved() || poolMember.getRefApproved()) {
+                    return new ResponseEntity<>("This request is already approved", HttpStatus.BAD_REQUEST);
+                } else {
+                    //TODO what about pool leader?
+                    poolMember.setRefApproved(true);
+                    //will this save work?
+                    poolMemberService.createPoolMember(poolMember);
+                    return ResponseEntity.ok("Approved request");
+                }
+            } else {
+                return new ResponseEntity<>("You are not authorized for this pool action", HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>("This request is invalid", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/leavepool")
+    public ResponseEntity deletePoolRequest(User user) {
+        PoolMember poolMember = user.getPoolMember();
+        if (poolMember != null) {
+            if (poolMember.getReference() == 0 ){
+                //give admin role to some one else
+            }
+            poolMemberService.deletePoolMember(poolMember);
+            //if admin deletes his membership, transfer the ownership to someone else
+            return ResponseEntity.ok("Deleted Pool");
+        } else {
+            return new ResponseEntity<>("Not part of any pool", HttpStatus.NOT_FOUND);
         }
     }
 }
