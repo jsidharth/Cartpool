@@ -30,4 +30,16 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepo.findById(id);
         return user.orElse(null);
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        Optional<User> user = userRepo.findByEmail(email);
+        return user.orElse(null);
+    }
+
+    @Override
+    public User getUserByScreenName(String screenName) {
+        Optional<User> user = userRepo.findByScreenName(screenName);
+        return user.orElse(null);
+    }
 }

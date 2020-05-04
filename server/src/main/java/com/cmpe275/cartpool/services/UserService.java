@@ -9,4 +9,6 @@ public interface UserService {
     List<User> getAllUsers();
     User createUser(User user);
     User getUserById(Integer id);
+    User getUserByEmail(String email);
+    User getUserByScreenName(String screenName);
 }
