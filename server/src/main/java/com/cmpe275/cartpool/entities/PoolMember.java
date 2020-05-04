@@ -7,42 +7,75 @@ public class PoolMember {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
-    private String poolId;
-    private Long userId;
-    private Long reference;
+    private Integer id;
+    //@Column(nullable=false)
+    //private String poolId;
+    @OneToOne
+    @JoinColumn(name = "user",referencedColumnName = "id")
+    private User user;
+    private Integer reference;
     private Boolean isRefApproved;
     private Boolean isPlApproved;
 
-    public Long getId() {
+    @ManyToOne
+    @JoinColumn(name="pool",referencedColumnName = "id")
+    private Pool pool;
+
+    public PoolMember() {
+    }
+    public PoolMember(User user, Integer reference, Boolean isRefApproved, Boolean isPlApproved, Pool pool) {
+        this.user = user;
+        this.reference = reference;
+        this.isRefApproved = isRefApproved;
+        this.isPlApproved = isPlApproved;
+        this.pool = pool;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Pool getPool() {
+        return pool;
+    }
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getPoolId() {
-        return poolId;
-    }
+//    public String getPoolId() {
+//        return poolId;
+//    }
+//
+//    public void setPoolId(String poolId) {
+//        this.poolId = poolId;
+//    }
 
-    public void setPoolId(String poolId) {
-        this.poolId = poolId;
-    }
+//    public Integer getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(Integer userId) {
+//        this.userId = userId;
+//    }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getReference() {
+    public Integer getReference() {
         return reference;
     }
 
-    public void setReference(Long reference) {
+    public void setReference(Integer reference) {
         this.reference = reference;
     }
 

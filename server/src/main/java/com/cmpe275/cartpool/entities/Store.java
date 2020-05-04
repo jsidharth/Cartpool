@@ -1,15 +1,14 @@
 package com.cmpe275.cartpool.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Column(unique = true)
     private String name;
     private String logoUrl;
@@ -17,6 +16,9 @@ public class Store {
     private String city;
     private String state;
     private String zip;
+
+    public Store() {
+    }
 
     public Store(String name, String logoUrl, String street, String city, String state, String zip) {
         this.name = name;
@@ -27,11 +29,11 @@ public class Store {
         this.zip = zip;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
