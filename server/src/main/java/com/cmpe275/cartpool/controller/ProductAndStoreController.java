@@ -110,17 +110,12 @@ public class ProductAndStoreController {
 
     /**
      * To delete a store by name
-     * @param store
+     * @param id
      * @return storeId
      */
-    @DeleteMapping("/store/{store}")
-    int deleteStoreByName(@PathVariable String store){
-        if(storeService.storeExistsByName(store)){
-            return storeService.deleteStore(store);
-        }else{
-            //TODO: Throw exception here
-            return -1;
-        }
+    @DeleteMapping("/store/{id}")
+    void deleteStoreById(@PathVariable int id){
+        storeService.deleteStore(id);
     }
 
     /**
