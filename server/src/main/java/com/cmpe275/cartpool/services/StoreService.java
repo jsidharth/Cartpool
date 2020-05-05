@@ -9,7 +9,7 @@ public interface StoreService {
     int addStore(Store store);
 
     //Delete a store
-    int deleteStore(String name);
+    void deleteStore(int id);
 
     //Get a store by id
     Store getStoreByName(String name);

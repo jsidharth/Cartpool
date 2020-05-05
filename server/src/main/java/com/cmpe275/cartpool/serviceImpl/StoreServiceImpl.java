@@ -4,6 +4,7 @@ import com.cmpe275.cartpool.entities.Store;
 import com.cmpe275.cartpool.repos.StoreRepo;
 import com.cmpe275.cartpool.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +22,14 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public int deleteStore(String name) {
+    public void deleteStore(int Id) {
         //ToDo: Check if any pending orders are left before deleting
-        if(storeRepo.existsByName(name)) {
-            storeRepo.deleteByName(name);
-            return 0;
-        }else{
-            return -1;
+        if(storeRepo.existsById(Id)) {
+          try{
+              storeRepo.deleteById(Id);
+          }catch (DataIntegrityViolationException e){
+              throw new DataIntegrityViolationException("store already in use, cannot delete");
+          }
         }
     }
 
@@ -55,7 +57,7 @@ public class StoreServiceImpl implements StoreService {
             //TODO: Return error properly
             return null;
         }
-        Store oldStore = storeRepo.findByName(store.getName());
+        Store oldStore = storeRepo.findById(store.getId()).get();
         oldStore.setLogoUrl(store.getLogoUrl());
         oldStore.setCity(store.getCity());
         oldStore.setState(store.getState());
