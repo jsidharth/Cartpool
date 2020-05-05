@@ -1,7 +1,9 @@
 package com.cmpe275.cartpool.serviceImpl;
 
 import com.cmpe275.cartpool.entities.Orders;
+import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.repos.OrdersRepo;
+import com.cmpe275.cartpool.repos.UserRepo;
 import com.cmpe275.cartpool.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,9 @@ import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    UserRepo userRepo;
 
     @Autowired
     OrdersRepo ordersRepo;
@@ -68,4 +73,12 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public List<Orders> getOrdersByUserId(int id) {
+        if(!userRepo.existsById(id)){
+           return null;
+        }
+        User user = userRepo.findById(id).get();
+        return ordersRepo.findByOrderedByUser(user);
+    }
 }

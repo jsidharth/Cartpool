@@ -57,12 +57,12 @@ public class OrderController {
     }
 
     /**
-     * Get an order from it's id
+     * Get an order for a user by their id
      * @param id
      * @return Order
      */
     @GetMapping("/orders/{id}")
-    public Orders getOrderById(@PathVariable int id){
-        return orderService.findOrderById(id);
+    public List<Orders> getOrderByUserId(@PathVariable int id){
+        return orderService.getOrdersByUserId(id);
     }
 }

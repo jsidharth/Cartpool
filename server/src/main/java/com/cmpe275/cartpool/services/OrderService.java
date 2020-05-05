@@ -15,4 +15,6 @@ public interface OrderService {
     Orders findOrderById(int id);
 
     int deleteById(int id);
+
+    List<Orders> getOrdersByUserId(int id);
 }
