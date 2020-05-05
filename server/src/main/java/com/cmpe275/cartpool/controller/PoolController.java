@@ -4,14 +4,10 @@ import com.cmpe275.cartpool.entities.Pool;
 import com.cmpe275.cartpool.entities.PoolMember;
 import com.cmpe275.cartpool.entities.Role;
 import com.cmpe275.cartpool.entities.User;
-import com.cmpe275.cartpool.repos.PoolMemberRepo;
-import com.cmpe275.cartpool.repos.PoolRepo;
 import com.cmpe275.cartpool.services.EmailService;
 import com.cmpe275.cartpool.services.PoolMemberService;
 import com.cmpe275.cartpool.services.PoolService;
 import com.cmpe275.cartpool.services.UserService;
-import com.google.firebase.auth.FirebaseToken;
-import com.google.firebase.internal.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -171,10 +167,35 @@ public class PoolController {
         if (poolMember != null) {
             if (poolMember.getReference() == 0 ){
                 //give admin role to some one else
+                //This is admin
+                //Can't leave
+                return new ResponseEntity<>("Admin cannot leave his pool", HttpStatus.BAD_REQUEST);
             }
             poolMemberService.deletePoolMember(poolMember);
             //if admin deletes his membership, transfer the ownership to someone else
-            return ResponseEntity.ok("Deleted Pool");
+            return ResponseEntity.ok("Left pool");
+        } else {
+            return new ResponseEntity<>("Not part of any pool", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/deletepool")
+    public ResponseEntity deletePool(User user) {
+        //TODO make transactions
+        PoolMember poolMember = user.getPoolMember();
+        if (poolMember != null) {
+            if (poolMember.getReference() == 0 ){
+                Pool pool = poolMember.getPool();
+                if (pool.getPoolMembers().size() == 1) {
+                    poolMemberService.deletePoolMember(poolMember);
+                    poolService.deletePool(pool);
+                    return ResponseEntity.ok("Deleted pool");
+                } else{
+                    return new ResponseEntity<>("This pool has members", HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return new ResponseEntity<>("Not a pool admin", HttpStatus.BAD_REQUEST);
+            }
         } else {
             return new ResponseEntity<>("Not part of any pool", HttpStatus.NOT_FOUND);
         }

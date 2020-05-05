@@ -13,4 +13,5 @@ public interface PoolService {
     Pool getPoolByName(String poolName);
     Pool getPoolById(String Id);
     void addToPool(Pool pool, User user) throws IllegalArgumentException, UnsupportedOperationException;
+    void deletePool(Pool pool);
 }

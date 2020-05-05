@@ -58,4 +58,9 @@ public class PoolServiceImpl implements PoolService {
             throw new UnsupportedOperationException();
         }
     }
+
+    @Override
+    public void deletePool(Pool pool) {
+        poolRepo.delete(pool);
+    }
 }
