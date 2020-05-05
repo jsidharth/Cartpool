@@ -26,8 +26,13 @@ const Routes = () => {
         component={AdminProductForm}
       />
       <Route exact path="/admin/products" component={AdminProductHome} />
-      <Route exact path="/admin/stores/add" component={AdminStoreForm} />
 
+      <Route
+        exact
+        path="/admin/stores/edit/:storeName"
+        component={AdminStoreForm}
+      />
+      <Route exact path="/admin/stores/add" component={AdminStoreForm} />
       <Route exact path="/admin/stores" component={AdminStoreHome} />
       <ToastContainer autoClose={2000} />
     </div>

@@ -23,6 +23,16 @@ class AdminProductForm extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(this.props.productToEdit) !==
+      JSON.stringify(prevProps.productToEdit)
+    ) {
+      const data = { ...this.props.productToEdit };
+      this.setState({ data });
+    }
+  }
+
   handleChange = ({ currentTarget: input }) => {
     const data = { ...this.state.data };
     data[input.name] = input.value;
@@ -33,7 +43,7 @@ class AdminProductForm extends Component {
     e.preventDefault();
     if (this.state.edit) {
       const data = { ...this.state.data };
-      alert("update");
+      //alert("update");
       this.props.updateProduct(data);
     } else {
       const data = { ...this.state.data };
@@ -43,16 +53,6 @@ class AdminProductForm extends Component {
 
   render() {
     const { data, edit } = this.state;
-    if (
-      edit &&
-      this.props.productToEdit &&
-      JSON.stringify(this.props.productToEdit) !==
-        JSON.stringify(this.state.data)
-    ) {
-      const data = { ...this.props.productToEdit };
-      this.setState({ data });
-    }
-
     return (
       <React.Fragment>
         <h2>AdminProductForm</h2>

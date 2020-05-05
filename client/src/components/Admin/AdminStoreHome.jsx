@@ -5,9 +5,14 @@ import { Link } from "react-router-dom";
 
 class AdminStoreHome extends Component {
   //state = {};
-
-  handleDeleteStore(sId) {
-    alert("delete " + sId);
+  componentDidMount() {
+    if (this.props.stores.length === 0) {
+      this.props.getStores();
+    }
+  }
+  handleDeleteStore(storeName) {
+    alert("delete " + storeName);
+    this.props.deleteStoreByName(storeName);
   }
 
   render() {
@@ -25,7 +30,7 @@ class AdminStoreHome extends Component {
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Name</th>
-              <th scope="col">Logo Url</th>
+
               <th scope="col">Street</th>
               <th scope="col">City</th>
               <th scope="col">State</th>
@@ -35,7 +40,7 @@ class AdminStoreHome extends Component {
             </tr>
           </thead>
           <tbody>
-            {/* {this.props.stores.map(s => (
+            {this.props.stores.map(s => (
               <tr key={s.id}>
                 <td>{s.id}</td>
                 <td>
@@ -46,7 +51,6 @@ class AdminStoreHome extends Component {
                     {s.name}
                   </Link>
                 </td>
-                <td>{s.logoUrl}</td>
                 <td>{s.street}</td>
                 <td>{s.city}</td>
                 <td>{s.state}</td>
@@ -54,21 +58,21 @@ class AdminStoreHome extends Component {
                 <td>
                   <Link
                     className="btn btn-link"
-                    to={`/admin/stores/edit/${s.id}`}
+                    to={`/admin/stores/edit/${s.name}`}
                   >
                     edit
                   </Link>
                 </td>
                 <td>
                   <button
-                    onClick={() => this.handleDeleteStore(s.id)}
+                    onClick={() => this.handleDeleteStore(s.name)}
                     className="btn btn-link"
                   >
                     delete
                   </button>
                 </td>
               </tr>
-            ))} */}
+            ))}
           </tbody>
         </table>
       </React.Fragment>
@@ -76,4 +80,21 @@ class AdminStoreHome extends Component {
   }
 }
 
-export default AdminStoreHome;
+const mapStateToProps = state => ({
+  //products: state.adminReducer.products
+  stores: state.adminReducer.stores
+});
+
+const mapDispatchToProps = dispatch => ({
+  getStores: () => {
+    dispatch(adminActions.getStores());
+  },
+  // getProducts: () => {
+  //   dispatch(adminActions.getProducts());
+  // },
+  deleteStoreByName: storeName => {
+    dispatch(adminActions.deleteStoreByName(storeName));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminStoreHome);

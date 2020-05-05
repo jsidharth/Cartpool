@@ -59,7 +59,6 @@ const updateProduct = (payload, ownProps) => async dispatch => {
     //dispatch({ type: actionTypes.SET_PRODUCTS, payload: { products } });
     dispatch(getProducts());
     ownProps.history.push("/admin/products");
-
     toast.success("Product with id " + product.id + " edited");
   } catch (err) {
     toast.error(err.message);
@@ -77,10 +76,87 @@ const deleteProduct = productId => async dispatch => {
   }
 };
 
+const addStore = (payload, ownProps) => async dispatch => {
+  try {
+    const { data: store } = await axios.post(
+      `http://${server.domain}:${server.port}/store`,
+      payload
+    );
+    console.log("action add store", store);
+    //dispatch({ type: actionTypes.SET_PRODUCTS, payload: { products } });
+    dispatch(getStores());
+    ownProps.history.push("/admin/stores");
+    toast.success("Store added with id " + store);
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const getStores = () => async dispatch => {
+  try {
+    const { data: stores } = await axios.get(
+      `http://${server.domain}:${server.port}/store`
+    );
+    console.log("action get stores", stores);
+    dispatch({ type: actionTypes.SET_STORES, payload: { stores } });
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const getStoreByName = storeName => async dispatch => {
+  try {
+    const { data: store } = await axios.get(
+      `http://${server.domain}:${server.port}/store/${storeName}`
+    );
+    console.log("action getStoreByName", store);
+    //toast.success("Product added with id" + product.id);
+    dispatch({
+      type: actionTypes.SET_CURRENT_STORE,
+      payload: { store }
+    });
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const updateStore = (payload, ownProps) => async dispatch => {
+  try {
+    const { data: store } = await axios.put(
+      `http://${server.domain}:${server.port}/store`,
+      payload
+    );
+    //console.log("action add products", product);
+    //dispatch({ type: actionTypes.SET_PRODUCTS, payload: { products } });
+    dispatch(getStores());
+    ownProps.history.push("/admin/stores");
+    toast.success("Store with id " + store.id + " edited");
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const deleteStoreByName = storeName => async dispatch => {
+  try {
+    await axios.delete(
+      `http://${server.domain}:${server.port}/store/${storeName}`
+    );
+    dispatch(getProducts());
+    toast.success("Store  " + storeName + " deleted");
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
 export {
   getProducts,
   addProduct,
   getProductById,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  addStore,
+  getStores,
+  getStoreByName,
+  updateStore,
+  deleteStoreByName
 };
