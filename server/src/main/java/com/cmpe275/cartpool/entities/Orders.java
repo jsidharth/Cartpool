@@ -44,7 +44,18 @@ public class Orders {
     @OneToMany(mappedBy = "belongsToOrder")
     private List<OrderProductStore> items;
 
-    public Orders() {
+    public Orders(){}
+
+    public Orders(Store store, User user, Pool pool, Status status, User assignedToUser, Float total, Date pickedTime,
+                  Date deliveredTime) {
+        this.storeId = store;
+        this.orderedByUser = user;
+        this.pool = pool;
+        this.orderStatus = status;
+        this.assignedToUser = assignedToUser;
+        this.total = total;
+        this.pickedTime = pickedTime;
+        this.deliveredTime = deliveredTime;
     }
 
     public Pool getPool() {
