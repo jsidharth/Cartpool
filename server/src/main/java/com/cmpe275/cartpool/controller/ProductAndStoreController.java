@@ -64,6 +64,11 @@ public class ProductAndStoreController {
          productService.deleteProduct(productId);
     }
 
+    @PutMapping("/products")
+    public Product modifyProduct(@RequestBody Product product){
+        return productService.modifyProduct(product);
+    }
+
     // Store endpoints
 
     /**
@@ -115,6 +120,16 @@ public class ProductAndStoreController {
             //TODO: Throw exception here
             return -1;
         }
+    }
+
+    /**
+     * Update Store
+     * @param store
+     * @return modifiedStore
+     */
+    @PutMapping("/store")
+    Store modifyStore(@RequestBody Store store){
+        return storeService.updateStore(store);
     }
 
     //ProductStore mappings

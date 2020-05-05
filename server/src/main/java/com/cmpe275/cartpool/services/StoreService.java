@@ -17,4 +17,6 @@ public interface StoreService {
     boolean storeExistsByName(String name);
 
     List<Store> getAllStores();
+
+    Store updateStore(Store store);
 }

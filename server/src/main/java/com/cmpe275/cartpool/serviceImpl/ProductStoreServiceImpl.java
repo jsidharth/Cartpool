@@ -1,6 +1,5 @@
 package com.cmpe275.cartpool.serviceImpl;
 
-import com.cmpe275.cartpool.entities.Product;
 import com.cmpe275.cartpool.entities.ProductStore;
 import com.cmpe275.cartpool.repos.ProductRepo;
 import com.cmpe275.cartpool.repos.ProductStoreRepo;
@@ -44,6 +43,7 @@ public class ProductStoreServiceImpl implements ProductStoreService {
         if(storeRepo.existsById(store) && productRepo.existsById(product)) {
             if(productStoreRepo.existsByStoreIdAndProductId(store,product)) {
                 //TODO:Throw error that the mapping already exists
+
             }else {
                 ProductStore productStore = new ProductStore(product, store);
                 ProductStore savedProductStore = productStoreRepo.save(productStore);
