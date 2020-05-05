@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class ProductAndStoreController {
 
@@ -53,6 +53,8 @@ public class ProductAndStoreController {
     public void deleteProduct(@PathVariable(required = true) Integer productId){
          productService.deleteProduct(productId);
     }
+
+
 
     // Store endpoints
 
