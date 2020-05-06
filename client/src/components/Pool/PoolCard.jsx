@@ -7,22 +7,31 @@ class PoolCard extends Component {
       <React.Fragment>
         <div className="">
           <div className="card">
-            <div className="card-header">PoolName</div>
+            <div className="card-header">{this.props.name}</div>
             <ul className="list-group list-group-flush">
               <li className="list-group-item">
-                <span>description dsfsdfv sdf sd fsa fsd sadf sadf sf</span>
+                <span>{this.props.description}</span>
               </li>
               <li className="list-group-item">
                 <strong>PoolLeader</strong>
-                <span className="badge badge-light">Sidharth</span>
+                <span className="badge badge-light">
+                  {this.props.poolLeader}
+                </span>
                 <button className="btn btn-primary  btn-sm btn-block mt-1 ">
                   Request PoolLeader
                 </button>
               </li>
               <li className="list-group-item">
                 <strong>Members</strong>
-                <span className="badge badge-light ml-2">Member2</span>
-                <span className="badge badge-light ml-2">Member2</span>
+                {this.props.members && this.props.members.lenght
+                  ? this.props.members.map((member) => {
+                      return (
+                        <span className="badge badge-light ml-2">
+                          {member.name}
+                        </span>
+                      );
+                    })
+                  : null}
                 <input
                   type="text"
                   className="form-control mt-1"

@@ -5,7 +5,7 @@ class Cart extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="card">
+        <div className="card mt-5">
           <div className="card-header">
             Cart{" "}
             <span className="float-right badge badge-primary">Walmart</span>
