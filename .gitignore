@@ -1,27 +1,28 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-./client/node_modules
-./client/.pnp
-./client/.pnp.js
+/client/node_modules
+/client/.pnp
+/client/.pnp.js
 
 # testing
-./client/coverage
+/client/coverage
 
 # production
-./client/build
+/client/build
 
 # misc
 .DS_Store
-./client/.DS_Store
-./client/.env.local
-./client/.env.development.local
-./client/.env.test.local
-./client/.env.production.local
+/client/.DS_Store
+/client/.env.local
+/client/.env.development.local
+/client/.env.test.local
+/client/.env.production.local
 
-./client/npm-debug.log*
-./client/yarn-debug.log*
-./client/yarn-error.log*
+/client/npm-debug.log*
+/client/yarn-debug.log*
+/client/yarn-error.log*
 #server
 server/target
 server/.idea
+server/carpool.iml

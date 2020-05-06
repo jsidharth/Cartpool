@@ -40,5 +40,25 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public Product modifyProduct(Product product) {
 
+        if(!productRepo.existsById(product.getId())){
+            //TODO: Handle error properly
+            System.out.println("product doesn't exist");
+            return null;
+        }
+
+        Product updatedProduct = productRepo.findById(product.getId()).get();
+        updatedProduct.setName(product.getName());
+        updatedProduct.setBrand(product.getBrand());
+        updatedProduct.setDescription(product.getDescription());
+        updatedProduct.setImgUrl(product.getImgUrl());
+        updatedProduct.setPrice(product.getPrice());
+        updatedProduct.setUnit(product.getUnit());
+
+        Product toSend = productRepo.save(updatedProduct);
+
+        return toSend;
+    }
 }

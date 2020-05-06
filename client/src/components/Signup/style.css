@@ -1,0 +1,15 @@
+.signupContainer{
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.signupCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.orclass {
+    margin: 10px;
+}
