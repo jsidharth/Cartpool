@@ -73,7 +73,6 @@ class SignIn extends Component {
               <span><FcGoogle/></span> Google Sign In
               </button>
             </div>
-            <div>or</div>
             <div>
               <Link to="/signup">Don't have an account yet? SignUp!</Link>
             </div>

@@ -14,7 +14,8 @@ const signUp = (userDetails, ownProps) => async (dispatch) => {
       // Send userdetails to backend for registraion
       const userPayload = {
           email,
-          screenName: `${details.firstName} ${details.lastName}`
+          screenName: `${details.firstName} ${details.lastName}`,
+          nickName: details.nickName
       }
       await axios.post(`http://${server.domain}:${server.port}/user`, userPayload);
       ownProps.history.push("/signin");

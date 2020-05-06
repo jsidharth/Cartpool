@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { authActions } from "./../../js/actions/index";
 import { FcGoogle } from "react-icons/fc";
-import { ToastContainer } from 'react-toastify';
 
 class Signup extends Component {
   constructor(props) {
@@ -32,7 +31,7 @@ class Signup extends Component {
   render() {
     return (
       <div className="signupContainer">
-        <div className="signupCard card">
+        <div className="signupCard card shadow p-2">
           <div className="card-body">
             <label className="font-weight-bold">Register your Cartpool Account.</label>
             <div className="input-group mb-3">
@@ -115,7 +114,7 @@ class Signup extends Component {
                 onChange={this.handleChange}
               />
             </div>
-            <div className="input-group">
+            <div className="input-group mt-3">
               <button
                 type="button"
                 className="btn btn-outline-success btn-block"
@@ -124,8 +123,7 @@ class Signup extends Component {
                 Sign Up
               </button>
             </div>
-            <div className = "orclass">OR</div>
-            <div className="input-group mb-3">
+            <div className="input-group mt-3">
               <button
                 type="button"
                 className="btn btn-outline-success btn-block"

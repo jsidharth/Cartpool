@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import { TiShoppingCart } from "react-icons/ti";
+import { Link } from "react-router-dom";
+
 class Navbar extends Component {
   state = {};
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="#">
-          <TiShoppingCart/>pool
-        </a>
+        {/* TODO: Change to link */}
+        <Link className="navbar-brand" to="/">
+          <TiShoppingCart />
+          pool
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -22,40 +26,88 @@ class Navbar extends Component {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav">
             <li className="nav-item active">
-              <a className="nav-link" href="#">
-                Home <span className="sr-only">(current)</span>
-              </a>
+              <Link to="/browse/stores" style={{ textDecoration: "none" }}>
+                <div className="nav-link">Browse</div>
+              </Link>
             </li>
-            
-            
-            {/* <li className="nav-item dropdown">
-              <a
+
+            <li className="nav-item dropdown">
+              <div
                 className="nav-link dropdown-toggle"
-                href="#"
                 id="navbarDropdownMenuLink"
                 role="button"
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                Dropdown link
-              </a>
+                Pool
+              </div>
               <div
                 className="dropdown-menu"
                 aria-labelledby="navbarDropdownMenuLink"
               >
-                <a className="dropdown-item" href="#">
-                  Action
-                </a>
-                <a className="dropdown-item" href="#">
-                  Another action
-                </a>
-                <a className="dropdown-item" href="#">
-                  Something else here
-                </a>
+                <Link className="dropdown-item" to="/pool/browse">
+                  Browse pools
+                </Link>
+                <Link className="dropdown-item" to="/pool/detail">
+                  My Pool
+                </Link>
               </div>
-            </li> */}
+            </li>
+
+            <li className="nav-item dropdown">
+              <div
+                className="nav-link dropdown-toggle"
+                id="navbarDropdownMenuLink"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Order
+              </div>
+              <div
+                className="dropdown-menu"
+                aria-labelledby="navbarDropdownMenuLink"
+              >
+                <Link className="dropdown-item" to="">
+                  My Orders
+                </Link>
+                <Link className="dropdown-item" to="">
+                  Orders to pickup
+                </Link>
+              </div>
+            </li>
           </ul>
+          <div className="collapse navbar-collapse justify-content-end">
+            <div className="navbar-nav">
+              <ul className="navbar-nav">
+              <li className="nav-item dropdown dropleft">
+              <div
+                className="nav-link dropdown-toggle "
+                id="navbarDropdownMenuLink"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Tejas
+              </div>
+              <div
+                className="dropdown-menu"
+                aria-labelledby="navbarDropdownMenuLink"
+              >
+                <Link className="dropdown-item" to="/account">
+                  Account
+                </Link>
+                <Link className="dropdown-item" to="">
+                  Cart
+                </Link>
+              </div>
+            </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </nav>
     );

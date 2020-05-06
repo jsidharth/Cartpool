@@ -1,12 +1,12 @@
 import React from "react";
 import SignIn from "./SignIn/SignIn";
-import Home from "./Home/Home";
 import { connect } from "react-redux";
+import Browse from "./Browse/Browse";
 
 const Main = ({ auth }) => {
   return (
     <div>
-      <div>{auth.isEmpty ? <SignIn /> : <Home />}</div>
+      <div>{auth.isEmpty ? <SignIn /> : <Browse />}</div>
     </div>
   );
 };
