@@ -15,7 +15,12 @@ import AdminProductDV from "./components/Admin/AdminProductDV";
 import AdminStoreHome from "./components/Admin/AdminStoreHome";
 import AdminStoreForm from "./components/Admin/AdminStoreForm";
 import Cart from "./components/Cart/Cart";
+<<<<<<< HEAD
 import CreatePool from "./components/CreatePool/CreatePool";
+=======
+import PoolCard from "./components/Pool/PoolCard";
+import OrderDv from "./components/Order/OrderDv";
+>>>>>>> e51c82f84bb6111ba478c40199ec54cc23e6a599
 
 const Routes = () => {
   return (
@@ -33,6 +38,8 @@ const Routes = () => {
       <Route exact path="/account" component={Account} />
       <Route exact path="/cart" component={Cart} />
       <Route exact path="/pool/create" component={CreatePool} />
+      <Route exact path="/pool" component={PoolCard} />
+      <Route exact path="/order" component={OrderDv} />
       <Route exact path="/admin/products/add" component={AdminProductForm} />
       <Route exact path="/admin/products/dv/:id" component={AdminProductDV} />
       <Route
