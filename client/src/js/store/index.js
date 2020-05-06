@@ -12,9 +12,10 @@ axios.interceptors.request.use(
   async config => {
     const currentUser = await firebase.auth().currentUser;
     if (currentUser) {
-      const idToken = currentUser.getIdToken();
+      console.log("Here", currentUser)
+      const idToken = await currentUser.getIdToken();
       if (idToken) {
-        config.headers.Authorization = `X-Authorization-Firebase ${idToken}`;
+        config.headers.Authorization = idToken;
       }
     }
     return config;

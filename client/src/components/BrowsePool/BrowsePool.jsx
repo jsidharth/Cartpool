@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Card from "../Card/Card";
+import { Link } from "react-router-dom";
 
 class BrowsePool extends Component {
   // constructor(props) {
@@ -38,13 +39,24 @@ class BrowsePool extends Component {
     return (
       <div>
         {/* TODO: Style this heading */}
-        <h1 className="display-4">Pools</h1>
+        <div className="row">
+          <div className="col">
+            <h1 className="display-4">Pools</h1>
+          </div>
+          <div className="col">
+            <Link to="/pool/create">
+            <button type="button" class="btn btn-outline-success">
+              Create
+            </button>
+            </Link>
+          </div>
+        </div>
         <div className="row justify-content-around">
           {this.state.pools && this.state.pools.length
             ? this.state.pools.map((pool) => {
                 return (
                   <div className="col-3 float-left">
-                    <Card {...pool} buttonAction={this.handleJoinClick}/>
+                    <Card {...pool} buttonAction={this.handleJoinClick} />
                   </div>
                 );
               })

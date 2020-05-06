@@ -100,7 +100,7 @@ class Navbar extends Component {
                 <Link className="dropdown-item" to="/account">
                   Account
                 </Link>
-                <Link className="dropdown-item" to="">
+                <Link className="dropdown-item" to="/cart">
                   Cart
                 </Link>
               </div>

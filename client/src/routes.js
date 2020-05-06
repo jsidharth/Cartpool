@@ -15,6 +15,7 @@ import AdminProductDV from "./components/Admin/AdminProductDV";
 import AdminStoreHome from "./components/Admin/AdminStoreHome";
 import AdminStoreForm from "./components/Admin/AdminStoreForm";
 import Cart from "./components/Cart/Cart";
+import CreatePool from "./components/CreatePool/CreatePool";
 
 const Routes = () => {
   return (
@@ -31,6 +32,7 @@ const Routes = () => {
       {/* TODO:Change the route to /account/{id} */}
       <Route exact path="/account" component={Account} />
       <Route exact path="/cart" component={Cart} />
+      <Route exact path="/pool/create" component={CreatePool} />
       <Route exact path="/admin/products/add" component={AdminProductForm} />
       <Route exact path="/admin/products/dv/:id" component={AdminProductDV} />
       <Route

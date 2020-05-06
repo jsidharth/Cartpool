@@ -51,6 +51,7 @@ class StoreDetail extends Component {
                 <input
                   type="text"
                   readonly
+                  disabled
                   className="form-control-plaintext"
                   id="staticEmail"
                   value="Costco"
@@ -65,6 +66,7 @@ class StoreDetail extends Component {
                 <input
                   type="text"
                   readonly
+                  disabled
                   className="form-control-plaintext"
                   id="staticEmail"
                   value="101 East"
@@ -79,6 +81,7 @@ class StoreDetail extends Component {
                 <input
                   type="text"
                   readonly
+                  disabled
                   className="form-control-plaintext"
                   id="staticEmail"
                   value="San Jose"
@@ -93,6 +96,7 @@ class StoreDetail extends Component {
                 <input
                   type="text"
                   readonly
+                  disabled
                   className="form-control-plaintext"
                   id="staticEmail"
                   value="California"
