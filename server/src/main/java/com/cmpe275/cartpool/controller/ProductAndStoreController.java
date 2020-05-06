@@ -9,6 +9,8 @@ import com.cmpe275.cartpool.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -145,7 +147,7 @@ public class ProductAndStoreController {
 
     /**
      * Get all the product store mappings
-     * @return AllProcutStoreMapping
+     * @return AllProductStoreMapping
      */
 
     @GetMapping("/productstore")
@@ -157,4 +159,31 @@ public class ProductAndStoreController {
     int deleteProductStoreMapping(@PathVariable int store, @PathVariable int product){
         return productStoreService.deleteProductFromStore(store,product);
     }
+
+
+    //Multi add products to one store
+    @PutMapping("productstore/multiadd")
+    void addProductToMultipleStores(@RequestBody HashMap<String, Object> payload){
+        int product_Id  = Integer.parseInt(payload.get("product").toString());
+        //System.out.println(product_Id);
+        ArrayList<Integer> stores_list = (ArrayList<Integer>) payload.get("stores");
+        //System.out.println(stores_list);
+
+        for(Integer store: stores_list){
+            productStoreService.addProductToStore(store, product_Id);
+        }
+    }
+
+
+    //All products in a store
+    @GetMapping("/productstore/{store_id}")
+        List<ProductStore> getAllProductsInStore(@PathVariable  int store_id){
+        return productStoreService.getAllProductsInStore(store_id);
+    }
+
+    @GetMapping("/productstore/allstores/{product_id}")
+    List<Store> getAllStoresForProduct(@PathVariable int product_id){
+        return productStoreService.getAllStoresForProduct(product_id);
+    }
+
 }

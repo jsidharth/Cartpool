@@ -126,23 +126,23 @@ const updateStore = (payload, ownProps) => async dispatch => {
       `http://${server.domain}:${server.port}/store`,
       payload
     );
-    //console.log("action add products", product);
+    console.log("action updateStore", store);
     //dispatch({ type: actionTypes.SET_PRODUCTS, payload: { products } });
+    toast.success("Store with id " + store.id + " edited");
     dispatch(getStores());
     ownProps.history.push("/admin/stores");
-    toast.success("Store with id " + store.id + " edited");
   } catch (err) {
     toast.error(err.message);
   }
 };
 
-const deleteStoreByName = storeName => async dispatch => {
+const deleteStore = storeId => async dispatch => {
   try {
     await axios.delete(
-      `http://${server.domain}:${server.port}/store/${storeName}`
+      `http://${server.domain}:${server.port}/store/${storeId}`
     );
-    dispatch(getProducts());
-    toast.success("Store  " + storeName + " deleted");
+    dispatch(getStores());
+    toast.success("Store  " + storeId + " deleted");
   } catch (err) {
     toast.error(err.message);
   }
@@ -158,5 +158,5 @@ export {
   getStores,
   getStoreByName,
   updateStore,
-  deleteStoreByName
+  deleteStore
 };

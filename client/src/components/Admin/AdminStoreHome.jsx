@@ -10,9 +10,9 @@ class AdminStoreHome extends Component {
       this.props.getStores();
     }
   }
-  handleDeleteStore(storeName) {
-    alert("delete " + storeName);
-    this.props.deleteStoreByName(storeName);
+  handleDeleteStore(storeId) {
+    //alert("delete " + storeId);
+    this.props.deleteStore(storeId);
   }
 
   render() {
@@ -30,7 +30,6 @@ class AdminStoreHome extends Component {
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Name</th>
-
               <th scope="col">Street</th>
               <th scope="col">City</th>
               <th scope="col">State</th>
@@ -65,7 +64,7 @@ class AdminStoreHome extends Component {
                 </td>
                 <td>
                   <button
-                    onClick={() => this.handleDeleteStore(s.name)}
+                    onClick={() => this.handleDeleteStore(s.id)}
                     className="btn btn-link"
                   >
                     delete
@@ -92,8 +91,8 @@ const mapDispatchToProps = dispatch => ({
   // getProducts: () => {
   //   dispatch(adminActions.getProducts());
   // },
-  deleteStoreByName: storeName => {
-    dispatch(adminActions.deleteStoreByName(storeName));
+  deleteStore: storeId => {
+    dispatch(adminActions.deleteStore(storeId));
   }
 });
 

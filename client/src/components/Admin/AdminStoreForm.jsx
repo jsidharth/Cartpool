@@ -42,6 +42,7 @@ class AdminStoreForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
     if (this.state.edit) {
+      //alert("edit store");
       const data = { ...this.state.data };
       this.props.updateStore(data);
     } else {
@@ -164,10 +165,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  // addProduct: payload => dispatch(adminActions.addProduct(payload, ownProps)),
-  // getProductById: id => dispatch(adminActions.getProductById(id)),
-  // updateProduct: payload =>
-  //   dispatch(adminActions.updateProduct(payload, ownProps))
   addStore: payload => dispatch(adminActions.addStore(payload, ownProps)),
   getStoreByName: storeName => dispatch(adminActions.getStoreByName(storeName)),
   updateStore: payload => dispatch(adminActions.updateStore(payload, ownProps))
