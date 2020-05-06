@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { adminActions } from "../../js/actions";
 import { Link } from "react-router-dom";
+import { MdDeleteForever, MdModeEdit } from "react-icons/md";
+import { BsPlusCircle } from "react-icons/bs";
 
 class AdminProductHome extends Component {
   componentDidMount() {
@@ -24,7 +26,7 @@ class AdminProductHome extends Component {
           to="/admin/products/add"
           className="btn btn-primary float-right m-2"
         >
-          Add Product
+          <BsPlusCircle /> Add Product
         </Link>
         <table className="table">
           <thead>
@@ -34,8 +36,8 @@ class AdminProductHome extends Component {
               <th scope="col">Brand</th>
               <th scope="col">Price</th>
               <th scope="col">Unit</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -58,7 +60,7 @@ class AdminProductHome extends Component {
                     className="btn btn-link"
                     to={`/admin/products/edit/${p.id}`}
                   >
-                    edit
+                    <MdModeEdit />
                   </Link>
                 </td>
                 <td>
@@ -66,7 +68,7 @@ class AdminProductHome extends Component {
                     onClick={() => this.handleDeleteProduct(p.id)}
                     className="btn btn-link"
                   >
-                    delete
+                    <MdDeleteForever />
                   </button>
                 </td>
               </tr>
