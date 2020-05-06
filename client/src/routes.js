@@ -10,6 +10,7 @@ import AdminProductForm from "./components/Admin/AdminProductForm";
 import AdminProductDV from "./components/Admin/AdminProductDV";
 import AdminStoreHome from "./components/Admin/AdminStoreHome";
 import AdminStoreForm from "./components/Admin/AdminStoreForm";
+import Cart from "./components/Cart/Cart";
 
 const Routes = () => {
   return (
@@ -18,6 +19,7 @@ const Routes = () => {
       <Route exact path="/signin" component={SignIn} />
       <Route exact path="/signup" component={Signup} />
       <Route exact path="/home" component={Home} />
+      <Route exact path="/cart" component={Cart} />
       <Route exact path="/admin/products/add" component={AdminProductForm} />
       <Route exact path="/admin/products/dv/:id" component={AdminProductDV} />
       <Route
