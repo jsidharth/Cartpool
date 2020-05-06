@@ -81,4 +81,18 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepo.findById(id).get();
         return ordersRepo.findByOrderedByUser(user);
     }
+
+    /*
+    @Override
+    public List<Orders> getOrdersByPoolId(int id) {
+        return ordersRepo.findByPoolId(id);
+    }
+
+
+    @Override
+    public List<Orders> getUnassignedOrders(int id){
+        return ordersRepo.findAllByAssignedToUserIsNullAndPoolId(id);
+    }
+
+    */
 }

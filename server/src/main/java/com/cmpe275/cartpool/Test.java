@@ -45,7 +45,7 @@ public class Test {
         return productStoreRepo.findAll();
     }
 */
-
+/*
     @GetMapping("/get")
     public List<ProductStore> getProducts(){
        return productStoreRepo.findAll();
@@ -91,5 +91,5 @@ public class Test {
         return saved_order;
 
     }
-
+*/
 }

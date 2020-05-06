@@ -1,7 +1,6 @@
 package com.cmpe275.cartpool.controller;
 
 import com.cmpe275.cartpool.entities.Orders;
-import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -65,4 +64,24 @@ public class OrderController {
     public List<Orders> getOrderByUserId(@PathVariable int id){
         return orderService.getOrdersByUserId(id);
     }
+
+    /**
+     * Get orders for a pool
+     * @param id
+     * @return
+     */
+    /*
+    @GetMapping("/orders/pool/{id}")
+    public List<Orders> getOrderByPoolId(@PathVariable int id){
+        return orderService.getOrdersByPoolId(id);
+    }*/
+
+    /*
+    //Get all orders that are unassigned
+    @GetMapping("orders/unassigned/{pool_id}")
+    public List<Orders> getUnassignedOrders(@PathVariable int pool_id){
+        return orderService.getUnassignedOrders(pool_id);
+    }
+    */
+
 }

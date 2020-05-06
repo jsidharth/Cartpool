@@ -17,4 +17,11 @@ public interface OrderService {
     int deleteById(int id);
 
     List<Orders> getOrdersByUserId(int id);
+
+    //List<Orders> getOrdersByPoolId(int id);
+
+    /*
+    List<Orders> getUnassignedOrders(int id);
+    */
 }
+
