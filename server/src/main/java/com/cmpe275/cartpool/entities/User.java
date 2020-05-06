@@ -33,8 +33,8 @@ public class User {
     @OneToMany(mappedBy = "orderedByUser")
     private List<Orders> ordersPlaced;
 
-    public User() {
-    }
+    public User(){}
+
     public User(String screenName, String nickName, String email, Role role, Boolean isVerified, String imgUrl, Integer credit, String street, String city, String state, String zip) {
         this.screenName = screenName;
         this.nickName = nickName;
@@ -48,6 +48,7 @@ public class User {
         this.state = state;
         this.zip = zip;
     }
+
 
     public List<Orders> getOrdersPlaced() {
         return ordersPlaced;

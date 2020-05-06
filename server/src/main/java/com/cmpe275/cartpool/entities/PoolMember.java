@@ -1,6 +1,7 @@
 package com.cmpe275.cartpool.entities;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 
 @Entity
 public class PoolMember {
@@ -29,6 +30,14 @@ public class PoolMember {
         this.isRefApproved = isRefApproved;
         this.isPlApproved = isPlApproved;
         this.pool = pool;
+    }
+
+    public PoolMember(Pool pool, User user, int reference, Boolean isRefApproved, Boolean isPlApproved) {
+        this.pool = pool;
+        this.user = user;
+        this.reference = reference;
+        this.isRefApproved = isRefApproved;
+        this.isPlApproved = isPlApproved;
     }
 
     public User getUser() {

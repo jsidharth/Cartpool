@@ -32,10 +32,12 @@ public class Pool {
     @OneToMany(mappedBy = "pool")
     private List<Orders> ordersInPool;
 
-    public Pool() {
+    public Pool(){
+
     }
 
-    public Pool(String id, String name, String neighbourhood, String description, String zip) {
+    public Pool(User poolLeader,String id, String name, String neighbourhood, String description, String zip) {
+        this.poolLeader = poolLeader;
         this.id = id;
         this.name = name;
         this.neighbourhood = neighbourhood;
