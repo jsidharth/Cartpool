@@ -1,2 +1,3 @@
 import * as authActions from "./authActions.js";
-export { authActions };
+import * as adminActions from "./adminActions.js";
+export { authActions, adminActions };

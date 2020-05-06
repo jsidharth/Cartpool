@@ -3,6 +3,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { authActions } from "./../../js/actions/index";
 import { FcGoogle } from "react-icons/fc";
+<<<<<<< HEAD
+=======
+import { ToastContainer } from "react-toastify";
+>>>>>>> db8d55d0599f963f8fbbe19bcf51f0a6aff9ad76
 
 class Signup extends Component {
   constructor(props) {
@@ -12,17 +16,17 @@ class Signup extends Component {
       lastName: "",
       nickName: "",
       email: "",
-      password: "",
+      password: ""
     };
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
-  signUp = (e) => {
+  signUp = e => {
     e.preventDefault();
     const payload = this.state;
     this.props.signUp(payload);
@@ -33,7 +37,9 @@ class Signup extends Component {
       <div className="signupContainer">
         <div className="signupCard card shadow p-2">
           <div className="card-body">
-            <label className="font-weight-bold">Register your Cartpool Account.</label>
+            <label className="font-weight-bold">
+              Register your Cartpool Account.
+            </label>
             <div className="input-group mb-3">
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon1">
@@ -143,8 +149,8 @@ class Signup extends Component {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  signUp: (payload) => dispatch(authActions.signUp(payload, ownProps)),
-  googleSignUp: () => dispatch(authActions.googleSignUp(ownProps)),
+  signUp: payload => dispatch(authActions.signUp(payload, ownProps)),
+  googleSignUp: () => dispatch(authActions.googleSignUp(ownProps))
 });
 
 export default connect(null, mapDispatchToProps)(Signup);
