@@ -1,18 +1,14 @@
 import React, { Component } from "react";
-import Card from "../Card/Card";
+import PoolCard from "../Pool/PoolCard";
 import { Link } from "react-router-dom";
 
 class BrowsePool extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
   state = {
-    showJoinPoolOptModal: false,
     pools: [
       {
         id: "1",
         name: "Pool 1",
-        desc: "101 San Fernando",
+        description: "101 San Fernando",
         count: "3 members",
         imageUrl: "",
         buttonText: "Join Pool",
@@ -20,7 +16,7 @@ class BrowsePool extends Component {
       {
         id: "2",
         name: "Pool 2",
-        desc: "101 San Fernando",
+        description: "101 San Fernando",
         count: "4 members",
         imageUrl: "",
         buttonText: "Join Pool",
@@ -28,7 +24,7 @@ class BrowsePool extends Component {
       {
         id: "3",
         name: "Pool 3",
-        desc: "101 San Fernando",
+        description: "101 San Fernando",
         count: "4 members",
         imageUrl: "",
         buttonText: "Join Pool",
@@ -56,7 +52,7 @@ class BrowsePool extends Component {
             ? this.state.pools.map((pool) => {
                 return (
                   <div className="col-3 float-left">
-                    <Card {...pool} buttonAction={this.handleJoinClick} />
+                    <PoolCard {...pool} buttonAction={this.handleJoinClick} />
                   </div>
                 );
               })

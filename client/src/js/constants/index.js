@@ -7,7 +7,7 @@ const actionTypes = {
   SET_CURRENT_STORE: "SET_CURRENT_STORE",
   SET_STORES_WITH_PRODUCT: "SET_STORES_WITH_PRODUCT",
   SET_USER: "SET_USER",
-  SET_POOLS: "SET_POOLS"
+  SET_POOLS: "SET_POOLS",
 };
 
 export default actionTypes;
