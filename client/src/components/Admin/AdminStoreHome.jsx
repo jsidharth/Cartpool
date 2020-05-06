@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { adminActions } from "../../js/actions";
 import { Link } from "react-router-dom";
+import { MdDeleteForever, MdModeEdit } from "react-icons/md";
+import { BsPlusCircle } from "react-icons/bs";
 
 class AdminStoreHome extends Component {
   //state = {};
@@ -23,7 +25,7 @@ class AdminStoreHome extends Component {
           to="/admin/stores/add"
           className="btn btn-primary float-right m-2"
         >
-          Add Store
+          <BsPlusCircle /> Add Store
         </Link>
         <table className="table">
           <thead>
@@ -34,8 +36,8 @@ class AdminStoreHome extends Component {
               <th scope="col">City</th>
               <th scope="col">State</th>
               <th scope="col">Zip</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -59,7 +61,7 @@ class AdminStoreHome extends Component {
                     className="btn btn-link"
                     to={`/admin/stores/edit/${s.name}`}
                   >
-                    edit
+                    <MdModeEdit />
                   </Link>
                 </td>
                 <td>
@@ -67,7 +69,7 @@ class AdminStoreHome extends Component {
                     onClick={() => this.handleDeleteStore(s.id)}
                     className="btn btn-link"
                   >
-                    delete
+                    <MdDeleteForever />
                   </button>
                 </td>
               </tr>

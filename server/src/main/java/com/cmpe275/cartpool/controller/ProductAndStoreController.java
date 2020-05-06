@@ -162,7 +162,7 @@ public class ProductAndStoreController {
 
 
     //Multi add products to one store
-    @PutMapping("productstore/multiadd")
+    @PostMapping("productstore/multiadd")
     void addProductToMultipleStores(@RequestBody HashMap<String, Object> payload){
         int product_Id  = Integer.parseInt(payload.get("product").toString());
         //System.out.println(product_Id);

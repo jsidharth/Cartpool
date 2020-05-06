@@ -25,7 +25,7 @@ const addProduct = (payload, ownProps) => async dispatch => {
     console.log("action add products", product);
     //dispatch({ type: actionTypes.SET_PRODUCTS, payload: { products } });
     dispatch(getProducts());
-    ownProps.history.push("/admin/products");
+    ownProps.history.push(`/admin/products/dv/${product.id}`);
 
     toast.success("Product added with id " + product.id);
   } catch (err) {
@@ -148,6 +148,38 @@ const deleteStore = storeId => async dispatch => {
   }
 };
 
+const getStoresWithProduct = productId => async dispatch => {
+  try {
+    const { data: stores } = await axios.get(
+      `http://${server.domain}:${server.port}/productstore/allstores/${productId}`
+    );
+    console.log("action getStoresWithProduct", stores);
+    //toast.success("Product added with id" + product.id);
+    dispatch({
+      type: actionTypes.SET_STORES_WITH_PRODUCT,
+      payload: { stores }
+    });
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const addProductToStore = (payload, productId) => async dispatch => {
+  try {
+    await axios.post(
+      `http://${server.domain}:${server.port}/productstore/multiadd`,
+      payload
+    );
+
+    dispatch(getStores());
+    dispatch(getStoresWithProduct(productId));
+
+    toast.success("Product added to the Stores ");
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
 export {
   getProducts,
   addProduct,
@@ -158,5 +190,7 @@ export {
   getStores,
   getStoreByName,
   updateStore,
-  deleteStore
+  deleteStore,
+  getStoresWithProduct,
+  addProductToStore
 };
