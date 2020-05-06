@@ -3,10 +3,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { authActions } from "./../../js/actions/index";
 import { FcGoogle } from "react-icons/fc";
-<<<<<<< HEAD
-=======
-import { ToastContainer } from "react-toastify";
->>>>>>> db8d55d0599f963f8fbbe19bcf51f0a6aff9ad76
 
 class Signup extends Component {
   constructor(props) {
