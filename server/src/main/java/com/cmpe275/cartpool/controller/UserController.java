@@ -4,6 +4,7 @@ import com.cmpe275.cartpool.entities.Role;
 import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.services.EmailService;
 import com.cmpe275.cartpool.services.UserService;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.firebase.auth.FirebaseToken;
 import com.sun.mail.iap.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +36,22 @@ public class UserController {
             return new ResponseEntity<>("Screen name exisits", HttpStatus.BAD_REQUEST);
         }
         //Assign role here
-        user.setRole(Role.USER);
+        if (user.getEmail().endsWith("@sjsu.edu")){
+            user.setRole(Role.ADMIN);
+        } else {
+            user.setRole(Role.USER);
+        }
         userService.createUser(user);
         return ResponseEntity.ok("user created");
     }
 
     @GetMapping("/user")
-    public ResponseEntity<String> getUser(User user) {
+    public ResponseEntity getUser(User user) {
+        System.out.println("Getting user at controller"+ user.getEmail());
         user = userService.getUserByEmail(user.getEmail());
         //TODO check json ignores
-        return ResponseEntity.ok(user.toString());
+        System.out.println("After search in repo"+ user.getEmail() + user.getScreenName());
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/users")
@@ -57,7 +64,7 @@ public class UserController {
     @PutMapping("/user")
     public ResponseEntity updateUser(User user, @RequestBody User updatedUser){
         //Can only update the nickname and all that
-        if (user.getNickName() != updatedUser.getNickName()){
+        if (!user.getNickName().equals(updatedUser.getNickName())){
             if (userService.getUserByNickName(updatedUser.getNickName())!= null){
                 return new ResponseEntity<>("This nickname exists", HttpStatus.BAD_REQUEST);
             }
@@ -66,9 +73,10 @@ public class UserController {
         user.setCity(updatedUser.getCity());
         user.setStreet(updatedUser.getStreet());
         user.setState(updatedUser.getState());
-        user.setState(updatedUser.getZip());
+        user.setZip(updatedUser.getZip());
+        user.setImgUrl(updatedUser.getImgUrl());
         user = userService.createUser(user);
-        return ResponseEntity.ok(user.toString());
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/sendMail")

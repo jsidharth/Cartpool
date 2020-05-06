@@ -1,6 +1,7 @@
 package com.cmpe275.cartpool.services;
 
 import com.cmpe275.cartpool.entities.Pool;
+import com.cmpe275.cartpool.entities.PoolMember;
 import com.cmpe275.cartpool.entities.User;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,6 @@ public interface PoolService {
     List<Pool> getPools();
     Pool getPoolByName(String poolName);
     Pool getPoolById(String Id);
-    void addToPool(Pool pool, User user) throws IllegalArgumentException, UnsupportedOperationException;
+    void addToPool(Pool pool, User user, PoolMember poolMember) throws IllegalArgumentException, UnsupportedOperationException;
     void deletePool(Pool pool);
 }

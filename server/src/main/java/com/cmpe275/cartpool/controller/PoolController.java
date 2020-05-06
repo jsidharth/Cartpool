@@ -13,8 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class PoolController {
 
@@ -31,6 +34,7 @@ public class PoolController {
     EmailService emailService;
 
     @PostMapping("/pool")
+    @Transactional
     public ResponseEntity createPool( User user, @RequestBody Pool pool)
     {
         //check if this user is already having a pool
@@ -51,16 +55,41 @@ public class PoolController {
         //create a poolmember object
         pool = poolService.createPool(pool);
         pool.setPoolLeader(user);
-        poolService.createPool(pool);
-        poolService.addToPool(pool,user);
+        pool = poolService.createPool(pool);
         PoolMember poolMember = new PoolMember(user, 0, true, true, pool);
-        poolMemberService.createPoolMember(poolMember);
+        poolMember = poolMemberService.createPoolMember(poolMember);
+        poolService.addToPool(pool,user,poolMember);
         return ResponseEntity.ok("created pool");
+    }
+
+    @PutMapping("/pool")
+    @Transactional
+    public ResponseEntity editPool( User user, @RequestBody Pool pool)
+    {
+        if (pool.getPoolLeader() == user){
+            Pool poolUpdated = poolService.getPoolById(pool.getId());
+            poolUpdated.setName(pool.getName());
+            poolUpdated.setNeighbourhood(pool.getNeighbourhood());
+            poolUpdated.setDescription(pool.getDescription());
+            poolUpdated = poolService.createPool(poolUpdated);
+            return ResponseEntity.ok(poolUpdated);
+        } else {
+            return new ResponseEntity<>("You are not admin of this pool", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping("/pools")
     public ResponseEntity getPools(User user) {
-            return ResponseEntity.ok(poolService.getPools());
+
+         List<Pool> pools = poolService.getPools();
+         for (Pool pool: pools){
+             List<String> memberNickNames = new ArrayList<>();
+             for(PoolMember poolMember: pool.getPoolMembers()){
+                 memberNickNames.add(poolMember.getUser().getNickName());
+             }
+             pool.setUserNickNamesTransient(memberNickNames);
+         }
+         return ResponseEntity.ok(pools);
     }
 
     @PostMapping("/joinpool")
@@ -128,7 +157,17 @@ public class PoolController {
         //Return current users pool
         if (user.getPoolMember() != null ){
             Pool pool = user.getPoolMember().getPool();
-            return ResponseEntity.ok(poolService.getPoolById(pool.getId()));
+            List<String> memberNickNames = new ArrayList<>();
+            List<String> memberScreenNames = new ArrayList<>();
+            for(PoolMember poolMember: pool.getPoolMembers()){
+                memberNickNames.add(poolMember.getUser().getNickName());
+                memberScreenNames.add(poolMember.getUser().getScreenName());
+            }
+            pool.setUserNickNamesTransient(memberNickNames);
+            pool.setUserScreenNamesTransient(memberScreenNames);
+            String leaderScreenName = pool.getPoolLeader().getScreenName();
+            pool.setPoolLeaderScreenNameTransient(leaderScreenName);
+            return ResponseEntity.ok(pool);
         } else {
             return new ResponseEntity<>("No pools found", HttpStatus.NOT_FOUND);
         }

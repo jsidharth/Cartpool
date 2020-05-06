@@ -19,9 +19,41 @@ public class Pool {
     private String description;
     private String zip;
 
+    public List<String> getUserNickNamesTransient() {
+        return userNickNamesTransient;
+    }
+
+    public void setUserNickNamesTransient(List<String> userNickNamesTransient) {
+        this.userNickNamesTransient = userNickNamesTransient;
+    }
+
+    @Transient
+    private List<String> userNickNamesTransient;
+
+    public List<String> getUserScreenNamesTransient() {
+        return userScreenNamesTransient;
+    }
+
+    public void setUserScreenNamesTransient(List<String> userScreenNamesTransient) {
+        this.userScreenNamesTransient = userScreenNamesTransient;
+    }
+
+    @Transient
+    private List<String> userScreenNamesTransient;
+
+    public String getPoolLeaderScreenNameTransient() {
+        return poolLeaderScreenNameTransient;
+    }
+
+    public void setPoolLeaderScreenNameTransient(String poolLeaderScreenNameTransient) {
+        this.poolLeaderScreenNameTransient = poolLeaderScreenNameTransient;
+    }
+
+    @Transient
+    private String poolLeaderScreenNameTransient;
 
     @OneToOne
-    @JsonIgnoreProperties({"poolMember", "assignedOrders", "orderedByUser"})
+    @JsonIgnoreProperties({"screenName","poolMember", "assignedOrders", "orderedByUser"})
     @JoinColumn(name = "poolLeader",referencedColumnName = "id")
     private User poolLeader;
 

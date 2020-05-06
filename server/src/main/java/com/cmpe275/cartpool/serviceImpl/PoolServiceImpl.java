@@ -9,6 +9,7 @@ import com.cmpe275.cartpool.services.PoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,19 +44,31 @@ public class PoolServiceImpl implements PoolService {
     }
 
     @Override
-    public void addToPool(Pool pool, User user) {
+    @Transactional
+    public void addToPool(Pool pool, User user, PoolMember poolMember_tosave) {
         //check number of users is 4
-        if (pool.getPoolMembers().size() <4) {
+        System.out.println("At add to pool"+pool);
+        System.out.println("At add to pool user"+pool);
+        if (pool.getPoolMembers()!=null) {
+            if (pool.getPoolMembers().size() <4 ) {
+                //check if this user is already part of a pool
+                PoolMember poolMember = user.getPoolMember();
+                if (poolMember != null) {
+                    throw new IllegalArgumentException();
+                } else {
+                    poolMemberRepo.save(poolMember_tosave);
+                }
+            } else {
+                throw new UnsupportedOperationException();
+            }
+        } else {
             //check if this user is already part of a pool
             PoolMember poolMember = user.getPoolMember();
             if (poolMember != null) {
                 throw new IllegalArgumentException();
             } else {
-                poolMember = new PoolMember(user, user.getId(), false, false, pool);
-                poolMemberRepo.save(poolMember);
+                poolMemberRepo.save(poolMember_tosave);
             }
-        } else {
-            throw new UnsupportedOperationException();
         }
     }
 
