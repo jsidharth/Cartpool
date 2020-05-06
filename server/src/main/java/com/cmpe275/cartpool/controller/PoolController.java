@@ -60,12 +60,7 @@ public class PoolController {
 
     @GetMapping("/pools")
     public ResponseEntity getPools(User user) {
-        //Check if admin then return pools
-        if (user.getRole() == Role.ADMIN){
             return ResponseEntity.ok(poolService.getPools());
-        } else {
-            return new ResponseEntity<>("Not admin", HttpStatus.UNAUTHORIZED);
-        }
     }
 
     @PostMapping("/joinpool")
@@ -132,7 +127,8 @@ public class PoolController {
     public ResponseEntity getPool(User user) {
         //Return current users pool
         if (user.getPoolMember() != null ){
-            return ResponseEntity.ok(user.getPoolMember().getPool());
+            Pool pool = user.getPoolMember().getPool();
+            return ResponseEntity.ok(poolService.getPoolById(pool.getId()));
         } else {
             return new ResponseEntity<>("No pools found", HttpStatus.NOT_FOUND);
         }

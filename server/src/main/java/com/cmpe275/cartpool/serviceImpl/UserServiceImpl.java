@@ -42,4 +42,10 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepo.findByScreenName(screenName);
         return user.orElse(null);
     }
+
+    @Override
+    public User getUserByNickName(String nickName) {
+        Optional<User> user = userRepo.findByNickName(nickName);
+        return user.orElse(null);
+    }
 }

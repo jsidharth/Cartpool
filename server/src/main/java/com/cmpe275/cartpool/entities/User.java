@@ -1,5 +1,7 @@
 package com.cmpe275.cartpool.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class User {
     private String state;
     private String zip;
     @OneToOne(mappedBy = "user")
+    @JsonIgnoreProperties("user")
     private PoolMember poolMember;
 
     @OneToMany(mappedBy = "assignedToUser")

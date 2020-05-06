@@ -21,11 +21,13 @@ public class Pool {
 
 
     @OneToOne
+    @JsonIgnoreProperties({"poolMember", "assignedOrders", "orderedByUser"})
     @JoinColumn(name = "poolLeader",referencedColumnName = "id")
     private User poolLeader;
 
 
     @OneToMany(mappedBy = "pool")
+    @JsonIgnoreProperties({"user", "pool"})
     private List<PoolMember> poolMembers;
 
 

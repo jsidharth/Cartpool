@@ -11,4 +11,5 @@ public interface UserService {
     User getUserById(Integer id);
     User getUserByEmail(String email);
     User getUserByScreenName(String screenName);
+    User getUserByNickName(String nickName);
 }
