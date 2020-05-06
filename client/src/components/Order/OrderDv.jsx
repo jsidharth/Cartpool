@@ -4,7 +4,7 @@ class OrderDv extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="card">
+        <div className="card shadow">
           <div className="card-body">
             <span className="badge badge-success float-right">
               Order placed
