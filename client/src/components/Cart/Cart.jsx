@@ -3,19 +3,19 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
 import { orderActions } from "./../../js/actions/index";
-
+import { Link } from "react-router-dom";
 class Cart extends Component {
   state = {};
 
-  placeOrder = (total) => {
+  placeOrder = total => {
     const payload = {
       userId: this.props.userId,
       storeId: this.props.cart.storeId,
-      productStore: this.props.cart.products.map((product) => ({
+      productStore: this.props.cart.products.map(product => ({
         productStoreId: product.psId,
-        quantity: product.qty,
+        quantity: product.qty
       })),
-      total,
+      total
     };
     this.props.placeOrder(payload);
   };
@@ -36,7 +36,25 @@ class Cart extends Component {
       _.isEmpty(this.props.cart) ||
       (this.props.cart.products && !this.props.cart.products.length)
     )
-      return <p>No Items in cart</p>;
+      return (
+        <React.Fragment>
+          <div className="row mt-5">
+            <div className="col-3"></div>
+            <div className="col-3">
+              <h3 className="mt-2">
+                Your cart is empty! Go to{" "}
+                <Link to="/browse/stores">Stores</Link> to load you cart!
+              </h3>
+              <img
+                className="mt-4"
+                max-width="100%"
+                height="400px"
+                src="https://cdn.clipart.email/78ffbbe139f46a8955cfbd340b425db2_shopping-cart-clip-art-free-sketch-coloring-page-printable-_650-680.gif"
+              />
+            </div>
+          </div>
+        </React.Fragment>
+      );
     const { cart } = this.props;
     const total = cart.products.reduce((total, p) => {
       return (total += _.round(p.qty * p.price, 2));
@@ -55,7 +73,7 @@ class Cart extends Component {
           </div>
 
           <ul className="list-group list-group-flush">
-            {this.props.cart.products.map((p) => (
+            {this.props.cart.products.map(p => (
               <li className="list-group-item">
                 <div className="row">
                   <div className="col">
@@ -119,15 +137,16 @@ class Cart extends Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   cart: state.orderReducer.cart,
-  userId: state.auth.user.id,
+  userId: state.auth.user.id
 });
 const mapDisPatchToProps = (dispatch, ownProps) => ({
   modifyProductQntyInCart: (productId, cart, step) =>
     dispatch(orderActions.modifyProductQntyInCart(productId, cart, step)),
   deleteProductFromCart: (productId, cart) =>
     dispatch(orderActions.deleteProductFromCart(productId, cart)),
-  placeOrder: (orderDetails) => dispatch(orderActions.placeOrder(orderDetails, ownProps)),
+  placeOrder: orderDetails =>
+    dispatch(orderActions.placeOrder(orderDetails, ownProps))
 });
 export default withRouter(connect(mapStateToProps, mapDisPatchToProps)(Cart));

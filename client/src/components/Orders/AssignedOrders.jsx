@@ -10,8 +10,8 @@ class AssignedOrders extends Component {
     this.props.getAssignedOrders();
   }
 
-  goToOrderDetail = (orderId) => {
-      this.props.history.push(`/order/dv/${orderId}?assigned=true`)
+  goToOrderDetail = orderId => {
+    this.props.history.push(`/order/dv/${orderId}?assigned=true`);
   };
 
   render() {
@@ -22,13 +22,13 @@ class AssignedOrders extends Component {
         <hr />
         <div className="row ">
           {this.props.assignedOrders && this.props.assignedOrders.length
-            ? this.props.assignedOrders.map((order) => {
+            ? this.props.assignedOrders.map(order => {
                 return (
-                  <div className="col-3 float-left m-3">
+                  <div className="col-3 float-left mt-3">
                     <OrderCard
                       {...order}
                       goToOrderDetail={this.goToOrderDetail}
-                      buttonText = "Checkout"
+                      buttonText="Checkout"
                     />
                   </div>
                 );
@@ -39,10 +39,12 @@ class AssignedOrders extends Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
-  assignedOrders: state.orderReducer.assignedOrders,
+const mapStateToProps = state => ({
+  assignedOrders: state.orderReducer.assignedOrders
 });
-const mapDispatchToProps = (dispatch) => ({
-  getAssignedOrders: () => dispatch(orderActions.getAssignedOrders()),
+const mapDispatchToProps = dispatch => ({
+  getAssignedOrders: () => dispatch(orderActions.getAssignedOrders())
 });
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AssignedOrders));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AssignedOrders)
+);

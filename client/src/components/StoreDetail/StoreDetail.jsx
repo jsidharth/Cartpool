@@ -16,11 +16,11 @@ class StoreDetail extends Component {
     if (!store) return <p>Loading Store {this.props.match.params.storeName}</p>;
     return (
       <div>
-        <div className="row mt-5 justify-content-center">
+        <div className="row mt-3">
           <div className="col-4">
             <img
               src={store.logoUrl}
-              className="rounded float-left img-thumbnail"
+              className=" img-fluid  float-left "
               alt="..."
             />
           </div>
@@ -54,7 +54,7 @@ class StoreDetail extends Component {
         <div className="row ">
           {this.props.productsInStore &&
             this.props.productsInStore.length &&
-            this.props.productsInStore.map((ps) => {
+            this.props.productsInStore.map(ps => {
               return (
                 <div className="col-4 float-left ">
                   <ProductCard
@@ -72,18 +72,17 @@ class StoreDetail extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   currentStore: state.adminReducer.currentStore,
-  productsInStore: state.adminReducer.productsInStore,
+  productsInStore: state.adminReducer.productsInStore
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  getStoreByName: (storeName) =>
-    dispatch(adminActions.getStoreByName(storeName)),
+const mapDispatchToProps = dispatch => ({
+  getStoreByName: storeName => dispatch(adminActions.getStoreByName(storeName)),
   // getStoresWithProduct: productId =>
   //   dispatch(adminActions.getStoresWithProduct(productId)),
-  getProductsInStore: (productId) =>
-    dispatch(adminActions.getProductsInStore(productId)),
+  getProductsInStore: productId =>
+    dispatch(adminActions.getProductsInStore(productId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StoreDetail);
