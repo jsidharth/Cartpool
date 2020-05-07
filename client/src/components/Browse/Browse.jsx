@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Card from "../Card/Card";
 import { connect } from "react-redux";
 import { adminActions } from "../../js/actions";
-
+import { withRouter } from "react-router-dom";
 class Browse extends Component {
   state = {
     stores: [
@@ -11,23 +11,23 @@ class Browse extends Component {
         name: "Costco",
         desc: "101 San Fernando",
         imageUrl: "",
-        buttonText: "Shop"
+        buttonText: "Shop",
       },
       {
         id: "2",
         name: "Safeway",
         desc: "101 San Fernando",
         imageUrl: "",
-        buttonText: "Shop"
+        buttonText: "Shop",
       },
       {
         id: "3",
         name: "Walmart",
         desc: "101 San Fernando",
         imageUrl: "",
-        buttonText: "Shop"
-      }
-    ]
+        buttonText: "Shop",
+      },
+    ],
   };
 
   componentDidMount() {
@@ -46,7 +46,7 @@ class Browse extends Component {
         <hr />
         <div className="row ">
           {this.props.stores && this.props.stores.length
-            ? this.props.stores.map(store => {
+            ? this.props.stores.map((store) => {
                 return (
                   <div className="col-3 float-left m-3">
                     <Card
@@ -65,14 +65,14 @@ class Browse extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  stores: state.adminReducer.stores
+const mapStateToProps = (state) => ({
+  stores: state.adminReducer.stores,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getStores: () => {
     dispatch(adminActions.getStores());
-  }
+  },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Browse);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Browse));

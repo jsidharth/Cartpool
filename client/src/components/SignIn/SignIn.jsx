@@ -2,35 +2,36 @@ import "./style.css";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { authActions } from "../../js/actions";
-
 
 class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: ''
+      email: "",
+      password: "",
     };
   }
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  signIn = e => {
+  signIn = (e) => {
     e.preventDefault();
     const payload = this.state;
     this.props.signIn(payload);
-  }
+  };
   render() {
     return (
       <div className="signinContainer">
         <div className="signinCard card shadow p-2">
           <div className="card-body">
-            <label className="font-weight-bold">Sign in with your Cartpool Account.</label>
+            <label className="font-weight-bold">
+              Sign in with your Cartpool Account.
+            </label>
             <div className="input-group mb-3">
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon1">
@@ -44,7 +45,7 @@ class SignIn extends Component {
                 placeholder="Email"
                 aria-label="Email"
                 aria-describedby="basic-addon1"
-                onChange = {this.handleChange}
+                onChange={this.handleChange}
               />
             </div>
             <div className="input-group mb-3">
@@ -60,17 +61,28 @@ class SignIn extends Component {
                 placeholder="Password"
                 aria-label="Password"
                 aria-describedby="basic-addon1"
-                onChange = {this.handleChange}
+                onChange={this.handleChange}
               />
             </div>
             <div className="input-group mb-3">
-              <button type="button" className="btn btn-outline-success btn-block" onClick={this.signIn}>
+              <button
+                type="button"
+                className="btn btn-outline-success btn-block"
+                onClick={this.signIn}
+              >
                 Sign In
               </button>
             </div>
             <div className="input-group mb-3">
-              <button type="button" className="btn btn-outline-success btn-block" onClick={this.props.googleSignIn}>
-              <span><FcGoogle/></span> Google Sign In
+              <button
+                type="button"
+                className="btn btn-outline-success btn-block"
+                onClick={this.props.googleSignIn}
+              >
+                <span>
+                  <FcGoogle />
+                </span>{" "}
+                Google Sign In
               </button>
             </div>
             <div>
@@ -83,9 +95,9 @@ class SignIn extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch,ownProps) => ({
-  signIn: payload => dispatch(authActions.signIn(payload, ownProps)),
-  googleSignIn: () => dispatch(authActions.googleSignIn(ownProps))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  signIn: (payload) => dispatch(authActions.signIn(payload, ownProps)),
+  googleSignIn: () => dispatch(authActions.googleSignIn(ownProps)),
 });
 
-export default connect(null, mapDispatchToProps)(SignIn);
+export default withRouter(connect(null, mapDispatchToProps)(SignIn));

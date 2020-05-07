@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import server from "./../../config/server";
 
-const signUp = (userDetails, ownProps) => async (dispatch) => {
+const signUp = (userDetails, ownProps) => async dispatch => {
   try {
     const { email, password, ...details } = userDetails;
     // Sign Up user
@@ -14,7 +14,7 @@ const signUp = (userDetails, ownProps) => async (dispatch) => {
     const userPayload = {
       email,
       screenName: `${details.firstName} ${details.lastName}`,
-      nickName: details.nickName,
+      nickName: details.nickName
     };
     await axios.post(
       `http://${server.domain}:${server.port}/user`,
@@ -23,11 +23,11 @@ const signUp = (userDetails, ownProps) => async (dispatch) => {
     ownProps.history.push("/signin");
     toast.success("Signup Sucess! Please verfiy your email!");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
-const signIn = (payload, ownProps) => async (dispatch) => {
+const signIn = (payload, ownProps) => async dispatch => {
   try {
     const { email, password } = payload;
     await firebase.auth().signInWithEmailAndPassword(email, password);
@@ -39,43 +39,45 @@ const signIn = (payload, ownProps) => async (dispatch) => {
     dispatch({
       type: actionTypes.SET_USER,
       payload: {
-        user: user.data,
-      },
+        user: user.data
+      }
     });
     const { role } = user.data;
+    console.log(role);
     if (role === "USER") {
       ownProps.history.push("/browse/stores");
     } else {
       ownProps.history.push("/admin/stores");
     }
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
-const signOut = () => async (dispatch) => {
+const signOut = (ownProps) => async (dispatch) => {
   try {
     await firebase.auth().signOut();
     localStorage.removeItem("idToken");
     localStorage.removeItem("state");
     dispatch({
       type: actionTypes.CLEAR_USER,
-      payload: {},
+      payload: {}
     });
+    ownProps.history.push("/");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 //TODO: Check if we can remove this
-const googleSignUp = (ownProps) => async (dispatch) => {
+const googleSignUp = ownProps => async dispatch => {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
     await firebase.auth().signInWithPopup(provider);
     dispatch({
       type: actionTypes.SIGNUP_SUCCESS,
       payload: {
-        signup: true,
-      },
+        signup: true
+      }
     });
     ownProps.history.push("/signin");
   } catch (err) {
@@ -83,7 +85,7 @@ const googleSignUp = (ownProps) => async (dispatch) => {
   }
 };
 
-const googleSignIn = (ownProps) => async (dispatch) => {
+const googleSignIn = ownProps => async dispatch => {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
     const signedInUser = await firebase.auth().signInWithPopup(provider);
@@ -91,8 +93,8 @@ const googleSignIn = (ownProps) => async (dispatch) => {
     dispatch({
       type: actionTypes.SIGNIN_SUCCESS,
       payload: {
-        user: signedInUser,
-      },
+        user: signedInUser
+      }
     });
     ownProps.history.push("/home");
   } catch (err) {

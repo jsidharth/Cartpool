@@ -15,12 +15,13 @@ class BrowsePool extends Component {
   }
 
   requestPoolLeader = id => {
-    alert(id);
+    //alert(id);
     this.props.requestToJoinPool(id, "");
   };
 
-  requestPoolMember = e => {
-    e.preventDefault();
+  requestPoolMember = (id, screenName) => {
+    //alert(id + " - " + screenName);
+    this.props.requestToJoinPool(id, screenName);
   };
 
   render() {

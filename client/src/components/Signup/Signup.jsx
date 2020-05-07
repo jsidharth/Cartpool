@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { authActions } from "./../../js/actions/index";
 import { FcGoogle } from "react-icons/fc";
-
+import {withRouter} from "react-router-dom";
 class Signup extends Component {
   constructor(props) {
     super(props);
@@ -149,4 +149,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   googleSignUp: () => dispatch(authActions.googleSignUp(ownProps))
 });
 
-export default connect(null, mapDispatchToProps)(Signup);
+export default withRouter(connect(null, mapDispatchToProps)(Signup));

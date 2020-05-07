@@ -30,6 +30,11 @@ public class OrderServiceImpl implements OrderService {
     StoreRepo storeRepo;
 
     @Override
+    public Orders getOrderById(int id) {
+        return ordersRepo.findById(id).get();
+    }
+
+    @Override
     public Orders addOrder(Orders order) {
         return ordersRepo.save(order);
     }
@@ -128,6 +133,18 @@ public class OrderServiceImpl implements OrderService {
 
         ordersRepo.save(order);
 
+    }
+
+    @Override
+    public List<Orders> getUnassignedOrdersForStoreInPool(int order_id) {
+        Orders order = ordersRepo.findById(order_id).get();
+        return ordersRepo.findAllByAssignedToUserIsNullAndPoolAndStoreId(order.getPoolId(), order.getStoreId());
+    }
+
+    @Override
+    public List<Orders> getUnassignedOrdersInPool(String pool_id) {
+        Pool pool = poolRepo.findPoolById(pool_id).get();
+        return ordersRepo.findAllByAssignedToUserIsNullAndPool(pool);
     }
 
     /*

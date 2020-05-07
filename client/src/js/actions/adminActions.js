@@ -12,7 +12,7 @@ const getProducts = () => async dispatch => {
     console.log("action get products", products);
     dispatch({ type: actionTypes.SET_PRODUCTS, payload: { products } });
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -29,7 +29,7 @@ const addProduct = (payload, ownProps) => async dispatch => {
 
     toast.success("Product added with id " + product.id);
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -45,7 +45,7 @@ const getProductById = productId => async dispatch => {
       payload: { product }
     });
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -61,7 +61,7 @@ const updateProduct = (payload, ownProps) => async dispatch => {
     ownProps.history.push("/admin/products");
     toast.success("Product with id " + product.id + " edited");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 const deleteProduct = productId => async dispatch => {
@@ -72,7 +72,7 @@ const deleteProduct = productId => async dispatch => {
     dispatch(getProducts());
     toast.success("Product with id " + productId + " deleted");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -88,7 +88,7 @@ const addStore = (payload, ownProps) => async dispatch => {
     ownProps.history.push("/admin/stores");
     toast.success("Store added with id " + store);
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -100,7 +100,7 @@ const getStores = () => async dispatch => {
     console.log("action get stores", stores);
     dispatch({ type: actionTypes.SET_STORES, payload: { stores } });
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response ? err.response.data : 'Eror occured');
   }
 };
 
@@ -117,7 +117,7 @@ const getStoreByName = storeName => async dispatch => {
     });
     dispatch(getProductsInStore(store.id));
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -133,7 +133,7 @@ const updateStore = (payload, ownProps) => async dispatch => {
     dispatch(getStores());
     ownProps.history.push("/admin/stores");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -145,7 +145,7 @@ const deleteStore = storeId => async dispatch => {
     dispatch(getStores());
     toast.success("Store  " + storeId + " deleted");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -161,7 +161,7 @@ const getStoresWithProduct = productId => async dispatch => {
       payload: { stores }
     });
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -177,7 +177,7 @@ const addProductToStore = (payload, productId) => async dispatch => {
 
     toast.success("Product added to the Stores ");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -193,7 +193,7 @@ const getProductsInStore = storeId => async dispatch => {
       payload: { products }
     });
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 

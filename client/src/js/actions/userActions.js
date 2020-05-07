@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import server from "./../../config/server";
 
-const updateProfile = (userDetails) => async (dispatch) => {
+const updateProfile = userDetails => async dispatch => {
   try {
     const updatedUser = await axios.put(
       `http://${server.domain}:${server.port}/user`,
@@ -12,12 +12,12 @@ const updateProfile = (userDetails) => async (dispatch) => {
     dispatch({
       type: actionTypes.SET_USER,
       payload: {
-        user: updatedUser.data,
-      },
+        user: updatedUser.data
+      }
     });
     toast.success("Account details updated!");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 

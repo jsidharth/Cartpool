@@ -32,6 +32,12 @@ public class OrderController {
     @Autowired
     ProductService productService;
 
+
+    @GetMapping("/order/{orderId}")
+    public Orders getOrderbyId(@PathVariable int orderId){
+        return orderService.getOrderById(orderId);
+    }
+
     /**
      * Modify an existing order
      * @param orders
@@ -120,6 +126,16 @@ public class OrderController {
     @GetMapping("/getPoolAndStore/{pool_id}/{store_id}")
     public List<Orders> getOrdersByPoolAndUser(User user, @PathVariable String pool_id, @PathVariable int store_id){
         return orderService.getOrderByPoolAndStore(pool_id, store_id);
+    }
+
+    @GetMapping("/getUnassignedOrdersOfStoreInPool/{order_id}")
+    public List<Orders> getUnassignedOrdersOfStoreInPool(User user, @PathVariable int order_id){
+        return orderService.getUnassignedOrdersForStoreInPool(order_id);
+    }
+
+    @GetMapping("/getUnassignedOrdersInPool/{pool_id}")
+    public List<Orders> getUnassignedOrdersInPool(User user, @PathVariable String pool_id){
+        return orderService.getUnassignedOrdersInPool(pool_id);
     }
 
     @GetMapping("/getAllOrdersAssignedTo")

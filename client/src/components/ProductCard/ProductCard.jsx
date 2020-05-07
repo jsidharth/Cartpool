@@ -6,8 +6,9 @@ class ProductCard extends Component {
   state = {};
 
   addToCart = () => {
-    const { id, name, brand, price, unit,storeId, storeName, currentCart} = this.props;
+    const { psId, id, name, brand, price, unit,storeId, storeName, currentCart} = this.props;
     this.props.addToCart({
+      psId,
       id,
       name,
       brand,
@@ -19,7 +20,7 @@ class ProductCard extends Component {
     });
   };
   render() {
-    const { id, name, desc, brand, price, unit, imageUrl } = this.props;
+    const { name, desc, brand, price, unit, imageUrl } = this.props;
     return (
       <div className="card poolcard shadow m-2">
         <img

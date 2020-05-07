@@ -1,28 +1,37 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import _ from "lodash";
 import { orderActions } from "./../../js/actions/index";
 
 class Cart extends Component {
   state = {};
 
+  placeOrder = (total) => {
+    const payload = {
+      userId: this.props.userId,
+      storeId: this.props.cart.storeId,
+      productStore: this.props.cart.products.map((product) => ({
+        productStoreId: product.psId,
+        quantity: product.qty,
+      })),
+      total,
+    };
+    this.props.placeOrder(payload);
+  };
+
   handleQntyChange(pId, step, currQty) {
-    //alert(pId + " " + step);
     this.props.modifyProductQntyInCart(pId, this.props.cart, step);
     if (currQty === 1 && step === -1) {
-      //alert("delete product");
       this.props.deleteProductFromCart(pId, this.props.cart);
     }
   }
 
   handelDeleteProduct(pId) {
-    //alert("delete " + pId);
     this.props.deleteProductFromCart(pId, this.props.cart);
   }
 
   render() {
-    console.log(this.props.cart);
-
     if (
       _.isEmpty(this.props.cart) ||
       (this.props.cart.products && !this.props.cart.products.length)
@@ -32,9 +41,9 @@ class Cart extends Component {
     const total = cart.products.reduce((total, p) => {
       return (total += _.round(p.qty * p.price, 2));
     }, 0);
-    console.log("total", total);
     let tax = _.round(0.0925 * total, 2);
     let conFee = _.round(0.005 * total, 2);
+    const finalCartTotal = _.round(total + conFee + tax, 2);
     return (
       <React.Fragment>
         <div className="card mt-5">
@@ -46,7 +55,7 @@ class Cart extends Component {
           </div>
 
           <ul className="list-group list-group-flush">
-            {this.props.cart.products.map(p => (
+            {this.props.cart.products.map((p) => (
               <li className="list-group-item">
                 <div className="row">
                   <div className="col">
@@ -98,20 +107,27 @@ class Cart extends Component {
             <h2 className="">Total ${_.round(total + conFee + tax, 2)}</h2>
           </div>
           <div className="card-footer">
-            <button className="btn btn-primary btn-block">Place Order</button>
+            <button
+              className="btn btn-primary btn-block"
+              onClick={() => this.placeOrder(finalCartTotal)}
+            >
+              Place Order
+            </button>
           </div>
         </div>
       </React.Fragment>
     );
   }
 }
-const mapStateToProps = state => ({
-  cart: state.orderReducer.cart
+const mapStateToProps = (state) => ({
+  cart: state.orderReducer.cart,
+  userId: state.auth.user.id,
 });
-const mapDisPatchToProps = dispatch => ({
+const mapDisPatchToProps = (dispatch, ownProps) => ({
   modifyProductQntyInCart: (productId, cart, step) =>
     dispatch(orderActions.modifyProductQntyInCart(productId, cart, step)),
   deleteProductFromCart: (productId, cart) =>
-    dispatch(orderActions.deleteProductFromCart(productId, cart))
+    dispatch(orderActions.deleteProductFromCart(productId, cart)),
+  placeOrder: (orderDetails) => dispatch(orderActions.placeOrder(orderDetails, ownProps)),
 });
-export default connect(mapStateToProps, mapDisPatchToProps)(Cart);
+export default withRouter(connect(mapStateToProps, mapDisPatchToProps)(Cart));

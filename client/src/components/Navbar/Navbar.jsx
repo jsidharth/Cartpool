@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { TiShoppingCart } from "react-icons/ti";
-import { Link } from "react-router-dom";
+import { Link, withRouter} from "react-router-dom";
 import { connect } from "react-redux";
 import { authActions } from "../../js/actions";
 import _ from "lodash";
@@ -32,7 +32,7 @@ class Navbar extends Component {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          {this.props.user ? (
+          {!_.isEmpty(this.props.user) ? (
             this.props.user.role === "USER" ? (
               <ul className="navbar-nav">
                 <li className="nav-item active">
@@ -149,8 +149,8 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  signOut: () => dispatch(authActions.signOut()),
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  signOut: () => dispatch(authActions.signOut(ownProps)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar));

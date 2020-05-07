@@ -7,6 +7,9 @@ import com.cmpe275.cartpool.repos.OrdersRepo;
 import java.util.List;
 
 public interface OrderService {
+
+    Orders getOrderById(int id);
+
     Orders addOrder(Orders order);
 
     Orders updateOrder(Orders order);
@@ -24,6 +27,10 @@ public interface OrderService {
     List<Orders> getAllOrdersAssignedToUser(int user_id);
 
     void changeAssignedToUser(int order_id, int user_id);
+
+    List<Orders> getUnassignedOrdersForStoreInPool(int order_id);
+
+    List<Orders> getUnassignedOrdersInPool(String pool_id);
 
     //List<Orders> getOrdersByPoolId(int id);
 
