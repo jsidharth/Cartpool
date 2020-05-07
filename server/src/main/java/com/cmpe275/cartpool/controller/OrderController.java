@@ -2,9 +2,7 @@ package com.cmpe275.cartpool.controller;
 
 import com.cmpe275.cartpool.DataObjects.OrderRequest;
 import com.cmpe275.cartpool.DataObjects.ProductStoreQuantity;
-import com.cmpe275.cartpool.entities.OrderProductStore;
-import com.cmpe275.cartpool.entities.Orders;
-import com.cmpe275.cartpool.entities.User;
+import com.cmpe275.cartpool.entities.*;
 import com.cmpe275.cartpool.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +28,8 @@ public class OrderController {
     @Autowired
     OrderProductStoreService orderProductStoreService;
 
+    @Autowired
+    ProductService productService;
 
     /**
      * Modify an existing order
@@ -98,13 +98,19 @@ public class OrderController {
 
         List<ProductStoreQuantity> productStoreQuantities = orderRequest.getProductStoreList();
 
+        float total = 0;
         for(ProductStoreQuantity productStoreQuantity:productStoreQuantities){
             OrderProductStore productStore = new OrderProductStore();
+            ProductStore temp = productStoreService.findById(productStoreQuantity.getProductStoreId());
+            Product product = productService.getProductById(temp.getProductId());
+            total += product.getPrice() * productStoreQuantity.getQuantity();
             productStore.setOrder(savedOrder);
-            productStore.setProductStore(productStoreService.findById(productStoreQuantity.getProductStoreId()));
+            productStore.setProductStore(temp);
             productStore.setQuantity(productStoreQuantity.getQuantity());
             orderProductStoreService.addOrderProductStore(productStore);
         }
+        savedOrder.setTotal(total);
+        orderService.updateOrder(savedOrder);
         return new ResponseEntity(savedOrder.getId(), HttpStatus.OK);
     }
 
