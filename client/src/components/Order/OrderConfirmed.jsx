@@ -87,7 +87,7 @@ class OrderConfirmed extends Component {
                   <div key={order.id} className="col-3 float-left ">
                     <div
                       onClick={() => this.handleCardClick(order.id)}
-                      className={"card " + this.addCardClass(order.id)}
+                      className={"card mt-2" + this.addCardClass(order.id)}
                     >
                       <div className="card-header">
                         #{order.id}{" "}
@@ -158,7 +158,12 @@ class OrderConfirmed extends Component {
               </p>
               <div className="row">
                 <div className="col">
-                  <button className="btn btn-secondary">
+                  <button
+                    onClick={() =>
+                      this.props.history.replace("/order/myorders")
+                    }
+                    className="btn btn-secondary"
+                  >
                     Yes, place my order in pool
                   </button>
                 </div>
@@ -197,8 +202,7 @@ const mapDisPatchToProps = (dispatch, ownProps) => ({
   getOrderById: id => dispatch(orderActions.getOrderById(id)),
   getSimilarOrdersFromPool: id =>
     dispatch(orderActions.getSimilarOrdersFromPool(id)),
-  pickupOrders: (data, ownProps) =>
-    dispatch(orderActions.pickupOrders(data, ownProps))
+  pickupOrders: data => dispatch(orderActions.pickupOrders(data, ownProps))
 });
 export default withRouter(
   connect(mapStateToProps, mapDisPatchToProps)(OrderConfirmed)
