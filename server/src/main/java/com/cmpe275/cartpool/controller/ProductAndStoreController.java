@@ -3,6 +3,7 @@ package com.cmpe275.cartpool.controller;
 import com.cmpe275.cartpool.entities.Product;
 import com.cmpe275.cartpool.entities.ProductStore;
 import com.cmpe275.cartpool.entities.Store;
+import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.services.ProductService;
 import com.cmpe275.cartpool.services.ProductStoreService;
 import com.cmpe275.cartpool.services.StoreService;
@@ -34,7 +35,7 @@ public class ProductAndStoreController {
      * @return
      */
     @GetMapping("/products/{productId}")
-    public Product getProductById(@PathVariable(required = true) Integer productId){
+    public Product getProductById(User user, @PathVariable(required = true) Integer productId){
         return productService.getProductById(productId);
     }
 
@@ -43,7 +44,7 @@ public class ProductAndStoreController {
      * @return
      */
     @GetMapping("/products")
-    public List<Product> allProducts(){
+    public List<Product> allProducts(User user){
         return productService.getAllProducts();
     }
 
@@ -53,7 +54,7 @@ public class ProductAndStoreController {
      * @return
      */
     @PostMapping("/products")
-    public Product addProduct(@RequestBody Product product){
+    public Product addProduct(User user, @RequestBody Product product){
         return productService.addProduct(product);
     }
 
@@ -62,13 +63,13 @@ public class ProductAndStoreController {
      * @param productId
      */
     @DeleteMapping("/products/{productId}")
-    public void deleteProduct(@PathVariable(required = true) Integer productId){
+    public void deleteProduct(User user, @PathVariable(required = true) Integer productId){
          productService.deleteProduct(productId);
     }
 
 
     @PutMapping("/products")
-    public Product modifyProduct(@RequestBody Product product){
+    public Product modifyProduct(User user, @RequestBody Product product){
         return productService.modifyProduct(product);
     }
 
@@ -80,7 +81,7 @@ public class ProductAndStoreController {
      * @return storeId
     * */
     @PostMapping("/store")
-    public int addStore(@RequestBody Store store){
+    public int addStore(User user, @RequestBody Store store){
         if(storeService.storeExistsByName(store.getName())){
             //Throw exception
         }else{
@@ -97,7 +98,7 @@ public class ProductAndStoreController {
      */
 
     @GetMapping("/store/{store}")
-    Store getStoreByName(@PathVariable String store){
+    Store getStoreByName(User user, @PathVariable String store){
         if(storeService.storeExistsByName(store)){
             return storeService.getStoreByName(store);
         }
@@ -106,7 +107,7 @@ public class ProductAndStoreController {
     }
 
     @GetMapping("/store")
-    List<Store> getAllStores(){
+    List<Store> getAllStores(User user){
         return storeService.getAllStores();
     }
 
@@ -116,7 +117,7 @@ public class ProductAndStoreController {
      * @return storeId
      */
     @DeleteMapping("/store/{id}")
-    void deleteStoreById(@PathVariable int id){
+    void deleteStoreById(User user, @PathVariable int id){
         storeService.deleteStore(id);
     }
 
@@ -126,7 +127,7 @@ public class ProductAndStoreController {
      * @return modifiedStore
      */
     @PutMapping("/store")
-    Store modifyStore(@RequestBody Store store){
+    Store modifyStore(User user, @RequestBody Store store){
         return storeService.updateStore(store);
     }
 
@@ -140,7 +141,7 @@ public class ProductAndStoreController {
      */
     //ProductStore endpoints
     @PostMapping("/productstore/{store}/{product}")
-    ProductStore addProductToStore(@PathVariable int store, @PathVariable int product){
+    ProductStore addProductToStore(User user, @PathVariable int store, @PathVariable int product){
         ProductStore savedProductStore = productStoreService.addProductToStore(store,product);
         return  savedProductStore;
     }
@@ -151,19 +152,19 @@ public class ProductAndStoreController {
      */
 
     @GetMapping("/productstore")
-    List<ProductStore> getAllProductStore(){
+    List<ProductStore> getAllProductStore(User user){
         return productStoreService.getAllProductStore();
     }
 
     @DeleteMapping("/productstore/{store}/{product}")
-    int deleteProductStoreMapping(@PathVariable int store, @PathVariable int product){
+    int deleteProductStoreMapping(User user, @PathVariable int store, @PathVariable int product){
         return productStoreService.deleteProductFromStore(store,product);
     }
 
 
     //Multi add products to one store
     @PostMapping("productstore/multiadd")
-    void addProductToMultipleStores(@RequestBody HashMap<String, Object> payload){
+    void addProductToMultipleStores(User user,@RequestBody HashMap<String, Object> payload){
         int product_Id  = Integer.parseInt(payload.get("product").toString());
         //System.out.println(product_Id);
         ArrayList<Integer> stores_list = (ArrayList<Integer>) payload.get("stores");
@@ -177,12 +178,12 @@ public class ProductAndStoreController {
 
     //All products in a store
     @GetMapping("/productstore/{store_id}")
-        List<ProductStore> getAllProductsInStore(@PathVariable  int store_id){
+        List<ProductStore> getAllProductsInStore(User user, @PathVariable  int store_id){
         return productStoreService.getAllProductsInStore(store_id);
     }
 
     @GetMapping("/productstore/allstores/{product_id}")
-    List<Store> getAllStoresForProduct(@PathVariable int product_id){
+    List<Store> getAllStoresForProduct(User user, @PathVariable int product_id){
         return productStoreService.getAllStoresForProduct(product_id);
     }
 

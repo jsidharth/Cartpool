@@ -72,4 +72,9 @@ public class ProductStoreServiceImpl implements ProductStoreService {
         }
         return store;
     }
+
+    @Override
+    public ProductStore findById(int id) {
+        return productStoreRepo.findById(id).get();
+    }
 }

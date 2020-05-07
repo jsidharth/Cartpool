@@ -16,4 +16,6 @@ public interface ProductStoreService {
     List<ProductStore> getAllProductsInStore(int id);
 
     List<Store> getAllStoresForProduct(int id);
+
+    ProductStore findById(int id);
 }

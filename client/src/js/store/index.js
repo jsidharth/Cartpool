@@ -9,18 +9,17 @@ import { loadState, saveState } from "./../../persistState";
 const persistedState = loadState();
 
 axios.interceptors.request.use(
-  async config => {
-    const currentUser = await firebase.auth().currentUser;
-    if (currentUser) {
-      console.log("Here", currentUser)
-      const idToken = await currentUser.getIdToken();
+  async (config) => {
+    if (localStorage.getItem("idToken")) {
+      const idToken = localStorage.getItem("idToken");
+
       if (idToken) {
-        config.headers.Authorization = idToken;
+        config.headers.Authorization = JSON.parse(idToken);
       }
     }
     return config;
   },
-  function(error) {
+  function (error) {
     // Do something with request error
     return Promise.reject(error);
   }
@@ -54,7 +53,7 @@ const store = createStoreWithFirebase(
 
 store.subscribe(() => {
   saveState({
-    auth: store.getState().auth
+    auth: store.getState().auth,
   });
 });
 
