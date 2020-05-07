@@ -67,4 +67,9 @@ public class StoreServiceImpl implements StoreService {
         Store toReturn = storeRepo.save(oldStore);
         return toReturn;
     }
+
+    @Override
+    public Store getStoreById(int id) {
+        return storeRepo.findStoreById(id);
+    }
 }

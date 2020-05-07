@@ -1,8 +1,12 @@
 package com.cmpe275.cartpool.serviceImpl;
 
 import com.cmpe275.cartpool.entities.Orders;
+import com.cmpe275.cartpool.entities.Pool;
+import com.cmpe275.cartpool.entities.Store;
 import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.repos.OrdersRepo;
+import com.cmpe275.cartpool.repos.PoolRepo;
+import com.cmpe275.cartpool.repos.StoreRepo;
 import com.cmpe275.cartpool.repos.UserRepo;
 import com.cmpe275.cartpool.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrdersRepo ordersRepo;
 
+    @Autowired
+    PoolRepo poolRepo;
+
+    @Autowired
+    StoreRepo storeRepo;
+
     @Override
     public Orders addOrder(Orders order) {
         return ordersRepo.save(order);
@@ -32,16 +42,30 @@ public class OrderServiceImpl implements OrderService {
         }
         Orders toUpdate = ordersRepo.findById(order.getId()).get();
 
-        toUpdate.setAssignedToUser(order.getAssignedToUser());
-        toUpdate.setAssignedToUsr(order.getAssignedToUsr());
-        toUpdate.setDeliveredTime(order.getDeliveredTime());
-        toUpdate.setItems(order.getItems());
-        toUpdate.setOrderStatus(order.getOrderStatus());
-        toUpdate.setPool(order.getPool());
-        toUpdate.setPoolId(order.getPoolId());
-        toUpdate.setPickedTime(order.getPickedTime());
-        toUpdate.setTotal(order.getTotal());
-        toUpdate.setOrderedByUser(order.getOrderedByUser());
+        if(order.getAssignedToUser()!=null) {
+            toUpdate.setAssignedToUser(order.getAssignedToUser());
+        }
+        if(order.getDeliveredTime()!=null) {
+            toUpdate.setDeliveredTime(order.getDeliveredTime());
+        }
+        if(order.getItems()!=null) {
+            toUpdate.setItems(order.getItems());
+        }
+        if(order.getOrderStatus()!=null) {
+            toUpdate.setOrderStatus(order.getOrderStatus());
+        }
+        if(order.getPool()!=null) {
+            toUpdate.setPool(order.getPool());
+        }
+        if(order.getPoolId()!=null) {
+            toUpdate.setPoolId(order.getPoolId());
+        }
+        if(order.getPickedTime()!=null) {
+            toUpdate.setPickedTime(order.getPickedTime());
+        }
+        if(order.getTotal()!=null) {
+            toUpdate.setTotal(order.getTotal());
+        }
 
         return ordersRepo.save(toUpdate);
 
@@ -81,6 +105,16 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepo.findById(id).get();
         return ordersRepo.findByOrderedByUser(user);
     }
+
+    @Override
+    public List<Orders> getOrderByPoolAndStore(String pool, int store_id) {
+        Pool pool1 = poolRepo.findPoolById(pool).get();
+        Store store = storeRepo.findStoreById(store_id);
+        return ordersRepo.findAllByPoolAndStoreId(pool1 , store);
+    }
+
+
+
 
     /*
     @Override
