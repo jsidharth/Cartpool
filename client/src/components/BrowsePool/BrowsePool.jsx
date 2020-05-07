@@ -1,36 +1,23 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PoolCard from "../Pool/PoolCard";
 import { Link } from "react-router-dom";
-
+import { poolActions } from "../../js/actions";
 class BrowsePool extends Component {
-  state = {
-    pools: [
-      {
-        id: "1",
-        name: "Pool 1",
-        description: "101 San Fernando",
-        count: "3 members",
-        imageUrl: "",
-        buttonText: "Join Pool",
-      },
-      {
-        id: "2",
-        name: "Pool 2",
-        description: "101 San Fernando",
-        count: "4 members",
-        imageUrl: "",
-        buttonText: "Join Pool",
-      },
-      {
-        id: "3",
-        name: "Pool 3",
-        description: "101 San Fernando",
-        count: "4 members",
-        imageUrl: "",
-        buttonText: "Join Pool",
-      },
-    ],
+  componentDidMount() {
+    if (!this.props.pools.length) {
+      this.props.getPools();
+    }
+  }
+
+  requestPoolLeader = (e) => {
+    e.preventDefault();
   };
+
+  requestPoolMember = (e) => {
+    e.preventDefault();
+  };
+
   render() {
     return (
       <div>
@@ -41,18 +28,22 @@ class BrowsePool extends Component {
           </div>
           <div className="col">
             <Link to="/pool/create">
-            <button type="button" class="btn btn-outline-success">
-              Create
-            </button>
+              <button type="button" class="btn btn-outline-success">
+                Create
+              </button>
             </Link>
           </div>
         </div>
         <div className="row justify-content-around">
-          {this.state.pools && this.state.pools.length
-            ? this.state.pools.map((pool) => {
+          {this.props.pools && this.props.pools.length
+            ? this.props.pools.map((pool) => {
                 return (
                   <div className="col-3 float-left">
-                    <PoolCard {...pool} buttonAction={this.handleJoinClick} />
+                    <PoolCard
+                      {...pool}
+                      requestPoolLeader={this.requestPoolLeader}
+                      requestPoolMember={this.requestPoolMember}
+                    />
                   </div>
                 );
               })
@@ -62,5 +53,10 @@ class BrowsePool extends Component {
     );
   }
 }
-
-export default BrowsePool;
+const mapStateToProps = (state) => ({
+  pools: state.poolReducer.pools,
+});
+const mapDispatchToProps = (dispatch) => ({
+  getPools: () => dispatch(poolActions.getPools()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(BrowsePool);

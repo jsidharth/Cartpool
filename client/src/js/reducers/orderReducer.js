@@ -1,14 +1,15 @@
 import actionTypes from "../constants/index";
 const intialState = {
-  pools: [],
-  userPool: {},
+  cart: {},
+  userOrders: [],
+  ordersToPickUp: []
 };
-const poolReducer = (state = intialState, action) => {
+const orderReducer = (state = intialState, action) => {
   switch (action.type) {
-    case actionTypes.SET_POOLS:
+    case actionTypes.UPDATE_CART:
       const { pools } = action.payload;
       return { ...state, pools };
-    case actionTypes.SET_USER_POOL:
+    case actionTypes.CLEAR_CART:
       const { userPool } = action.payload;
       return { ...state, userPool };
     default:
@@ -17,4 +18,4 @@ const poolReducer = (state = intialState, action) => {
   return state;
 };
 
-export default poolReducer;
+export default orderReducer;

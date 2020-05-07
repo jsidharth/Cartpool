@@ -113,7 +113,7 @@ class StoreDetail extends Component {
             ? this.state.products.map((product) => {
                 return (
                   <div className="col-3 float-left">
-                    <ProductCard {...product}/>
+                    <ProductCard {...product} storeId={this.props.store.id} storeName={this.props.storeName}/>
                   </div>
                 );
               })
