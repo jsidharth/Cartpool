@@ -152,11 +152,29 @@ const getSimilarOrdersFromPool = orderId => async dispatch => {
   }
 };
 
+const pickupOrders = (data, ownProps) => async dispatch => {
+  try {
+    await axios.put(
+      `http://${server.domain}:${server.port}/orders/assignToUser/`,
+      data
+    );
+    console.log("action pickupOrders completed!");
+    //toast.success("Product added with id" + product.id);
+    // dispatch({
+    //   type: actionTypes.SET_SIMILAR_ORDERS,
+    //   payload: { similarOrders: orders }
+    // });
+  } catch (err) {
+    toast.error(err.response.data);
+  }
+};
+
 export {
   addToCart,
   modifyProductQntyInCart,
   deleteProductFromCart,
   placeOrder,
   getOrderById,
-  getSimilarOrdersFromPool
+  getSimilarOrdersFromPool,
+  pickupOrders
 };
