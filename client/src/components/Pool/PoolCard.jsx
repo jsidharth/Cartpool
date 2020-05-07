@@ -15,19 +15,19 @@ class PoolCard extends Component {
               <li className="list-group-item">
                 <strong>PoolLeader</strong>
                 <span className="badge badge-light">
-                  {this.props.poolLeader}
+                  {this.props.poolLeader.nickName}
                 </span>
-                <button className="btn btn-primary  btn-sm btn-block mt-1 ">
+                <button className="btn btn-primary  btn-sm btn-block mt-1 " onClick={this.props.requestPoolLeader}>
                   Request PoolLeader
                 </button>
               </li>
               <li className="list-group-item">
                 <strong>Members</strong>
-                {this.props.members && this.props.members.lenght
-                  ? this.props.members.map((member) => {
+                {this.props.userNickNamesTransient && this.props.userNickNamesTransient.length
+                  ? this.props.userNickNamesTransient.map((member) => {
                       return (
                         <span className="badge badge-light ml-2">
-                          {member.name}
+                          {member}
                         </span>
                       );
                     })
@@ -39,7 +39,7 @@ class PoolCard extends Component {
                   aria-describedby="inputGroup-sizing-sm"
                   placeholder="Enter Screenname of any member"
                 />
-                <button className="btn btn-primary  btn-sm btn-block mt-2">
+                <button className="btn btn-primary  btn-sm btn-block mt-2" onClick={this.props.requestPoolMember}>
                   Request member
                 </button>
               </li>

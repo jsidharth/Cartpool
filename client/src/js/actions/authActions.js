@@ -31,6 +31,9 @@ const signIn = (payload, ownProps) => async (dispatch) => {
   try {
     const { email, password } = payload;
     await firebase.auth().signInWithEmailAndPassword(email, password);
+    const idToken = await firebase.auth().currentUser.getIdToken();
+    const serializedidToken = JSON.stringify(idToken);
+    localStorage.setItem("idToken", serializedidToken);
     //TODO: Change endpoint to user detail API
     const user = await axios.get(`http://${server.domain}:${server.port}/user`);
     dispatch({

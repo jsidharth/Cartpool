@@ -115,6 +115,7 @@ const getStoreByName = storeName => async dispatch => {
       type: actionTypes.SET_CURRENT_STORE,
       payload: { store }
     });
+    dispatch(getProductsInStore(store.id));
   } catch (err) {
     toast.error(err.message);
   }
@@ -180,6 +181,22 @@ const addProductToStore = (payload, productId) => async dispatch => {
   }
 };
 
+const getProductsInStore = storeId => async dispatch => {
+  try {
+    const { data: products } = await axios.get(
+      `http://${server.domain}:${server.port}/productstore/${storeId}`
+    );
+    console.log("action getProductsInStore", products);
+    //toast.success("Product added with id" + product.id);
+    dispatch({
+      type: actionTypes.SET_PRODUCTS_OF_STORE,
+      payload: { products }
+    });
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
 export {
   getProducts,
   addProduct,
@@ -192,5 +209,6 @@ export {
   updateStore,
   deleteStore,
   getStoresWithProduct,
-  addProductToStore
+  addProductToStore,
+  getProductsInStore
 };

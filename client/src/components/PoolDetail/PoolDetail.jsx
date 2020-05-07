@@ -1,8 +1,15 @@
 import React, { Component } from "react";
-import poolLogo from "./../../assets/carpool.jpg";
+import {connect} from "react-redux";
+import { poolActions } from "../../js/actions";
 class Pool extends Component {
   state = {};
+  componentDidMount() {
+    if(!this.props.poolDetail.id) {
+      this.props.getUserPool();
+    }
+  }
   render() {
+    const { id, name, description, neighbourhood, zip, poolLeaderScreenNameTransient, userScreenNamesTransient} = this.props.poolDetail;
     return (
       <div className="mt-5 ">
         <div className="card">
@@ -19,8 +26,7 @@ class Pool extends Component {
                       type="text"
                       readonly
                       className="form-control-plaintext"
-                      id="staticEmail"
-                      value="Pool Name"
+                      value={name}
                     />
                   </div>
                 </div>
@@ -33,8 +39,7 @@ class Pool extends Component {
                       type="text"
                       readonly
                       className="form-control-plaintext"
-                      id="staticEmail"
-                      value="Pool ID"
+                      value={id}
                     />
                   </div>
                 </div>
@@ -47,8 +52,7 @@ class Pool extends Component {
                       type="text"
                       readonly
                       className="form-control-plaintext"
-                      id="staticEmail"
-                      value="Pool Description"
+                      value={description}
                     />
                   </div>
                 </div>
@@ -61,8 +65,7 @@ class Pool extends Component {
                       type="text"
                       readonly
                       className="form-control-plaintext"
-                      id="staticEmail"
-                      value="San Jose"
+                      value={neighbourhood}
                     />
                   </div>
                 </div>
@@ -75,8 +78,7 @@ class Pool extends Component {
                       type="text"
                       readonly
                       className="form-control-plaintext"
-                      id="staticEmail"
-                      value="95112"
+                      value={zip}
                     />
                   </div>
                 </div>
@@ -89,8 +91,7 @@ class Pool extends Component {
                       type="text"
                       readonly
                       className="form-control-plaintext"
-                      id="staticEmail"
-                      value="Jojo"
+                      value={poolLeaderScreenNameTransient}
                     />
                   </div>
                 </div>
@@ -99,9 +100,10 @@ class Pool extends Component {
                 <div className="row font-weight-bold">Members</div>
                 <div className="row">
                   <ul className="list-group">
-                    <li className="list-group-item d-flex justify-content-around align-items-center">
+                    {userScreenNamesTransient && userScreenNamesTransient.length ? userScreenNamesTransient.map(screenName => {
+                      return (<li className="list-group-item d-flex justify-content-around align-items-center">
                       <div className="row">
-                        <div className="col-6">Sushant</div>
+                        <div className="col-6">{screenName}</div>
                         <div className="col-6">
                           <button
                             type="button"
@@ -111,33 +113,8 @@ class Pool extends Component {
                           </button>
                         </div>
                       </div>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-around align-items-center">
-                      <div className="row">
-                        <div className="col-6">Harsh</div>
-                        <div className="col-6">
-                          <button
-                            type="button"
-                            className="btn btn-outline-primary btn-sm"
-                          >
-                            Message
-                          </button>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-around align-items-center">
-                      <div className="row">
-                        <div className="col-6">Jojo</div>
-                        <div className="col-6">
-                          <button
-                            type="button"
-                            className="btn btn-outline-primary btn-sm"
-                          >
-                            Message
-                          </button>
-                        </div>
-                      </div>
-                    </li>
+                    </li>)
+                    }):null}
                   </ul>
                 </div>
               </div>
@@ -149,4 +126,10 @@ class Pool extends Component {
   }
 }
 
-export default Pool;
+const mapStateToPros = state => ({
+  poolDetail: state.poolReducer.userPool
+})
+const mapDispatchToProps = dispatch =>( {
+  getUserPool: () => dispatch(poolActions.getUserPool())
+})
+export default connect(mapStateToPros, mapDispatchToProps)(Pool);
