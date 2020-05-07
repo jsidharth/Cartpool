@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
+
     @Autowired
     private JavaMailSender javaMailSender;
 
     public void sendMail(String senderScreenName, String receiverScreenName, String receiverMail, String message ) {
+
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(receiverMail);
         msg.setSubject("CartPool: Message from " + senderScreenName);

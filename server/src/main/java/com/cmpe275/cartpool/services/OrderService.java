@@ -21,6 +21,9 @@ public interface OrderService {
 
     List<Orders> getOrderByPoolAndStore(String pool_id, int store_id);
 
+    List<Orders> getAllOrdersAssignedToUser(int user_id);
+
+    void changeAssignedToUser(int order_id, int user_id);
 
     //List<Orders> getOrdersByPoolId(int id);
 
