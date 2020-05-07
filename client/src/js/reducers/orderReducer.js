@@ -3,7 +3,7 @@ const intialState = {
   cart: {},
   userOrders: [],
   ordersToPickUp: [],
-  currentOrder: {},
+  currentOrder: {}
 };
 const orderReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -13,6 +13,9 @@ const orderReducer = (state = intialState, action) => {
     case actionTypes.SET_CURRENT_ORDER:
       const { currentOrder } = action.payload;
       return { ...state, currentOrder };
+    case actionTypes.SET_SIMILAR_ORDERS:
+      const { similarOrders } = action.payload;
+      return { ...state, similarOrders };
     default:
       break;
   }
