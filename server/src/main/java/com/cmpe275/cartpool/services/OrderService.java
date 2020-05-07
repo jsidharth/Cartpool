@@ -7,6 +7,9 @@ import com.cmpe275.cartpool.repos.OrdersRepo;
 import java.util.List;
 
 public interface OrderService {
+
+    Orders getOrderById(int id);
+
     Orders addOrder(Orders order);
 
     Orders updateOrder(Orders order);

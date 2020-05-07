@@ -32,6 +32,12 @@ public class OrderController {
     @Autowired
     ProductService productService;
 
+
+    @GetMapping("/order/{orderId}")
+    public Orders getOrderbyId(@PathVariable int orderId){
+        return orderService.getOrderById(orderId);
+    }
+
     /**
      * Modify an existing order
      * @param orders
