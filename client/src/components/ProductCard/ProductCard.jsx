@@ -14,13 +14,14 @@ class ProductCard extends Component {
       price,
       unit,
       storeId,
+      storeName,
       currentCart
     });
   };
   render() {
     const { id, name, desc, brand, price, unit, imageUrl } = this.props;
     return (
-      <div className="card poolcard" style={{ width: "18rem" }}>
+      <div className="card poolcard shadow m-2">
         <img
           src={imageUrl || poolLogo}
           class="rounded img-thumbnail"

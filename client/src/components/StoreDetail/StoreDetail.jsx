@@ -1,127 +1,114 @@
 import React, { Component } from "react";
-import ProductCard  from './../ProductCard/ProductCard';
+import ProductCard from "./../ProductCard/ProductCard";
+import { connect } from "react-redux";
+import { adminActions } from "../../js/actions";
 
 class StoreDetail extends Component {
   state = {
     products: [
-        {
-          id: "1",
-          name: "Milk",
-          desc: "2% Milk",
-          price: 10,
-          unit: "1lb",
-          brand: "Kirkland"
-        },
-        {
-            id: "2",
-            name: "Milk 2",
-            desc: "2% Milk",
-            price: 10,
-            unit: "1lb",
-            brand: "Kirkland"
-        },
-        {
-            id: "3",
-            name: "Milk 3",
-            desc: "2% Milk",
-            price: 10,
-            unit: "1lb",
-            brand: "Kirkland"
-        },
-      ]
-
+      {
+        id: "1",
+        name: "Milk",
+        desc: "2% Milk",
+        price: 10,
+        unit: "1lb",
+        brand: "Kirkland"
+      },
+      {
+        id: "2",
+        name: "Milk 2",
+        desc: "2% Milk",
+        price: 10,
+        unit: "1lb",
+        brand: "Kirkland"
+      },
+      {
+        id: "3",
+        name: "Milk 3",
+        desc: "2% Milk",
+        price: 10,
+        unit: "1lb",
+        brand: "Kirkland"
+      }
+    ]
   };
+
+  componentDidMount() {
+    this.props.getStoreByName(this.props.match.params.storeName);
+  }
+
   render() {
+    const { currentStore: store } = this.props;
+    console.log("currentStore", store);
+    if (!store) return <p>Loading Store {this.props.match.params.storeName}</p>;
     return (
       <div>
         <div className="row mt-5 justify-content-center">
           <div className="col-4">
             <img
-              src="https://1.img-dpreview.com/files/p/E~C0x0S1012x759T1200x900~articles/1270164160/CostCo.jpeg"
+              src={store.logoUrl}
               class="rounded float-left img-thumbnail"
               alt="..."
             />
           </div>
-          <div className="col-8">
-            <div className="row m-2">
-              <label className="col-sm-4 col-form-label font-weight-bold">
-                Name
-              </label>
-              <div className="col-sm-8">
-                <input
-                  type="text"
-                  readonly
-                  disabled
-                  className="form-control-plaintext"
-                  id="staticEmail"
-                  value="Costco"
-                />
+          <div className="col-8 mt-4">
+            <small>Name</small>
+            <h2>{store.name}</h2>
+            <hr />
+            <div className="row">
+              <div className="col">
+                <small>Street</small>
+                <h4>{store.street}</h4>
               </div>
-            </div>
-            <div className="row m-2">
-              <label className="col-sm-4 col-form-label font-weight-bold">
-                Street
-              </label>
-              <div className="col-sm-8">
-                <input
-                  type="text"
-                  readonly
-                  disabled
-                  className="form-control-plaintext"
-                  id="staticEmail"
-                  value="101 East"
-                />
+              <div className="col">
+                <small>City</small>
+                <h4>{store.city}</h4>
               </div>
-            </div>
-            <div className="row m-2">
-              <label className="col-sm-4 col-form-label font-weight-bold">
-                City
-              </label>
-              <div className="col-sm-8">
-                <input
-                  type="text"
-                  readonly
-                  disabled
-                  className="form-control-plaintext"
-                  id="staticEmail"
-                  value="San Jose"
-                />
+              <div className="col">
+                <small>State</small>
+                <h4>{store.state}</h4>
               </div>
-            </div>
-            <div className="row m-2">
-              <label className="col-sm-4 col-form-label font-weight-bold">
-                State
-              </label>
-              <div className="col-sm-8">
-                <input
-                  type="text"
-                  readonly
-                  disabled
-                  className="form-control-plaintext"
-                  id="staticEmail"
-                  value="California"
-                />
+              <div className="col">
+                <small>Zip</small>
+                <h4>{store.zip}</h4>
               </div>
             </div>
           </div>
         </div>
-        <div className="row m-3 justify-content-center font-weight-bold">
-            Available products
+        <div className="row m-1 justify-content-center font-weight-bold">
+          Available products
         </div>
-        <div className="row justify-content-around">
-        {this.state.products && this.state.products.length
-            ? this.state.products.map((product) => {
-                return (
-                  <div className="col-3 float-left">
-                    <ProductCard {...product} storeId={this.props.store.id} storeName={this.props.storeName}/>
-                  </div>
-                );
-              })
-            : null}
+        <div className="row ">
+          {this.props.productsInStore &&
+            this.props.productsInStore.length &&
+            this.props.productsInStore.map(ps => {
+              return (
+                <div className="col-4 float-left ">
+                  <ProductCard
+                    {...ps.product}
+                    storeName={ps.store.name}
+                    storeId={ps.storeId}
+                  />
+                </div>
+              );
+            })}
         </div>
       </div>
     );
   }
 }
 
-export default StoreDetail;
+const mapStateToProps = state => ({
+  currentStore: state.adminReducer.currentStore,
+  productsInStore: state.adminReducer.productsInStore
+});
+
+const mapDispatchToProps = dispatch => ({
+  getStoreByName: storeName => dispatch(adminActions.getStoreByName(storeName)),
+  // getStoresWithProduct: productId =>
+  //   dispatch(adminActions.getStoresWithProduct(productId)),
+  getProductsInStore: productId =>
+    dispatch(adminActions.getProductsInStore(productId))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(StoreDetail);

@@ -7,8 +7,8 @@ const intialState = {
 const orderReducer = (state = intialState, action) => {
   switch (action.type) {
     case actionTypes.UPDATE_CART:
-      const { pools } = action.payload;
-      return { ...state, pools };
+      const { cart } = action.payload;
+      return { ...state, cart };
     case actionTypes.CLEAR_CART:
       const { userPool } = action.payload;
       return { ...state, userPool };

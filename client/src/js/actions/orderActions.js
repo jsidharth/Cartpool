@@ -3,6 +3,7 @@ import _ from "lodash";
 import actionTypes from "../constants";
 
 const addToCart = (productDetails) => (dispatch) => {
+  console.log("Here", productDetails)
   try {
     const {
       id,
@@ -11,6 +12,7 @@ const addToCart = (productDetails) => (dispatch) => {
       price,
       unit,
       storeId,
+      storeName,
       currentCart,
     } = productDetails;
     let cart;
@@ -18,6 +20,7 @@ const addToCart = (productDetails) => (dispatch) => {
     if (_.isEmpty(currentCart)) {
       cart = {
         storeId,
+        storeName,
         products: [
           {
             id,
@@ -33,6 +36,7 @@ const addToCart = (productDetails) => (dispatch) => {
       if (currentCart.storeId !== storeId) {
         cart = {
           storeId,
+          storeName,
           products: [
             {
               id,
@@ -61,6 +65,7 @@ const addToCart = (productDetails) => (dispatch) => {
         cart
       }
     });
+    toast.success(`${name} added to cart`);
   } catch (err) {
     toast.error(err.message);
   }

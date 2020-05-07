@@ -27,9 +27,7 @@ const Routes = () => {
       <Route exact path="/browse/stores" component={Browse} />
       <Route exact path="/pool/browse" component={BrowsePool} />
       <Route exact path="/pool/detail" component={PoolDetail} />
-      {/* TODO:Change the route to /store/{id} */}
-      <Route exact path="/store/detail" component={StoreDetail} />
-      {/* TODO:Change the route to /account/{id} */}
+      <Route exact path="/store/detail/:storeName" component={StoreDetail} />
       <Route exact path="/account" component={Account} />
       <Route exact path="/cart" component={Cart} />
       <Route exact path="/pool/create" component={CreatePool} />
