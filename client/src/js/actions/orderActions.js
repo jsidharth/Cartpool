@@ -88,4 +88,15 @@ const modifyProductQntyInCart = (prodId, cart, step) => dispatch => {
   });
 };
 
-export { addToCart, modifyProductQntyInCart };
+const deleteProductFromCart = (prodId, cart) => dispatch => {
+  console.log("deleteProductFromCart", prodId, cart);
+  const currCart = { ...cart };
+  currCart.products = currCart.products.filter(p => p.id !== prodId);
+  console.log("after deleteProductFromCart", currCart);
+  dispatch({
+    type: actionTypes.UPDATE_CART,
+    payload: { cart: currCart }
+  });
+};
+
+export { addToCart, modifyProductQntyInCart, deleteProductFromCart };
