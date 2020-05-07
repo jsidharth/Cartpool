@@ -2,8 +2,8 @@ import { toast } from "react-toastify";
 import _ from "lodash";
 import actionTypes from "../constants";
 
-const addToCart = (productDetails) => (dispatch) => {
-  console.log("Here", productDetails)
+const addToCart = productDetails => dispatch => {
+  console.log("Here", productDetails);
   try {
     const {
       id,
@@ -13,7 +13,7 @@ const addToCart = (productDetails) => (dispatch) => {
       unit,
       storeId,
       storeName,
-      currentCart,
+      currentCart
     } = productDetails;
     let cart;
     // Cart is empty
@@ -28,8 +28,9 @@ const addToCart = (productDetails) => (dispatch) => {
             brand,
             price,
             unit,
-          },
-        ],
+            qty: 1
+          }
+        ]
       };
     } else {
       // Cart has items. Clear cart and add new product
@@ -44,8 +45,9 @@ const addToCart = (productDetails) => (dispatch) => {
               brand,
               price,
               unit,
-            },
-          ],
+              qty: 1
+            }
+          ]
         };
       } else {
         // Add products to cart
@@ -56,6 +58,7 @@ const addToCart = (productDetails) => (dispatch) => {
           brand,
           price,
           unit,
+          qty: 1
         });
       }
     }
@@ -71,4 +74,29 @@ const addToCart = (productDetails) => (dispatch) => {
   }
 };
 
-export { addToCart };
+const modifyProductQntyInCart = (prodId, cart, step) => dispatch => {
+  const updatedCart = { ...cart };
+  updatedCart.products = updatedCart.products.map(p => {
+    if (p.id == prodId) {
+      p.qty = p.qty + step;
+    }
+    return p;
+  });
+  dispatch({
+    type: actionTypes.UPDATE_CART,
+    payload: { cart: updatedCart }
+  });
+};
+
+const deleteProductFromCart = (prodId, cart) => dispatch => {
+  //console.log("deleteProductFromCart", prodId, cart);
+  const currCart = { ...cart };
+  currCart.products = currCart.products.filter(p => p.id !== prodId);
+  //console.log("after deleteProductFromCart", currCart);
+  dispatch({
+    type: actionTypes.UPDATE_CART,
+    payload: { cart: currCart }
+  });
+};
+
+export { addToCart, modifyProductQntyInCart, deleteProductFromCart };

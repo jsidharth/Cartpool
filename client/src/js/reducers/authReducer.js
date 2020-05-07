@@ -7,6 +7,8 @@ const authReducer = (state = intialState, action) => {
     case actionTypes.SET_USER:
       const { user } = action.payload;
       return { ...state, user };
+    case actionTypes.CLEAR_USER:
+      return { ...intialState};
     default:
       break;
   }

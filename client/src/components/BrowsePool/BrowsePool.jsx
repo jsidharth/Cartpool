@@ -5,40 +5,37 @@ import { Link } from "react-router-dom";
 import { poolActions } from "../../js/actions";
 class BrowsePool extends Component {
   componentDidMount() {
-    if (!this.props.pools.length) {
+    this.props.getPools();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.pools.length != this.props.pools.length) {
       this.props.getPools();
     }
   }
 
-  requestPoolLeader = (e) => {
-    e.preventDefault();
+  requestPoolLeader = id => {
+    alert(id);
+    this.props.requestToJoinPool(id, "");
   };
 
-  requestPoolMember = (e) => {
+  requestPoolMember = e => {
     e.preventDefault();
   };
 
   render() {
     return (
-      <div>
-        {/* TODO: Style this heading */}
+      <React.Fragment>
+        <Link className=" btn btn-primary float-right m-2" to="/pool/create">
+          Create pool
+        </Link>
+        <h2>Browse Pools</h2>
+
         <div className="row">
-          <div className="col">
-            <h1 className="display-4">Pools</h1>
-          </div>
-          <div className="col">
-            <Link to="/pool/create">
-              <button type="button" class="btn btn-outline-success">
-                Create
-              </button>
-            </Link>
-          </div>
-        </div>
-        <div className="row justify-content-around">
           {this.props.pools && this.props.pools.length
-            ? this.props.pools.map((pool) => {
+            ? this.props.pools.map(pool => {
                 return (
-                  <div className="col-3 float-left">
+                  <div className="col-6 float-left">
                     <PoolCard
                       {...pool}
                       requestPoolLeader={this.requestPoolLeader}
@@ -49,14 +46,16 @@ class BrowsePool extends Component {
               })
             : null}
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
-const mapStateToProps = (state) => ({
-  pools: state.poolReducer.pools,
+const mapStateToProps = state => ({
+  pools: state.poolReducer.pools
 });
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   getPools: () => dispatch(poolActions.getPools()),
+  requestToJoinPool: (id, screenName) =>
+    dispatch(poolActions.requestToJoinPool(id, screenName))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(BrowsePool);

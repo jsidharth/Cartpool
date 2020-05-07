@@ -93,7 +93,7 @@ public class PoolController {
     }
 
     @PostMapping("/joinpool")
-    public ResponseEntity joinPool(User user, @RequestParam String id, @RequestParam(required = false) String nickName) {
+    public ResponseEntity joinPool(User user, @RequestParam String id, @RequestParam(required = false) String screenName) {
         //get current user object
         //check if current user is in a pool
         //create a poolmember object to save
@@ -112,12 +112,12 @@ public class PoolController {
             //if nick name is given, check if nick name is in pool
             Boolean flag = false;
             User user_ = null;
-            if (nickName != null) {
+            if (screenName != null) {
                 List<PoolMember> poolMembers = pool.getPoolMembers();
                 for (PoolMember poolMember: poolMembers) {
-                    user_ = userService.getUserById(poolMember.getId());
+                    user_ = poolMember.getUser();
                     if ( user_ !=null) {
-                        if (user_.getNickName().equals(nickName)) {
+                        if (user_.getScreenName().equals(screenName)) {
                             flag = true;
                             break;
                         }
@@ -131,10 +131,10 @@ public class PoolController {
                     emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool "+ poolMember_for_user.getId());
                     return ResponseEntity.ok("Email sent to user. Wait for approval");
                 } else {
-                    return new ResponseEntity<>("This nick name is not in given pool", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>("This screen name is not in given pool", HttpStatus.BAD_REQUEST);
                 }
             } else {
-                //need to send email to the pool leader if nick name is not given
+                //need to send email to the pool leader if screen name is not given
                 //TODO
                 //find admin of this pool
                 user_ = pool.getPoolLeader();

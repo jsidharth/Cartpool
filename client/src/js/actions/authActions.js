@@ -53,6 +53,19 @@ const signIn = (payload, ownProps) => async (dispatch) => {
   }
 };
 
+const signOut = () => async (dispatch) => {
+  try {
+    await firebase.auth().signOut();
+    localStorage.removeItem("idToken");
+    localStorage.removeItem("state");
+    dispatch({
+      type: actionTypes.CLEAR_USER,
+      payload: {},
+    });
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
 //TODO: Check if we can remove this
 const googleSignUp = (ownProps) => async (dispatch) => {
   try {
@@ -86,4 +99,4 @@ const googleSignIn = (ownProps) => async (dispatch) => {
     toast.error("Google signup failed!");
   }
 };
-export { signIn, signUp, googleSignIn, googleSignUp };
+export { signIn, signUp, googleSignIn, googleSignUp, signOut };
