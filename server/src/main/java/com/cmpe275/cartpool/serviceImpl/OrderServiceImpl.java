@@ -130,6 +130,18 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public List<Orders> getUnassignedOrdersForStoreInPool(int order_id) {
+        Orders order = ordersRepo.findById(order_id).get();
+        return ordersRepo.findAllByAssignedToUserIsNullAndPoolAndStoreId(order.getStoreId(), order.getPoolId());
+    }
+
+    @Override
+    public List<Orders> getUnassignedOrdersInPool(String pool_id) {
+        Pool pool = poolRepo.findPoolById(pool_id).get();
+        return ordersRepo.findAllByAssignedToUserIsNullAndPool(pool);
+    }
+
     /*
     @Override
     public List<Orders> getOrdersByPoolId(int id) {
