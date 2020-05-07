@@ -97,6 +97,8 @@ public class PoolController {
         //get current user object
         //check if current user is in a pool
         //create a poolmember object to save
+
+
         PoolMember poolMember_for_user;
         if (user != null){
             if (user.getPoolMember() != null) {
@@ -115,6 +117,7 @@ public class PoolController {
             if (screenName != null) {
                 List<PoolMember> poolMembers = pool.getPoolMembers();
                 for (PoolMember poolMember: poolMembers) {
+                    System.out.println("Iterating over pool members"+poolMember.getUser().getEmail());
                     user_ = poolMember.getUser();
                     if ( user_ !=null) {
                         if (user_.getScreenName().equals(screenName)) {

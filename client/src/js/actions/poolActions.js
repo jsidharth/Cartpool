@@ -12,7 +12,7 @@ const createPool = (poolDetails, props) => async dispatch => {
     toast.success("Pool created!");
     props.history.push("/pool/browse");
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -29,7 +29,7 @@ const getPools = () => async dispatch => {
       }
     });
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -46,20 +46,20 @@ const getUserPool = () => async dispatch => {
       }
     });
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
 const requestToJoinPool = (id, screenName) => async dispatch => {
-  let endPoint = `http://${server.domain}:${server.port}/joinpool?id=${id}`;
+  let endPoint = `http://${server.domain}:${server.port}/joinpool?poolId=${id}`;
   if (screenName && screenName !== "") {
-    endPoint = `${endPoint}&nickName=${screenName}`;
+    endPoint = `${endPoint}&screenName=${screenName}`;
   }
   try {
     const { data: response } = await axios.post(endPoint);
     toast.success(response);
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 

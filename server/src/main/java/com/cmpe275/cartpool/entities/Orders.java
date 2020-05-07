@@ -100,14 +100,6 @@ public class Orders {
         this.orderedByUser = orderedByUser;
     }
 
-    public User getAssignedToUsr() {
-        return assignedToUser;
-    }
-
-    public void setAssignedToUsr(User assignedToUser) {
-        this.assignedToUser = assignedToUser;
-    }
-
     public Integer getId() {
         return id;
     }
