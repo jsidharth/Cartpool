@@ -148,7 +148,7 @@ public class OrderController {
     public void editAssignedToUser(User user, @RequestBody UserMultipleOrders userMultipleOrders){
         List<Integer> order_ids = userMultipleOrders.getOrder_ids();
         for(int order_id:order_ids) {
-            orderService.changeAssignedToUser(order_id, userMultipleOrders.getUser_id());
+            orderService.changeAssignedToUser(order_id, user.getId());
         }
     }
 }
