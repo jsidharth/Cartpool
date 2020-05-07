@@ -43,6 +43,7 @@ const signIn = (payload, ownProps) => async (dispatch) => {
       },
     });
     const { role } = user.data;
+    console.log(role);
     if (role === "USER") {
       ownProps.history.push("/browse/stores");
     } else {
@@ -53,7 +54,7 @@ const signIn = (payload, ownProps) => async (dispatch) => {
   }
 };
 
-const signOut = () => async (dispatch) => {
+const signOut = (ownProps) => async (dispatch) => {
   try {
     await firebase.auth().signOut();
     localStorage.removeItem("idToken");
@@ -62,6 +63,7 @@ const signOut = () => async (dispatch) => {
       type: actionTypes.CLEAR_USER,
       payload: {},
     });
+    ownProps.history.push("/");
   } catch (err) {
     toast.error(err.message);
   }

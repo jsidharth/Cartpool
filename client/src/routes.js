@@ -32,6 +32,8 @@ const Routes = () => {
       <Route exact path="/cart" component={Cart} />
       <Route exact path="/pool/create" component={CreatePool} />
       <Route exact path="/order" component={OrderDv} />
+      <Route exact path="/admin/stores" component={AdminStoreHome} />
+      <Route exact path="/admin/products" component={AdminProductHome} />
       <Route exact path="/admin/products/add" component={AdminProductForm} />
       <Route exact path="/admin/products/dv/:id" component={AdminProductDV} />
       <Route
@@ -39,15 +41,12 @@ const Routes = () => {
         path="/admin/products/edit/:id"
         component={AdminProductForm}
       />
-      <Route exact path="/admin/products" component={AdminProductHome} />
-
       <Route
         exact
         path="/admin/stores/edit/:storeName"
         component={AdminStoreForm}
       />
       <Route exact path="/admin/stores/add" component={AdminStoreForm} />
-      <Route exact path="/admin/stores" component={AdminStoreHome} />
       <ToastContainer autoClose={2000} />
     </div>
   );
