@@ -9,9 +9,7 @@ const orderReducer = (state = intialState, action) => {
     case actionTypes.UPDATE_CART:
       const { cart } = action.payload;
       return { ...state, cart };
-    case actionTypes.CLEAR_CART:
-      const { userPool } = action.payload;
-      return { ...state, userPool };
+
     default:
       break;
   }

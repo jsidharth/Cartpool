@@ -53,7 +53,7 @@ public class Pool {
     private String poolLeaderScreenNameTransient;
 
     @OneToOne
-    @JsonIgnoreProperties({"screenName","poolMember", "assignedOrders", "orderedByUser"})
+    @JsonIgnoreProperties({"screenName","poolMember", "assignedOrders", "orderedByUser", "ordersPlaced"})
     @JoinColumn(name = "poolLeader",referencedColumnName = "id")
     private User poolLeader;
 

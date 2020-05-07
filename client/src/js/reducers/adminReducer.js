@@ -2,7 +2,8 @@ import actionTypes from "../constants/index";
 const intialState = {
   products: [],
   stores: [],
-  storesWithProduct: []
+  storesWithProduct: [],
+  productsInStore: []
 };
 const adminReducer = (state = intialState, action) => {
   switch (action.type) {
