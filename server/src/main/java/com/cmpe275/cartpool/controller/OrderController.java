@@ -2,12 +2,8 @@ package com.cmpe275.cartpool.controller;
 
 import com.cmpe275.cartpool.DataObjects.OrderRequest;
 import com.cmpe275.cartpool.DataObjects.ProductStoreQuantity;
-import com.cmpe275.cartpool.entities.OrderProductStore;
-import com.cmpe275.cartpool.entities.Orders;
-import com.cmpe275.cartpool.entities.ProductStore;
-import com.cmpe275.cartpool.entities.User;
+import com.cmpe275.cartpool.entities.*;
 import com.cmpe275.cartpool.services.*;
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class OrderController {
     @Autowired
@@ -32,6 +29,8 @@ public class OrderController {
     @Autowired
     OrderProductStoreService orderProductStoreService;
 
+    @Autowired
+    ProductService productService;
 
     /**
      * Modify an existing order
@@ -96,22 +95,40 @@ public class OrderController {
         orders.setStoreId(storeService.getStoreById(orderRequest.getStoreId()));
         orders.setOrderedByUser(user);
         orders.setPool(poolService.getPoolById(orderRequest.getPoolId()));
+        orders.setOrderStatus(Status.ORDER_PLACED);
+        //TODO calculate total
         Orders savedOrder = orderService.addOrder(orders);
 
         List<ProductStoreQuantity> productStoreQuantities = orderRequest.getProductStoreList();
 
+        float total = 0;
         for(ProductStoreQuantity productStoreQuantity:productStoreQuantities){
             OrderProductStore productStore = new OrderProductStore();
+            ProductStore temp = productStoreService.findById(productStoreQuantity.getProductStoreId());
+            Product product = productService.getProductById(temp.getProductId());
+            total += product.getPrice() * productStoreQuantity.getQuantity();
             productStore.setOrder(savedOrder);
-            productStore.setProductStore(productStoreService.findById(productStoreQuantity.getProductStoreId()));
+            productStore.setProductStore(temp);
             productStore.setQuantity(productStoreQuantity.getQuantity());
             orderProductStoreService.addOrderProductStore(productStore);
         }
+        savedOrder.setTotal(total);
+        orderService.updateOrder(savedOrder);
         return new ResponseEntity(savedOrder.getId(), HttpStatus.OK);
     }
 
     @GetMapping("/getPoolAndStore/{pool_id}/{store_id}")
     public List<Orders> getOrdersByPoolAndUser(User user, @PathVariable String pool_id, @PathVariable int store_id){
         return orderService.getOrderByPoolAndStore(pool_id, store_id);
+    }
+
+    @GetMapping("/getAllOrdersAssignedTo")
+    public List<Orders> getOrdersAssignedToUser(User user){
+        return orderService.getAllOrdersAssignedToUser(user.getId());
+    }
+
+    @PutMapping("/orders/assignToUser/{order_id}/{user_id}")
+    public void editAssignedToUser(User user, @PathVariable int order_id, @PathVariable int user_id){
+        orderService.changeAssignedToUser(order_id,user_id);
     }
 }

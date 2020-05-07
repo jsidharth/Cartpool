@@ -113,8 +113,22 @@ public class OrderServiceImpl implements OrderService {
         return ordersRepo.findAllByPoolAndStoreId(pool1 , store);
     }
 
+    @Override
+    public List<Orders> getAllOrdersAssignedToUser(int user_id) {
+        User user = userRepo.findById(user_id).get();
+        return ordersRepo.findAllByAssignedToUser(user);
+    }
 
+    @Override
+    public void changeAssignedToUser(int order_id, int user_id) {
+        Orders order = ordersRepo.findById(order_id).get();
+        User toAssign = userRepo.findById(user_id).get();
 
+        order.setAssignedToUser(toAssign);
+
+        ordersRepo.save(order);
+
+    }
 
     /*
     @Override

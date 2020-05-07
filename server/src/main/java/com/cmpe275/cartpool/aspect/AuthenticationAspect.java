@@ -49,6 +49,7 @@ public class AuthenticationAspect {
                         } else {
                             System.out.println("Not an instance of user"+ newargs[0].getClass().getSimpleName());
                         }
+                        System.out.println("Auth went with no issues");
                         return joinPoint.proceed(newargs);
                     } else {
                         //Do this only if joinPoint is not register

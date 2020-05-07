@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import _ from "lodash";
 import { orderActions } from "./../../js/actions/index";
 
@@ -10,11 +11,11 @@ class Cart extends Component {
     const payload = {
       userId: this.props.userId,
       storeId: this.props.cart.storeId,
-      productStore: this.props.cart.products.map(product => ({
+      productStore: this.props.cart.products.map((product) => ({
         productStoreId: product.psId,
-        quantity: product.qty
+        quantity: product.qty,
       })),
-      total
+      total,
     };
     this.props.placeOrder(payload);
   };
@@ -122,11 +123,11 @@ const mapStateToProps = (state) => ({
   cart: state.orderReducer.cart,
   userId: state.auth.user.id,
 });
-const mapDisPatchToProps = (dispatch) => ({
+const mapDisPatchToProps = (dispatch, ownProps) => ({
   modifyProductQntyInCart: (productId, cart, step) =>
     dispatch(orderActions.modifyProductQntyInCart(productId, cart, step)),
   deleteProductFromCart: (productId, cart) =>
     dispatch(orderActions.deleteProductFromCart(productId, cart)),
-  placeOrder: (orderDetails) => dispatch(orderActions.placeOrder(orderDetails)),
+  placeOrder: (orderDetails) => dispatch(orderActions.placeOrder(orderDetails, ownProps)),
 });
-export default connect(mapStateToProps, mapDisPatchToProps)(Cart);
+export default withRouter(connect(mapStateToProps, mapDisPatchToProps)(Cart));

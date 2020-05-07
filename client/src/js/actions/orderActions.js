@@ -57,7 +57,7 @@ const addToCart = (productDetails) => (dispatch) => {
     });
     toast.success(`${curProduct.name} added to cart`);
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
@@ -84,12 +84,13 @@ const deleteProductFromCart = (prodId, cart) => (dispatch) => {
   });
 };
 
-const placeOrder = (orderDetails) => async (dispatch) => {
+const placeOrder = (orderDetails, ownProps) => async (dispatch) => {
   try {
     const { userId, storeId, productStore, total } = orderDetails;
-    const pool = await axios.get(`http://${server.domain}:${server.port}/pool`);
+    const {data:pool} = await axios.get(`http://${server.domain}:${server.port}/pool`);
     //TODO: Total price calculation move to backend
-    if (pool) {
+   
+    if (!_.isEmpty(pool)) {
       const payload = {
         storeId,
         userId: userId,
@@ -97,7 +98,7 @@ const placeOrder = (orderDetails) => async (dispatch) => {
         total,
         productStoreList: productStore,
       };
-      const currentOrder = await axios.post(
+      const {data: currentOrder} = await axios.post(
         `http://${server.domain}:${server.port}/orders`,
         payload
       );
@@ -113,6 +114,7 @@ const placeOrder = (orderDetails) => async (dispatch) => {
         payload: { cart: {} },
       });
       toast.success(`Your Order has been placed!`);
+      ownProps.history.push(`/order_placed/${currentOrder}`)
     } else {
       toast.error("Please join a pool to place order!");
     }
