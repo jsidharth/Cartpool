@@ -20,7 +20,7 @@ class StoreDetail extends Component {
           <div className="col-4">
             <img
               src={store.logoUrl}
-              class="rounded float-left img-thumbnail"
+              className="rounded float-left img-thumbnail"
               alt="..."
             />
           </div>

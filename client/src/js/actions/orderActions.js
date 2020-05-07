@@ -17,9 +17,9 @@ const addToCart = productDetails => dispatch => {
         products: [
           {
             qty: 1,
-            ...curProduct
-          }
-        ]
+            ...curProduct,
+          },
+        ],
       };
     } else {
       // Cart has items. Clear cart and add new product
@@ -30,16 +30,16 @@ const addToCart = productDetails => dispatch => {
           products: [
             {
               qty: 1,
-              ...curProduct
-            }
-          ]
+              ...curProduct,
+            },
+          ],
         };
       } else {
         // Add products to cart
         cart = { ...currentCart };
         cart.products.push({
           qty: 1,
-          ...curProduct
+          ...curProduct,
         });
         cart.products = _.uniqBy(cart.products, "psId");
       }
@@ -99,12 +99,6 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
         `http://${server.domain}:${server.port}/orders`,
         payload
       );
-      dispatch({
-        type: actionTypes.SET_CURRENT_ORDER,
-        payload: {
-          currentOrder
-        }
-      });
       // CLEAR THE CART
       dispatch({
         type: actionTypes.UPDATE_CART,
@@ -115,6 +109,38 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
     } else {
       toast.error("Please join a pool to place order!");
     }
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const getUserOrders = (id) => async (dispatch) => {
+  try {
+    const { data: userOrders } = await axios.get(
+      `http://${server.domain}:${server.port}/orders/${id}`
+    );
+      dispatch({
+        type: actionTypes.SET_USER_ORDERS,
+        payload: {
+          userOrders
+        }
+      });
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const getAssignedOrders = () => async (dispatch) => {
+  try {
+    const { data: assignedOrders } = await axios.get(
+      `http://${server.domain}:${server.port}/getAllOrdersAssignedTo`
+    );
+      dispatch({
+        type: actionTypes.SET_ASSIGNED_ORDERS,
+        payload: {
+          assignedOrders
+        }
+      });
   } catch (err) {
     toast.error(err.message);
   }
@@ -174,6 +200,8 @@ export {
   modifyProductQntyInCart,
   deleteProductFromCart,
   placeOrder,
+  getUserOrders,
+  getAssignedOrders,
   getOrderById,
   getSimilarOrdersFromPool,
   pickupOrders
