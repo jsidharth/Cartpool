@@ -1,5 +1,8 @@
 package com.cmpe275.cartpool.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -19,10 +22,13 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name="orderedByUser",referencedColumnName = "id")
+    @JsonIgnoreProperties({"ordersPlaced","assignedOrders", "poolMember"})
     private User orderedByUser;
 
     @ManyToOne
     @JoinColumn(name="pool",referencedColumnName = "id")
+    //@JsonIgnoreProperties({"poolLeader", "poolMembers", "ordersInPool"})
+    @JsonIgnore
     private Pool pool;
 
     @Enumerated(EnumType.STRING)
@@ -31,6 +37,7 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name="assignedToUser",referencedColumnName = "id")
+    @JsonIgnoreProperties({"ordersPlaced","assignedOrders", "poolMember"})
     private User assignedToUser;
 
     private Float total;
@@ -42,6 +49,7 @@ public class Orders {
     private Date deliveredTime;
 
     @OneToMany(mappedBy = "belongsToOrder")
+    @JsonIgnoreProperties({"belongsToOrder","orderedByUser", "order"})
     private List<OrderProductStore> items;
 
     public Orders(){}
@@ -58,6 +66,8 @@ public class Orders {
         this.deliveredTime = deliveredTime;
     }
 
+
+    @JsonIgnore
     public Pool getPool() {
         return pool;
     }
@@ -122,6 +132,7 @@ public class Orders {
 //        this.userId = userId;
 //    }
 
+    @JsonIgnore
     public Pool getPoolId() {
         return pool;
     }
@@ -129,7 +140,6 @@ public class Orders {
     public void setPoolId(Pool poolId) {
         this.pool = poolId;
     }
-
 
     public Status getOrderStatus() {
         return orderStatus;
