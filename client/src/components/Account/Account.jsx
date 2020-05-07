@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { userActions } from "./../../js/actions";
-
+import _ from 'lodash';
 class Account extends Component {
   state = {
     screenName: "",
@@ -16,11 +16,24 @@ class Account extends Component {
     verified: "",
   };
 
-  componentDidMount() {
-    this.setState({
-      ...this.props.user,
-    });
+  static getDerivedStateFromProps(props, state) {
+    if(!_.isEqual(props.user.screenName, state.screenName)) {
+      return {...props.user}
+    }
   }
+
+  componentDidMount() {
+    this.props.getDetails();
+  }
+
+  // componentDidUpdate(prevProps) {
+  //   if(!_.isEqual(this.props.user, prevProps.user)) 
+  //   {
+  //     this.setState({
+  //       ...this.props.user
+  //     });
+  //   }
+  // } 
 
   handleChange = (e) => {
     console.log(e.target);
@@ -32,10 +45,10 @@ class Account extends Component {
   updateProfile = (e) => {
     e.preventDefault();
     const payload = { ...this.state };
-
     this.props.updateProfile(payload);
   };
   render() {
+    
     return (
       <div className="mt-5 ">
         <div className="card">
@@ -237,5 +250,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   updateProfile: (payload) => dispatch(userActions.updateProfile(payload)),
+  getDetails: () => dispatch(userActions.getDetails())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Account);

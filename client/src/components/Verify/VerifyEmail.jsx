@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import queryString from "query-string";
 import { userActions } from "../../js/actions";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 class VerifyEMail extends Component {
   state = {};
@@ -26,4 +27,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     verifyEmail: (userEmail) => dispatch(userActions.verifyEmail(userEmail))
 })
-export default connect(mapStateToProps, mapDispatchToProps)(VerifyEMail);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(VerifyEMail));

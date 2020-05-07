@@ -45,7 +45,6 @@ const signIn = (payload, ownProps) => async dispatch => {
       }
     });
     const { role } = user.data;
-    console.log(role);
     if (role === "USER") {
       ownProps.history.push("/browse/stores");
     } else {
