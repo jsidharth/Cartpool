@@ -18,6 +18,8 @@ import Cart from "./components/Cart/Cart";
 import CreatePool from "./components/CreatePool/CreatePool";
 import OrderDv from "./components/Order/OrderDv";
 import OrderConfirmed from "./components/Order/OrderConfirmed";
+import MyOrders from "./components/Orders/MyOrders";
+import AssignedOrders from "./components/Orders/AssignedOrders";
 
 const Routes = () => {
   return (
@@ -28,17 +30,16 @@ const Routes = () => {
       <Route exact path="/browse/stores" component={Browse} />
       <Route exact path="/pool/browse" component={BrowsePool} />
       <Route exact path="/pool/detail" component={PoolDetail} />
-
       <Route exact path="/store/detail/:storeName" component={StoreDetail} />
       <Route exact path="/account" component={Account} />
-
       <Route exact path="/cart" component={Cart} />
       <Route exact path="/pool/create" component={CreatePool} />
-      <Route exact path="/order" component={OrderDv} />
       <Route exact path="/admin/stores" component={AdminStoreHome} />
       <Route exact path="/admin/products" component={AdminProductHome} />
       <Route exact path="/order_placed/:orderId" component={OrderConfirmed} />
-      <Route exact path="/order/order_id" component={OrderDv} />
+      <Route exact path="/order/myorders" component={MyOrders} />
+      <Route exact path="/order/assignedorders" component={AssignedOrders} />
+      <Route exact path="/order/dv/:orderId" component={OrderDv} />
       <Route exact path="/admin/products/add" component={AdminProductForm} />
       <Route exact path="/admin/products/dv/:id" component={AdminProductDV} />
       <Route

@@ -4,31 +4,7 @@ import { connect } from "react-redux";
 import { adminActions } from "../../js/actions";
 import { withRouter } from "react-router-dom";
 class Browse extends Component {
-  state = {
-    stores: [
-      {
-        id: "1",
-        name: "Costco",
-        desc: "101 San Fernando",
-        imageUrl: "",
-        buttonText: "Shop",
-      },
-      {
-        id: "2",
-        name: "Safeway",
-        desc: "101 San Fernando",
-        imageUrl: "",
-        buttonText: "Shop",
-      },
-      {
-        id: "3",
-        name: "Walmart",
-        desc: "101 San Fernando",
-        imageUrl: "",
-        buttonText: "Shop",
-      },
-    ],
-  };
+  state = {};
 
   componentDidMount() {
     this.props.getStores();
