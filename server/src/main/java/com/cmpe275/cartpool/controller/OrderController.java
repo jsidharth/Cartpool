@@ -4,6 +4,7 @@ import com.cmpe275.cartpool.DataObjects.OrderRequest;
 import com.cmpe275.cartpool.DataObjects.ProductStoreQuantity;
 import com.cmpe275.cartpool.entities.OrderProductStore;
 import com.cmpe275.cartpool.entities.Orders;
+import com.cmpe275.cartpool.entities.Status;
 import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class OrderController {
     @Autowired
@@ -94,6 +96,8 @@ public class OrderController {
         orders.setStoreId(storeService.getStoreById(orderRequest.getStoreId()));
         orders.setOrderedByUser(user);
         orders.setPool(poolService.getPoolById(orderRequest.getPoolId()));
+        orders.setOrderStatus(Status.ORDER_PLACED);
+        //TODO calculate total
         Orders savedOrder = orderService.addOrder(orders);
 
         List<ProductStoreQuantity> productStoreQuantities = orderRequest.getProductStoreList();
