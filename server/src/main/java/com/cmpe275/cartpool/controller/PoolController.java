@@ -235,4 +235,9 @@ public class PoolController {
             return new ResponseEntity<>("Not part of any pool", HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/testemail")
+    public void testEmail(User user){
+        emailService.sendMail("whatever", "lolz", "sushant.post@gmail.com",
+                "Whats uppp");
+    }
 }

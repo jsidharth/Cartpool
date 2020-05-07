@@ -4,10 +4,8 @@ import com.cmpe275.cartpool.DataObjects.OrderRequest;
 import com.cmpe275.cartpool.DataObjects.ProductStoreQuantity;
 import com.cmpe275.cartpool.entities.OrderProductStore;
 import com.cmpe275.cartpool.entities.Orders;
-import com.cmpe275.cartpool.entities.ProductStore;
 import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.services.*;
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -113,5 +111,15 @@ public class OrderController {
     @GetMapping("/getPoolAndStore/{pool_id}/{store_id}")
     public List<Orders> getOrdersByPoolAndUser(User user, @PathVariable String pool_id, @PathVariable int store_id){
         return orderService.getOrderByPoolAndStore(pool_id, store_id);
+    }
+
+    @GetMapping("/getAllOrdersAssignedTo")
+    public List<Orders> getOrdersAssignedToUser(User user){
+        return orderService.getAllOrdersAssignedToUser(user.getId());
+    }
+
+    @PutMapping("/orders/assignToUser/{order_id}/{user_id}")
+    public void editAssignedToUser(User user, @PathVariable int order_id, @PathVariable int user_id){
+        orderService.changeAssignedToUser(order_id,user_id);
     }
 }
