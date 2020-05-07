@@ -26,11 +26,11 @@ const Routes = () => {
       <Route exact path="/signin" component={SignIn} />
       <Route exact path="/signup" component={Signup} />
       <Route exact path="/browse/stores" component={Browse} />
-      <Route exact path="/pool/browse" component={BrowsePool}/>
+      <Route exact path="/pool/browse" component={BrowsePool} />
       {/* TODO:Change the route to /pool/{id} */}
       <Route exact path="/pool/detail" component={PoolDetail} />
       {/* TODO:Change the route to /store/{id} */}
-      <Route exact path="/store/detail" component={StoreDetail} />
+      <Route exact path="/store/detail/:storeName" component={StoreDetail} />
       {/* TODO:Change the route to /account/{id} */}
       <Route exact path="/account" component={Account} />
       <Route exact path="/cart" component={Cart} />

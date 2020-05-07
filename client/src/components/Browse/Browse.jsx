@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import requireAuth from "../RequireAuth/RequireAuth";
 import Card from "../Card/Card";
+import { connect } from "react-redux";
+import { adminActions } from "../../js/actions";
 
 class Browse extends Component {
   state = {
@@ -10,26 +11,31 @@ class Browse extends Component {
         name: "Costco",
         desc: "101 San Fernando",
         imageUrl: "",
-        buttonText: "Shop",
+        buttonText: "Shop"
       },
       {
         id: "2",
         name: "Safeway",
         desc: "101 San Fernando",
         imageUrl: "",
-        buttonText: "Shop",
+        buttonText: "Shop"
       },
       {
         id: "3",
         name: "Walmart",
         desc: "101 San Fernando",
         imageUrl: "",
-        buttonText: "Shop",
-      },
-    ],
+        buttonText: "Shop"
+      }
+    ]
   };
-  goToStoreDetail = (id) => {
-    this.props.history.push("/store/detail/");
+
+  componentDidMount() {
+    this.props.getStores();
+  }
+
+  goToStoreDetail = (id, name) => {
+    this.props.history.push(`/store/detail/${name}`);
   };
 
   render() {
@@ -37,12 +43,18 @@ class Browse extends Component {
       <div>
         {/* TODO: Style this heading */}
         <h1 className="display-4">Stores</h1>
-        <div className="row justify-content-around">
-          {this.state.stores && this.state.stores.length
-            ? this.state.stores.map((store) => {
+        <hr />
+        <div className="row ">
+          {this.props.stores && this.props.stores.length
+            ? this.props.stores.map(store => {
                 return (
-                  <div className="col-3 float-left">
-                    <Card {...store} buttonAction={this.goToStoreDetail} />
+                  <div className="col-3 float-left m-3">
+                    <Card
+                      {...store}
+                      id={store.id}
+                      buttonAction={this.goToStoreDetail}
+                      buttonText="Go to store"
+                    />
                   </div>
                 );
               })
@@ -53,5 +65,14 @@ class Browse extends Component {
   }
 }
 
-export default Browse;
-// export default requireAuth(Pool);
+const mapStateToProps = state => ({
+  stores: state.adminReducer.stores
+});
+
+const mapDispatchToProps = dispatch => ({
+  getStores: () => {
+    dispatch(adminActions.getStores());
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Browse);

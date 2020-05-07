@@ -6,7 +6,7 @@ class Card extends Component {
   render() {
     const { id, name, desc, brand, price, unit, imageUrl } = this.props;
     return (
-      <div className="card poolcard" style={{ width: "18rem" }}>
+      <div className="card poolcard shadow m-2">
         <img
           src={imageUrl || poolLogo}
           class="rounded img-thumbnail"
@@ -18,7 +18,9 @@ class Card extends Component {
         <div className="card-body">
           <div className="row">
             <div className="col">
-              <h5 className="card-title">{name} | {brand}</h5>
+              <h5 className="card-title">
+                {name} | {brand}
+              </h5>
             </div>
           </div>
           <div className="row">
@@ -28,13 +30,15 @@ class Card extends Component {
               </h6>
             </div>
           </div>
-          
+
           <div className="row">
             <div className="col">
-              <p className="card-text">{unit} @ ${price}</p>
+              <p className="card-text">
+                {unit} @ ${price}
+              </p>
             </div>
           </div>
-          
+
           <div className="row">
             <div className="col">
               <button
