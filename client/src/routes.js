@@ -16,7 +16,6 @@ import AdminStoreHome from "./components/Admin/AdminStoreHome";
 import AdminStoreForm from "./components/Admin/AdminStoreForm";
 import Cart from "./components/Cart/Cart";
 import CreatePool from "./components/CreatePool/CreatePool";
-import PoolCard from "./components/Pool/PoolCard";
 import OrderDv from "./components/Order/OrderDv";
 
 const Routes = () => {
@@ -26,16 +25,12 @@ const Routes = () => {
       <Route exact path="/signin" component={SignIn} />
       <Route exact path="/signup" component={Signup} />
       <Route exact path="/browse/stores" component={Browse} />
-      <Route exact path="/pool/browse" component={BrowsePool}/>
-      {/* TODO:Change the route to /pool/{id} */}
+      <Route exact path="/pool/browse" component={BrowsePool} />
       <Route exact path="/pool/detail" component={PoolDetail} />
-      {/* TODO:Change the route to /store/{id} */}
-      <Route exact path="/store/detail" component={StoreDetail} />
-      {/* TODO:Change the route to /account/{id} */}
+      <Route exact path="/store/detail/:storeName" component={StoreDetail} />
       <Route exact path="/account" component={Account} />
       <Route exact path="/cart" component={Cart} />
       <Route exact path="/pool/create" component={CreatePool} />
-      <Route exact path="/pool" component={PoolCard} />
       <Route exact path="/order" component={OrderDv} />
       <Route exact path="/admin/products/add" component={AdminProductForm} />
       <Route exact path="/admin/products/dv/:id" component={AdminProductDV} />

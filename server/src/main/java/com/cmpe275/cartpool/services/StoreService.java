@@ -19,4 +19,6 @@ public interface StoreService {
     List<Store> getAllStores();
 
     Store updateStore(Store store);
+
+    Store getStoreById(int id);
 }

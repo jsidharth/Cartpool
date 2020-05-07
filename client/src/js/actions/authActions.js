@@ -31,6 +31,9 @@ const signIn = (payload, ownProps) => async (dispatch) => {
   try {
     const { email, password } = payload;
     await firebase.auth().signInWithEmailAndPassword(email, password);
+    const idToken = await firebase.auth().currentUser.getIdToken();
+    const serializedidToken = JSON.stringify(idToken);
+    localStorage.setItem("idToken", serializedidToken);
     //TODO: Change endpoint to user detail API
     const user = await axios.get(`http://${server.domain}:${server.port}/user`);
     dispatch({
@@ -50,6 +53,19 @@ const signIn = (payload, ownProps) => async (dispatch) => {
   }
 };
 
+const signOut = () => async (dispatch) => {
+  try {
+    await firebase.auth().signOut();
+    localStorage.removeItem("idToken");
+    localStorage.removeItem("state");
+    dispatch({
+      type: actionTypes.CLEAR_USER,
+      payload: {},
+    });
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
 //TODO: Check if we can remove this
 const googleSignUp = (ownProps) => async (dispatch) => {
   try {
@@ -83,4 +99,4 @@ const googleSignIn = (ownProps) => async (dispatch) => {
     toast.error("Google signup failed!");
   }
 };
-export { signIn, signUp, googleSignIn, googleSignUp };
+export { signIn, signUp, googleSignIn, googleSignUp, signOut };

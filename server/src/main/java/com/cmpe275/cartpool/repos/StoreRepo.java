@@ -9,4 +9,6 @@ public interface StoreRepo extends JpaRepository<Store,Integer> {
         Store findByName(String name);
 
         boolean existsByName(String name);
+
+        Store findStoreById(int id);
 }

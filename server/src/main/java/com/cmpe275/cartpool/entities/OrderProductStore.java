@@ -24,6 +24,12 @@ public class OrderProductStore {
     public OrderProductStore() {
     }
 
+    public OrderProductStore(int quantity, Orders belongsToOrder, ProductStore productStore){
+        this.quantity = quantity;
+        this.belongsToOrder = belongsToOrder;
+        this.productStore = productStore;
+    }
+
     public ProductStore getProductStore() {
         return productStore;
     }

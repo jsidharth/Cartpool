@@ -2,7 +2,8 @@ import actionTypes from "../constants/index";
 const intialState = {
   products: [],
   stores: [],
-  storesWithProduct: []
+  storesWithProduct: [],
+  productsInStore: []
 };
 const adminReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -23,6 +24,9 @@ const adminReducer = (state = intialState, action) => {
     case actionTypes.SET_STORES_WITH_PRODUCT:
       const { stores: storesWithProduct } = action.payload;
       return { ...state, storesWithProduct };
+    case actionTypes.SET_PRODUCTS_OF_STORE:
+      const { products: productsInStore } = action.payload;
+      return { ...state, productsInStore };
     default:
       break;
   }
