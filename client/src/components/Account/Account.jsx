@@ -1,40 +1,40 @@
 import React, { Component } from "react";
-import {connect} from 'react-redux';
-import {userActions} from "./../../js/actions";
+import { connect } from "react-redux";
+import { userActions } from "./../../js/actions";
 
 class Account extends Component {
   state = {
-    screenName: '',
-    nickName: '',
-    email: '',
-    imgUrl: '',
-    street: '',
-    city: '',
-    state: '',
-    zip: '',
-    credit: '',
-    verified: ''
+    screenName: "",
+    nickName: "",
+    email: "",
+    imgUrl: "",
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+    credit: "",
+    verified: "",
   };
 
   componentDidMount() {
     this.setState({
-      ...this.props.user
-    })
+      ...this.props.user,
+    });
   }
 
-  handleChange  = e => {
+  handleChange = (e) => {
     console.log(e.target);
     this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  updateProfile = e => {
+  updateProfile = (e) => {
     e.preventDefault();
-    const payload = {...this.state};
-    
+    const payload = { ...this.state };
+
     this.props.updateProfile(payload);
-  }
+  };
   render() {
     return (
       <div className="mt-5 ">
@@ -44,13 +44,13 @@ class Account extends Component {
             <div className="row">
               <div className="col-6">
                 <div className="row ml-5">
-                <img
-                  src={this.state.imgUrl}
-                  class="rounded img-thumbnail"
-                  alt="..."
-                  max-width="100%"
-                  height="200px"
-                />
+                  <img
+                    src={this.state.imgUrl}
+                    className="rounded img-thumbnail"
+                    alt="..."
+                    max-width="100%"
+                    height="200px"
+                  />
                 </div>
                 <div className="row ml-5">
                   <label className="col-sm-4 col-form-label font-weight-bold">
@@ -61,7 +61,7 @@ class Account extends Component {
                       type="text"
                       className="form-control-plaintext"
                       disabled
-                      value={this.state.verified}
+                      value={this.state.verified ? "YES" : "NO"}
                     />
                   </div>
                 </div>
@@ -88,7 +88,7 @@ class Account extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Screen Name"
                       aria-label="Screen Name"
                       disabled
@@ -104,7 +104,7 @@ class Account extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Nick name"
                       aria-label="Nick name"
                       aria-describedby="basic-addon1"
@@ -135,7 +135,7 @@ class Account extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Image url"
                       aria-label="Image"
                       aria-describedby="basic-addon1"
@@ -152,7 +152,7 @@ class Account extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Street"
                       aria-label="Street"
                       aria-describedby="basic-addon1"
@@ -169,7 +169,7 @@ class Account extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="City"
                       aria-label="City"
                       aria-describedby="basic-addon1"
@@ -186,7 +186,7 @@ class Account extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="State"
                       aria-label="State"
                       aria-describedby="basic-addon1"
@@ -203,7 +203,7 @@ class Account extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Zipcode"
                       aria-label="Zipcode"
                       name="zip"
@@ -216,7 +216,13 @@ class Account extends Component {
               </div>
             </div>
             <div className="row m-3 float-right">
-            <button type="button" className="btn btn-outline-success" onClick={this.updateProfile}>Update</button>
+              <button
+                type="button"
+                className="btn btn-outline-success"
+                onClick={this.updateProfile}
+              >
+                Update
+              </button>
             </div>
           </div>
         </div>
@@ -225,11 +231,11 @@ class Account extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.auth.user
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateProfile: payload => dispatch(userActions.updateProfile(payload))
-})
+  updateProfile: (payload) => dispatch(userActions.updateProfile(payload)),
+});
 export default connect(mapStateToProps, mapDispatchToProps)(Account);

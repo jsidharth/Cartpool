@@ -21,4 +21,20 @@ const updateProfile = userDetails => async dispatch => {
   }
 };
 
-export { updateProfile };
+const verifyEmail = (userEmail) => async dispatch => {
+  try {
+    await axios.get(`http://${server.domain}:${server.port}/user/verify?userEmail=${userEmail}`)
+  } catch (err) {
+    toast.error(err.response.data);
+  }
+}
+
+const verifyPool = (poolMemberId) => async dispatch => {
+  try {
+    await axios.get(`http://${server.domain}:${server.port}/pool/approve?poolMemberId=${poolMemberId}`)
+  } catch (err) {
+    toast.error(err.response.data);
+  }
+}
+
+export { updateProfile, verifyEmail, verifyPool};

@@ -11,7 +11,7 @@ class AssignedOrders extends Component {
   }
 
   goToOrderDetail = (orderId) => {
-      this.props.history.push(`/order/${orderId}`)
+      this.props.history.push(`/order/dv/${orderId}?assigned=true`)
   };
 
   render() {
@@ -27,7 +27,8 @@ class AssignedOrders extends Component {
                   <div className="col-3 float-left m-3">
                     <OrderCard
                       {...order}
-                      goToOrderDetail={() => this.goToStoreDetail}
+                      goToOrderDetail={this.goToOrderDetail}
+                      buttonText = "Checkout"
                     />
                   </div>
                 );

@@ -20,6 +20,8 @@ import OrderDv from "./components/Order/OrderDv";
 import OrderConfirmed from "./components/Order/OrderConfirmed";
 import MyOrders from "./components/Orders/MyOrders";
 import AssignedOrders from "./components/Orders/AssignedOrders";
+import VerifyEmail from "./components/Verify/VerifyEmail";
+import VerifyPool from "./components/Verify/VerifyPool";
 
 const Routes = () => {
   return (
@@ -53,6 +55,8 @@ const Routes = () => {
         component={AdminStoreForm}
       />
       <Route exact path="/admin/stores/add" component={AdminStoreForm} />
+      <Route exact path="/user/verify" component={VerifyEmail} />
+      <Route exact path="/pool/approve" component={VerifyPool} />
       <ToastContainer autoClose={2000} />
     </div>
   );

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 class OrderCard extends Component {
   state = {};
   render() {
-    const { id, orderStatus, total } = this.props;
+    const { id, orderStatus, total, buttonText} = this.props;
     return (
       <div className="card poolcard shadow">
         <div className="card-body">
@@ -15,7 +15,7 @@ class OrderCard extends Component {
             className="btn btn-primary float-right"
             onClick={() =>this.props.goToOrderDetail(id)}
           >
-            View
+            {buttonText}
           </button>
         </div>
       </div>

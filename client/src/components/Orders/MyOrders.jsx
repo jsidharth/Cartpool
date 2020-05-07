@@ -28,6 +28,7 @@ class MyOrders extends Component {
                     <OrderCard
                       {...order}
                       goToOrderDetail={this.goToOrderDetail}
+                      buttonText = "View"
                     />
                   </div>
                 );
