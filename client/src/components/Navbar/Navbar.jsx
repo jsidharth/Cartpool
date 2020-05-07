@@ -32,76 +32,78 @@ class Navbar extends Component {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          {this.props.user.role === "USER" ? (
-            <ul className="navbar-nav">
-              <li className="nav-item active">
-                <Link to="/browse/stores" style={{ textDecoration: "none" }}>
-                  <div className="nav-link">Browse</div>
-                </Link>
-              </li>
+          {this.props.user ? (
+            this.props.user.role === "USER" ? (
+              <ul className="navbar-nav">
+                <li className="nav-item active">
+                  <Link to="/browse/stores" style={{ textDecoration: "none" }}>
+                    <div className="nav-link">Browse</div>
+                  </Link>
+                </li>
 
-              <li className="nav-item dropdown">
-                <div
-                  className="nav-link dropdown-toggle"
-                  id="navbarDropdownMenuLink"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Pool
-                </div>
-                <div
-                  className="dropdown-menu"
-                  aria-labelledby="navbarDropdownMenuLink"
-                >
-                  <Link className="dropdown-item" to="/pool/browse">
-                    Browse pools
-                  </Link>
-                  <Link className="dropdown-item" to="/pool/detail">
-                    My Pool
-                  </Link>
-                </div>
-              </li>
+                <li className="nav-item dropdown">
+                  <div
+                    className="nav-link dropdown-toggle"
+                    id="navbarDropdownMenuLink"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Pool
+                  </div>
+                  <div
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdownMenuLink"
+                  >
+                    <Link className="dropdown-item" to="/pool/browse">
+                      Browse pools
+                    </Link>
+                    <Link className="dropdown-item" to="/pool/detail">
+                      My Pool
+                    </Link>
+                  </div>
+                </li>
 
-              <li className="nav-item dropdown">
-                <div
-                  className="nav-link dropdown-toggle"
-                  id="navbarDropdownMenuLink"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Order
-                </div>
-                <div
-                  className="dropdown-menu"
-                  aria-labelledby="navbarDropdownMenuLink"
-                >
-                  <Link className="dropdown-item" to="">
-                    My Orders
+                <li className="nav-item dropdown">
+                  <div
+                    className="nav-link dropdown-toggle"
+                    id="navbarDropdownMenuLink"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Order
+                  </div>
+                  <div
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdownMenuLink"
+                  >
+                    <Link className="dropdown-item" to="">
+                      My Orders
+                    </Link>
+                    <Link className="dropdown-item" to="">
+                      Orders to pickup
+                    </Link>
+                  </div>
+                </li>
+              </ul>
+            ) : (
+              <ul className="navbar-nav">
+                <li className="nav-item active">
+                  <Link to="/admin/stores" style={{ textDecoration: "none" }}>
+                    <div className="nav-link">Store</div>
                   </Link>
-                  <Link className="dropdown-item" to="">
-                    Orders to pickup
+                </li>
+                <li className="nav-item active">
+                  <Link to="/admin/products" style={{ textDecoration: "none" }}>
+                    <div className="nav-link">Products</div>
                   </Link>
-                </div>
-              </li>
-            </ul>
-          ) : (
-            <ul className="navbar-nav">
-              <li className="nav-item active">
-                <Link to="/admin/stores" style={{ textDecoration: "none" }}>
-                  <div className="nav-link">Store</div>
-                </Link>
-              </li>
-              <li className="nav-item active">
-                <Link to="/admin/products" style={{ textDecoration: "none" }}>
-                  <div className="nav-link">Products</div>
-                </Link>
-              </li>
-            </ul>
-          )}
+                </li>
+              </ul>
+            )
+          ) : null}
           {!_.isEmpty(this.props.user) ? (
             <div className="collapse navbar-collapse justify-content-end">
               <div className="navbar-nav">
