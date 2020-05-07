@@ -25,6 +25,10 @@ public interface OrderService {
 
     void changeAssignedToUser(int order_id, int user_id);
 
+    List<Orders> getUnassignedOrdersForStoreInPool(int order_id);
+
+    List<Orders> getUnassignedOrdersInPool(String pool_id);
+
     //List<Orders> getOrdersByPoolId(int id);
 
     /*

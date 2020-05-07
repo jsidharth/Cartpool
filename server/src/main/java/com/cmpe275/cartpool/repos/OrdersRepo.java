@@ -14,4 +14,8 @@ public interface OrdersRepo extends JpaRepository<Orders,Integer> {
     List<Orders> findAllByPoolAndStoreId(Pool pool_id, Store store_id);
 
     List<Orders> findAllByAssignedToUser(User user);
+
+    List<Orders> findAllByAssignedToUserIsNullAndPoolAndStoreId(Store store_id, Pool poolId);
+
+    List<Orders> findAllByAssignedToUserIsNullAndPool(Pool pool_id);
 }

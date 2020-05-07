@@ -119,6 +119,16 @@ public class OrderController {
         return orderService.getOrderByPoolAndStore(pool_id, store_id);
     }
 
+    @GetMapping("/getUnassignedOrdersOfStoreInPool/{order_id}")
+    public List<Orders> getUnassignedOrdersOfStoreInPool(User user, @PathVariable int order_id){
+        return orderService.getUnassignedOrdersForStoreInPool(order_id);
+    }
+
+    @GetMapping("/getUnassignedOrdersInPool/{pool_id")
+    public List<Orders> getUnassignedOrdersInPool(User user, @PathVariable String pool_id){
+        return orderService.getUnassignedOrdersInPool(pool_id);
+    }
+
     @GetMapping("/getAllOrdersAssignedTo")
     public List<Orders> getOrdersAssignedToUser(User user){
         return orderService.getAllOrdersAssignedToUser(user.getId());
