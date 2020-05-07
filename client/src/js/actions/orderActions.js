@@ -4,7 +4,7 @@ import axios from "axios";
 import server from "./../../config/server";
 import actionTypes from "../constants";
 
-const addToCart = (productDetails) => (dispatch) => {
+const addToCart = productDetails => dispatch => {
   console.log("Here", productDetails);
   try {
     const { storeId, storeName, currentCart, ...curProduct } = productDetails;
@@ -47,8 +47,8 @@ const addToCart = (productDetails) => (dispatch) => {
     dispatch({
       type: actionTypes.UPDATE_CART,
       payload: {
-        cart,
-      },
+        cart
+      }
     });
     toast.success(`${curProduct.name} added to cart`);
   } catch (err) {
@@ -56,9 +56,9 @@ const addToCart = (productDetails) => (dispatch) => {
   }
 };
 
-const modifyProductQntyInCart = (prodId, cart, step) => (dispatch) => {
+const modifyProductQntyInCart = (prodId, cart, step) => dispatch => {
   const updatedCart = { ...cart };
-  updatedCart.products = updatedCart.products.map((p) => {
+  updatedCart.products = updatedCart.products.map(p => {
     if (p.id === prodId) {
       p.qty = p.qty + step;
     }
@@ -66,20 +66,20 @@ const modifyProductQntyInCart = (prodId, cart, step) => (dispatch) => {
   });
   dispatch({
     type: actionTypes.UPDATE_CART,
-    payload: { cart: updatedCart },
+    payload: { cart: updatedCart }
   });
 };
 
-const deleteProductFromCart = (prodId, cart) => (dispatch) => {
+const deleteProductFromCart = (prodId, cart) => dispatch => {
   const currCart = { ...cart };
-  currCart.products = currCart.products.filter((p) => p.id !== prodId);
+  currCart.products = currCart.products.filter(p => p.id !== prodId);
   dispatch({
     type: actionTypes.UPDATE_CART,
-    payload: { cart: currCart },
+    payload: { cart: currCart }
   });
 };
 
-const placeOrder = (orderDetails, ownProps) => async (dispatch) => {
+const placeOrder = (orderDetails, ownProps) => async dispatch => {
   try {
     const { userId, storeId, productStore, total } = orderDetails;
     const { data: pool } = await axios.get(
@@ -93,7 +93,7 @@ const placeOrder = (orderDetails, ownProps) => async (dispatch) => {
         userId: userId,
         poolId: pool.id,
         total,
-        productStoreList: productStore,
+        productStoreList: productStore
       };
       const { data: currentOrder } = await axios.post(
         `http://${server.domain}:${server.port}/orders`,
@@ -102,7 +102,7 @@ const placeOrder = (orderDetails, ownProps) => async (dispatch) => {
       // CLEAR THE CART
       dispatch({
         type: actionTypes.UPDATE_CART,
-        payload: { cart: {} },
+        payload: { cart: {} }
       });
       toast.success(`Your Order has been placed!`);
       ownProps.history.push(`/order_placed/${currentOrder}`);
@@ -146,17 +146,38 @@ const getAssignedOrders = () => async (dispatch) => {
   }
 };
 
-const getOrderById = (orderId) => async (dispatch) => {
-  const { data: currentOrder } = await axios.get(
-    `http://${server.domain}:${server.port}/order/${orderId}`
-  );
+const getOrderById = orderId => async dispatch => {
+  try {
+    const { data: order } = await axios.get(
+      `http://${server.domain}:${server.port}/order/${orderId}`
+    );
+    console.log("action getOrderById", order);
+    //toast.success("Product added with id" + product.id);
     dispatch({
       type: actionTypes.SET_CURRENT_ORDER,
-      payload: {
-        currentOrder
-      }
+      payload: { currentOrder: order }
     });
-}
+  } catch (err) {
+    toast.error(err.response.data);
+  }
+};
+
+const getSimilarOrdersFromPool = orderId => async dispatch => {
+  try {
+    const { data: orders } = await axios.get(
+      `http://${server.domain}:${server.port}/getUnassignedOrdersOfStoreInPool/${orderId}`
+    );
+    console.log("action getSimilarOrdersFromPool", orders);
+    //toast.success("Product added with id" + product.id);
+    dispatch({
+      type: actionTypes.SET_SIMILAR_ORDERS,
+      payload: { similarOrders: orders }
+    });
+  } catch (err) {
+    toast.error(err.response.data);
+  }
+};
+
 export {
   addToCart,
   modifyProductQntyInCart,
@@ -164,5 +185,6 @@ export {
   placeOrder,
   getUserOrders,
   getAssignedOrders,
-  getOrderById
+  getOrderById,
+  getSimilarOrdersFromPool
 };

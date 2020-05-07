@@ -4,6 +4,7 @@ const intialState = {
   userOrders: [],
   assignedOrders: [],
   currentOrder: {},
+  ordersToPickUp: [],
 };
 const orderReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -19,6 +20,9 @@ const orderReducer = (state = intialState, action) => {
       case actionTypes.SET_ASSIGNED_ORDERS:
         const { assignedOrders } = action.payload;
         return { ...state, assignedOrders };
+    case actionTypes.SET_SIMILAR_ORDERS:
+      const { similarOrders } = action.payload;
+      return { ...state, similarOrders };
     default:
       break;
   }

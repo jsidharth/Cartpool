@@ -32,6 +32,12 @@ public class OrderController {
     @Autowired
     ProductService productService;
 
+
+    @GetMapping("/order/{orderId}")
+    public Orders getOrderbyId(@PathVariable int orderId){
+        return orderService.getOrderById(orderId);
+    }
+
     /**
      * Modify an existing order
      * @param orders
@@ -127,7 +133,7 @@ public class OrderController {
         return orderService.getUnassignedOrdersForStoreInPool(order_id);
     }
 
-    @GetMapping("/getUnassignedOrdersInPool/{pool_id")
+    @GetMapping("/getUnassignedOrdersInPool/{pool_id}")
     public List<Orders> getUnassignedOrdersInPool(User user, @PathVariable String pool_id){
         return orderService.getUnassignedOrdersInPool(pool_id);
     }
