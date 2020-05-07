@@ -1,26 +1,26 @@
 import React, { Component } from "react";
-import {poolActions} from "./../../js/actions/index";
+import { poolActions } from "./../../js/actions/index";
 import { connect } from "react-redux";
 
 class CreatePool extends Component {
   state = {
-    id: '',
-    name: '',
-    neighbourhood: '',
-    description: '',
-    zip: ''
+    id: "",
+    name: "",
+    neighbourhood: "",
+    description: "",
+    zip: ""
   };
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
-  }
+  };
 
   createPool = e => {
     e.preventDefault();
-    const payload = {...this.state};
+    const payload = { ...this.state };
     this.props.createPool(payload);
-  }
+  };
   render() {
     return (
       <div className="mt-5 row justify-content-center">
@@ -82,7 +82,7 @@ class CreatePool extends Component {
                 </div>
                 <div className="row m-2">
                   <label className="col-sm-4 col-form-label font-weight-bold">
-                  Neighborhood
+                    Neighborhood
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -117,7 +117,13 @@ class CreatePool extends Component {
               </div>
             </div>
             <div className="row m-3 float-right">
-            <button type="button" className="btn btn-outline-success" onClick={this.createPool}>Create</button>
+              <button
+                type="button"
+                className="btn btn-outline-success"
+                onClick={this.createPool}
+              >
+                Create
+              </button>
             </div>
           </div>
         </div>
@@ -126,8 +132,8 @@ class CreatePool extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  createPool: payload => dispatch(poolActions.createPool(payload))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  createPool: payload => dispatch(poolActions.createPool(payload, ownProps))
 });
 
 export default connect(null, mapDispatchToProps)(CreatePool);

@@ -1,4 +1,4 @@
 export default {
-  domain: "10.0.0.47",
+  domain: "localhost",
   port: "8080"
 };
