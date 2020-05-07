@@ -2,6 +2,7 @@ package com.cmpe275.cartpool.controller;
 
 import com.cmpe275.cartpool.DataObjects.OrderRequest;
 import com.cmpe275.cartpool.DataObjects.ProductStoreQuantity;
+import com.cmpe275.cartpool.DataObjects.UserMultipleOrders;
 import com.cmpe275.cartpool.entities.*;
 import com.cmpe275.cartpool.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,8 +144,11 @@ public class OrderController {
         return orderService.getAllOrdersAssignedToUser(user.getId());
     }
 
-    @PutMapping("/orders/assignToUser/{order_id}/{user_id}")
-    public void editAssignedToUser(User user, @PathVariable int order_id, @PathVariable int user_id){
-        orderService.changeAssignedToUser(order_id,user_id);
+    @PutMapping("/orders/assignToUser/")
+    public void editAssignedToUser(User user, @RequestBody UserMultipleOrders userMultipleOrders){
+        List<Integer> order_ids = userMultipleOrders.getOrder_ids();
+        for(int order_id:order_ids) {
+            orderService.changeAssignedToUser(order_id, user.getId());
+        }
     }
 }
