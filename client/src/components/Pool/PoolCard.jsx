@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 
 class PoolCard extends Component {
-  state = {};
+  state = {
+    screenName: ""
+  };
+
+  handleChange = e => {
+    //console.log(e.target);
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -38,13 +48,21 @@ class PoolCard extends Component {
                       className="form-control mt-1"
                       aria-label="Small"
                       aria-describedby="inputGroup-sizing-sm"
-                      placeholder="Enter Screenname of any member"
+                      placeholder="Enter Screen name of any member"
+                      value={this.state.screenName}
+                      onChange={this.handleChange}
+                      name="screenName"
                     />
                   </div>
                   <div>
                     <button
                       className="btn btn-primary  btn-sm btn-block mt-2"
-                      onClick={this.props.requestPoolMember}
+                      onClick={() =>
+                        this.props.requestPoolMember(
+                          this.props.id,
+                          this.state.screenName
+                        )
+                      }
                     >
                       Request member
                     </button>

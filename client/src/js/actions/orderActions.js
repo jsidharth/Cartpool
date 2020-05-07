@@ -70,7 +70,7 @@ const addToCart = productDetails => dispatch => {
     });
     toast.success(`${name} added to cart`);
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.response.data);
   }
 };
 
