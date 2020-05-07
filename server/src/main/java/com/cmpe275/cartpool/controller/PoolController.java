@@ -98,6 +98,7 @@ public class PoolController {
         //check if current user is in a pool
         //create a poolmember object to save
         PoolMember poolMember_for_user;
+        String url_for_approval;
         if (user != null){
             if (user.getPoolMember() != null) {
                 return new ResponseEntity<>("user already part of a pool", HttpStatus.BAD_REQUEST);
@@ -128,7 +129,8 @@ public class PoolController {
                     //TODO email
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
-                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool "+ poolMember_for_user.getId());
+                    url_for_approval = "http://localhost:3000/approve_pool?poolMemberId="+poolMember_for_user.getId();
+                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool "+ poolMember_for_user.getId() + "\n Paste this url to approve :  "+url_for_approval);
                     return ResponseEntity.ok("Email sent to user. Wait for approval");
                 } else {
                     return new ResponseEntity<>("This screen name is not in given pool", HttpStatus.BAD_REQUEST);
@@ -141,7 +143,8 @@ public class PoolController {
                 if(user_ != null) {
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
-                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool. You are admin. "+ poolMember_for_user.getId());
+                    url_for_approval = "http://localhost:3000/approve_pool?poolMemberId="+poolMember_for_user.getId();
+                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool. You are admin. "+ poolMember_for_user.getId()+ "\n Paste this url to approve :  "+url_for_approval);
                     return ResponseEntity.ok("Email sent to PoolAdmin. Wait for approval");
                 } else {
                     return new ResponseEntity<>("Cannot find admin of this pool", HttpStatus.NOT_FOUND);
