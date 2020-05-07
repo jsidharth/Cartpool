@@ -9,7 +9,7 @@ class BrowsePool extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.pools.length != this.props.pools.length) {
+    if (prevProps.pools.length !== this.props.pools.length) {
       this.props.getPools();
     }
   }

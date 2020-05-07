@@ -9,13 +9,13 @@ class Card extends Component {
       <div className="card poolcard shadow">
         <img src={imageUrl || poolLogo} className="card-img-top" alt="..." />
         <div className="card-body">
-          {name ? <h5 className="card-title">{name || "Pool Name"}</h5> : null}
+          {name ? <h5 className="card-title">{name}</h5> : null}
           {desc ? (
             <h6 className="card-subtitle mb-2 text-muted">
-              {desc || "Pool ID"}
+              {desc}
             </h6>
           ) : null}
-          {count ? <p className="card-text">{count || "4 Members"}</p> : null}
+          {count ? <p className="card-text">{count}</p> : null}
           {buttonText ? (
             <button
               type="button"

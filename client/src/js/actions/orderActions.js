@@ -99,22 +99,48 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
         `http://${server.domain}:${server.port}/orders`,
         payload
       );
-      dispatch({
-        type: actionTypes.SET_CURRENT_ORDER,
-        payload: {
-          currentOrder
-        }
-      });
       // CLEAR THE CART
       dispatch({
         type: actionTypes.UPDATE_CART,
         payload: { cart: {} }
       });
       toast.success(`Your Order has been placed!`);
-      ownProps.history.push(`/order_placed/${currentOrder}`);
+      ownProps.history.replace(`/order_placed/${currentOrder}`);
     } else {
       toast.error("Please join a pool to place order!");
     }
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const getUserOrders = id => async dispatch => {
+  try {
+    const { data: userOrders } = await axios.get(
+      `http://${server.domain}:${server.port}/orders/${id}`
+    );
+    dispatch({
+      type: actionTypes.SET_USER_ORDERS,
+      payload: {
+        userOrders
+      }
+    });
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+const getAssignedOrders = () => async dispatch => {
+  try {
+    const { data: assignedOrders } = await axios.get(
+      `http://${server.domain}:${server.port}/getAllOrdersAssignedTo`
+    );
+    dispatch({
+      type: actionTypes.SET_ASSIGNED_ORDERS,
+      payload: {
+        assignedOrders
+      }
+    });
   } catch (err) {
     toast.error(err.message);
   }
@@ -152,11 +178,32 @@ const getSimilarOrdersFromPool = orderId => async dispatch => {
   }
 };
 
+const pickupOrders = (data, ownProps) => async dispatch => {
+  try {
+    await axios.put(
+      `http://${server.domain}:${server.port}/orders/assignToUser/`,
+      data
+    );
+    console.log("action pickupOrders completed!");
+    toast.success("Orders added for pickup");
+    // dispatch({
+    //   type: actionTypes.SET_SIMILAR_ORDERS,
+    //   payload: { similarOrders: orders }
+    // });
+    ownProps.history.replace("/order/assignedorders");
+  } catch (err) {
+    toast.error(err.response.data);
+  }
+};
+
 export {
   addToCart,
   modifyProductQntyInCart,
   deleteProductFromCart,
   placeOrder,
+  getUserOrders,
+  getAssignedOrders,
   getOrderById,
-  getSimilarOrdersFromPool
+  getSimilarOrdersFromPool,
+  pickupOrders
 };

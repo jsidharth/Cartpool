@@ -9,8 +9,9 @@ const signUp = (userDetails, ownProps) => async dispatch => {
     const { email, password, ...details } = userDetails;
     // Sign Up user
     await firebase.auth().createUserWithEmailAndPassword(email, password);
-    // Send verification email
-    // Send userdetails to backend for registraion
+    const idToken = await firebase.auth().currentUser.getIdToken();
+    const serializedidToken = JSON.stringify(idToken);
+    localStorage.setItem("idToken", serializedidToken);
     const userPayload = {
       email,
       screenName: `${details.firstName} ${details.lastName}`,
@@ -23,7 +24,8 @@ const signUp = (userDetails, ownProps) => async dispatch => {
     ownProps.history.push("/signin");
     toast.success("Signup Sucess! Please verfiy your email!");
   } catch (err) {
-    toast.error(err.response.data);
+    // toast.error(err.response.data);
+    console.log(err.message);
   }
 };
 
@@ -101,4 +103,5 @@ const googleSignIn = ownProps => async dispatch => {
     toast.error("Google signup failed!");
   }
 };
+
 export { signIn, signUp, googleSignIn, googleSignUp, signOut };

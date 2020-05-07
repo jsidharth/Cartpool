@@ -8,15 +8,15 @@ class CreatePool extends Component {
     name: "",
     neighbourhood: "",
     description: "",
-    zip: ""
+    zip: "",
   };
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  createPool = e => {
+  createPool = (e) => {
     e.preventDefault();
     const payload = { ...this.state };
     this.props.createPool(payload);
@@ -36,7 +36,7 @@ class CreatePool extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Pool Name"
                       aria-label="Pool Name"
                       aria-describedby="basic-addon1"
@@ -53,7 +53,7 @@ class CreatePool extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Pool ID"
                       aria-label="Pool ID"
                       aria-describedby="basic-addon1"
@@ -70,7 +70,7 @@ class CreatePool extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Description"
                       aria-label="Description"
                       aria-describedby="basic-addon1"
@@ -87,7 +87,7 @@ class CreatePool extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Neighborhood"
                       aria-label="Neighborhood"
                       aria-describedby="basic-addon1"
@@ -104,7 +104,7 @@ class CreatePool extends Component {
                   <div className="col-sm-8">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Zipcode"
                       aria-label="Zipcode"
                       aria-describedby="basic-addon1"
@@ -133,7 +133,7 @@ class CreatePool extends Component {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  createPool: payload => dispatch(poolActions.createPool(payload, ownProps))
+  createPool: (payload) => dispatch(poolActions.createPool(payload, ownProps)),
 });
 
 export default connect(null, mapDispatchToProps)(CreatePool);
