@@ -93,7 +93,7 @@ public class PoolController {
     }
 
     @PostMapping("/joinpool")
-    public ResponseEntity joinPool(User user, @RequestParam String id, @RequestParam(required = false) String screenName) {
+    public ResponseEntity joinPool(User user, @RequestParam String poolId, @RequestParam(required = false) String screenName) {
         //get current user object
         //check if current user is in a pool
         //create a poolmember object to save
@@ -107,7 +107,7 @@ public class PoolController {
         }
 
         //check pool exists
-        Pool pool = poolService.getPoolById(id);
+        Pool pool = poolService.getPoolById(poolId);
         if (pool != null) {
             //if nick name is given, check if nick name is in pool
             Boolean flag = false;
