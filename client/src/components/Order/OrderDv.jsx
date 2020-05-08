@@ -9,6 +9,18 @@ class OrderDv extends Component {
   componentDidMount() {
     this.props.getCurrentOrder(this.props.match.params.orderId);
   }
+
+  handleUpdateOrder = (orderStatus, id) => {
+    if (orderStatus === "ORDER_PLACED") {
+      alert("ORDER_PLACED " + orderStatus + " + " + id);
+      this.props.updateOrder(id, "ORDER_PICKED");
+    }
+    if (orderStatus === "ORDER_PICKED") {
+      alert("ORDER_PLACED " + orderStatus + " + " + id);
+      this.props.updateOrder(id, "ORDER_DELIVERED");
+    }
+  };
+
   render() {
     const {
       id,
@@ -66,20 +78,37 @@ class OrderDv extends Component {
                   : null}
               </tbody>
             </table>
-            {/* <p className="card-subtitle text-muted float-left">
-              {!_.isEmpty(assignedToUser)
-                ? `Order Picked By ${assignedToUser.nickName}`
-                : null}
-            </p>
-            {orderStatus && orderStatus === "DELIVERED" ? (
-              <button className="btn btn-danger float-right ">
-                Not delivered
+
+            {assigned && orderStatus === "ORDER_PICKED" && (
+              <div className="row">
+                <strong>Delivery Address: </strong>
+                <p>{this.props.currentOrder.screenName},</p>
+                <br />
+                <p>{this.props.currentOrder.street}</p>
+                <br />
+                <p>{this.props.currentOrder.state}</p>
+                <br />
+                <p>{this.props.currentOrder.zip}</p>
+                <br />
+              </div>
+            )}
+
+            {assigned && orderStatus === "ORDER_PLACED" && (
+              <button
+                className="btn btn-primary"
+                onClick={() => this.handleUpdateOrder(orderStatus, id)}
+              >
+                Order picked up
               </button>
-            ) : (
-              <button className="btn btn-danger float-right disabled">
-                Not delivered
+            )}
+            {assigned && orderStatus === "ORDER_PICKED" && (
+              <button
+                className="btn btn-primary"
+                onClick={() => this.handleUpdateOrder(orderStatus, id)}
+              >
+                Order Delivered
               </button>
-            )} */}
+            )}
           </div>
         </div>
       </React.Fragment>
@@ -90,6 +119,8 @@ const mapStateToProps = state => ({
   currentOrder: state.orderReducer.currentOrder
 });
 const mapDispatchToProps = dispatch => ({
-  getCurrentOrder: orderId => dispatch(orderActions.getOrderById(orderId))
+  getCurrentOrder: orderId => dispatch(orderActions.getOrderById(orderId)),
+  updateOrder: (orderId, orderStatus) =>
+    dispatch(orderActions.updateOrder(orderId, orderStatus))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(OrderDv);
