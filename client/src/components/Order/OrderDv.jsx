@@ -62,7 +62,7 @@ class OrderDv extends Component {
                   : null}
               </tbody>
             </table>
-            <p className="card-subtitle text-muted float-left">
+            {/* <p className="card-subtitle text-muted float-left">
               {!_.isEmpty(assignedToUser)
                 ? `Order Picked By ${assignedToUser.nickName}`
                 : null}
@@ -75,7 +75,7 @@ class OrderDv extends Component {
               <button className="btn btn-danger float-right disabled">
                 Not delivered
               </button>
-            )}
+            )} */}
           </div>
         </div>
       </React.Fragment>

@@ -110,18 +110,20 @@ class Navbar extends Component {
             <div className="collapse navbar-collapse justify-content-end">
               <div className="navbar-nav">
                 <ul className="navbar-nav">
-                  <li>
-                    <Link to="/cart" style={{ textDecoration: "none" }}>
-                      <div className="nav-link">
-                        Cart
-                        {!_.isEmpty(this.props.cart) && (
-                          <span className="badge badge-danger ml-1">
-                            {this.props.cart.products.length}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                  </li>
+                  {this.props.user.role === "USER" && (
+                    <li>
+                      <Link to="/cart" style={{ textDecoration: "none" }}>
+                        <div className="nav-link">
+                          Cart
+                          {!_.isEmpty(this.props.cart) && (
+                            <span className="badge badge-danger ml-1">
+                              {this.props.cart.products.length}
+                            </span>
+                          )}
+                        </div>
+                      </Link>
+                    </li>
+                  )}
                   <li className="nav-item dropdown dropleft">
                     <div
                       className="nav-link dropdown-toggle "
@@ -141,9 +143,6 @@ class Navbar extends Component {
                       <Link className="dropdown-item" to="/account">
                         Account
                       </Link>
-                      <Link className="dropdown-item" to="/cart">
-                        Cart
-                      </Link>
                       <div className="dropdown-item" onClick={this.signOut}>
                         Logout
                       </div>
@@ -159,13 +158,13 @@ class Navbar extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.auth.user,
-  cart: state.orderReducer.cart
+  cart: state.orderReducer.cart,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  signOut: () => dispatch(authActions.signOut(ownProps))
+  signOut: () => dispatch(authActions.signOut(ownProps)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar));

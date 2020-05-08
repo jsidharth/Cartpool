@@ -48,7 +48,6 @@ class OrderConfirmed extends Component {
   };
 
   handlePickupClick = () => {
-    alert("here");
     const data = {};
     data["order_ids"] = [...this.state.selectedOrders];
     this.props.pickupOrders(data);

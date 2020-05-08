@@ -23,7 +23,8 @@ const updateProfile = userDetails => async dispatch => {
 
 const verifyEmail = (userEmail) => async dispatch => {
   try {
-    await axios.get(`http://${server.domain}:${server.port}/user/verify?userEmail=${userEmail}`)
+    await axios.get(`http://${server.domain}:${server.port}/user/verify?userEmail=${userEmail}`);
+    dispatch(getDetails());
   } catch (err) {
     toast.error(err.response.data);
   }
