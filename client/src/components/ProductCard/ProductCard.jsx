@@ -30,17 +30,23 @@ class ProductCard extends Component {
     });
   };
   render() {
-    const { name, desc, brand, price, unit, imageUrl } = this.props;
+    const { name, desc, brand, price, unit, imgUrl } = this.props;
     return (
       <div className="card poolcard shadow m-2">
-        <img
-          src={imageUrl || poolLogo}
+        {/* <img
+          src={imgUrl || poolLogo}
           className="rounded img-thumbnail"
           alt="..."
           max-width="100%"
           height="150px"
+        /> */}
+        <img
+          src={imgUrl||poolLogo}
+          className="card-img"
+          max-width="100%"
+          height="180px"
+          alt="..."
         />
-
         <div className="card-body">
           <div className="row">
             <div className="col">

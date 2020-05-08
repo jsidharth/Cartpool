@@ -4,10 +4,17 @@ import poolLogo from "./../../assets/carpool.jpg";
 class Card extends Component {
   state = {};
   render() {
-    const { id, name, desc, count, imageUrl, buttonText } = this.props;
+    const { id, name, desc, count, logoUrl, buttonText } = this.props;
     return (
       <div className="card poolcard shadow">
-        <img src={imageUrl || poolLogo} className="card-img-top" alt="..." />
+        <img
+                  src={logoUrl}
+                  className="card-img"
+                  max-width="100%"
+                  height="180px"
+                  alt="..."
+                />
+        {/* <img src={logoUrl || poolLogo} className="card-img-top" alt="..." /> */}
         <div className="card-body">
           {name ? <h5 className="card-title">{name}</h5> : null}
           {desc ? (

@@ -18,11 +18,18 @@ class StoreDetail extends Component {
       <div>
         <div className="row mt-3">
           <div className="col-4">
-            <img
+            {/* <img
               src={store.logoUrl}
               className=" img-fluid  float-left "
               alt="..."
-            />
+            /> */}
+            <img
+                  src={store.logoUrl}
+                  className="card-img"
+                  max-width="100%"
+                  height="250px"
+                  alt="car"
+                />
           </div>
           <div className="col-8 mt-4">
             <small>Name</small>
@@ -48,15 +55,16 @@ class StoreDetail extends Component {
             </div>
           </div>
         </div>
+        <hr />
         <div className="row m-1 justify-content-center font-weight-bold">
           Available products
         </div>
         <div className="row ">
           {this.props.productsInStore &&
             this.props.productsInStore.length &&
-            this.props.productsInStore.map(ps => {
+            this.props.productsInStore.map((ps) => {
               return (
-                <div className="col-4 float-left ">
+                <div className="col-3 float-left ">
                   <ProductCard
                     {...ps.product}
                     psId={ps.id}
@@ -72,17 +80,18 @@ class StoreDetail extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentStore: state.adminReducer.currentStore,
-  productsInStore: state.adminReducer.productsInStore
+  productsInStore: state.adminReducer.productsInStore,
 });
 
-const mapDispatchToProps = dispatch => ({
-  getStoreByName: storeName => dispatch(adminActions.getStoreByName(storeName)),
+const mapDispatchToProps = (dispatch) => ({
+  getStoreByName: (storeName) =>
+    dispatch(adminActions.getStoreByName(storeName)),
   // getStoresWithProduct: productId =>
   //   dispatch(adminActions.getStoresWithProduct(productId)),
-  getProductsInStore: productId =>
-    dispatch(adminActions.getProductsInStore(productId))
+  getProductsInStore: (productId) =>
+    dispatch(adminActions.getProductsInStore(productId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StoreDetail);

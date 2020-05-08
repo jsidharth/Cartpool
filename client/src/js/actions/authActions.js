@@ -24,8 +24,11 @@ const signUp = (userDetails, ownProps) => async dispatch => {
     ownProps.history.push("/signin");
     toast.success("Signup Sucess! Please verfiy your email!");
   } catch (err) {
-    // toast.error(err.response.data);
-    console.log(err.message);
+    if(err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error("Can't place order");
+    }
   }
 };
 
@@ -45,14 +48,17 @@ const signIn = (payload, ownProps) => async dispatch => {
       }
     });
     const { role } = user.data;
-    console.log(role);
     if (role === "USER") {
       ownProps.history.push("/browse/stores");
     } else {
       ownProps.history.push("/admin/stores");
     }
   } catch (err) {
-    toast.error(err.response.data);
+    if(err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error("Can't place order");
+    }
   }
 };
 

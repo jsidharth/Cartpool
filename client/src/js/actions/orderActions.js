@@ -86,7 +86,7 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
       `http://${server.domain}:${server.port}/pool`
     );
     //TODO: Total price calculation move to backend
-
+      console.log("Pool after order placing",pool)
     if (!_.isEmpty(pool)) {
       const payload = {
         storeId,
@@ -110,7 +110,12 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
       toast.error("Please join a pool to place order!");
     }
   } catch (err) {
-    toast.error(err.message);
+    if(err && err.response) {
+
+      toast.error(err.response.data);
+    } else {
+      toast.error("Can't place order");
+    }
   }
 };
 

@@ -23,7 +23,8 @@ const updateProfile = userDetails => async dispatch => {
 
 const verifyEmail = (userEmail) => async dispatch => {
   try {
-    await axios.get(`http://${server.domain}:${server.port}/user/verify?userEmail=${userEmail}`)
+    await axios.get(`http://${server.domain}:${server.port}/user/verify?userEmail=${userEmail}`);
+    dispatch(getDetails());
   } catch (err) {
     toast.error(err.response.data);
   }
@@ -37,4 +38,18 @@ const verifyPool = (poolMemberId) => async dispatch => {
   }
 }
 
-export { updateProfile, verifyEmail, verifyPool};
+const getDetails = () => async dispatch => {
+  try {
+    const user = await axios.get(`http://${server.domain}:${server.port}/user`);
+    dispatch({
+      type: actionTypes.SET_USER,
+      payload: {
+        user: user.data
+      }
+    });
+
+  } catch(err) {
+    toast.error(err.response.data);
+  }
+}
+export { updateProfile, verifyEmail, verifyPool, getDetails};

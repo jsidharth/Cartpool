@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -105,6 +107,7 @@ public class OrderController {
         orders.setOrderStatus(Status.ORDER_PLACED);
         //TODO calculate total
         Orders savedOrder = orderService.addOrder(orders);
+        DecimalFormat df = new DecimalFormat("0.00");
 
         List<ProductStoreQuantity> productStoreQuantities = orderRequest.getProductStoreList();
 
@@ -119,7 +122,11 @@ public class OrderController {
             productStore.setQuantity(productStoreQuantity.getQuantity());
             orderProductStoreService.addOrderProductStore(productStore);
         }
-        savedOrder.setTotal(total);
+        double temp = (total + total*0.005);
+        total += total*0.0925;
+        total += temp;
+        String rounded = df.format(total);
+        savedOrder.setTotal(Float.valueOf(rounded));
         orderService.updateOrder(savedOrder);
         return new ResponseEntity(savedOrder.getId(), HttpStatus.OK);
     }
