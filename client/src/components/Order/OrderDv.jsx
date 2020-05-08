@@ -3,7 +3,7 @@ import { orderActions } from "../../js/actions";
 import { connect } from "react-redux";
 import _ from "lodash";
 import queryString from "query-string";
-import QRcode from  "qrcode.react";
+import QRcode from "qrcode.react";
 
 class OrderDv extends Component {
   componentDidMount() {
@@ -16,7 +16,7 @@ class OrderDv extends Component {
       total,
       storeId,
       assignedToUser,
-      items,
+      items
     } = this.props.currentOrder;
     const queryParams = queryString.parse(this.props.location.search);
     const assigned = queryParams.assigned;
@@ -27,7 +27,11 @@ class OrderDv extends Component {
         <div className="card shadow mt-5">
           <div className="card-body">
             <div className="row">
-              {assigned && <div className="col-2"><QRcode value = {`#${qrcodeString}`} renderAs="svg"/></div>}
+              {assigned && (
+                <div className="col-2">
+                  <QRcode value={`#${qrcodeString}`} renderAs="svg" />
+                </div>
+              )}
               <div className="col">
                 <span className="badge badge-success float-right">
                   {orderStatus}
@@ -50,7 +54,7 @@ class OrderDv extends Component {
               </thead>
               <tbody>
                 {items && items.length
-                  ? items.map((item) => {
+                  ? items.map(item => {
                       return (
                         <tr>
                           <td>{item.productStore.product.name}</td>
@@ -82,10 +86,10 @@ class OrderDv extends Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
-  currentOrder: state.orderReducer.currentOrder,
+const mapStateToProps = state => ({
+  currentOrder: state.orderReducer.currentOrder
 });
-const mapDispatchToProps = (dispatch) => ({
-  getCurrentOrder: (orderId) => dispatch(orderActions.getOrderById(orderId)),
+const mapDispatchToProps = dispatch => ({
+  getCurrentOrder: orderId => dispatch(orderActions.getOrderById(orderId))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(OrderDv);
