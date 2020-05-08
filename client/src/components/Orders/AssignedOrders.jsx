@@ -18,7 +18,7 @@ class AssignedOrders extends Component {
     return (
       <div>
         {/* TODO: Style this heading */}
-        <h1 className="display-4">Assigned Orders</h1>
+        <h1 className="display-4">Orders to pickup</h1>
         <hr />
         <div className="row ">
           {this.props.assignedOrders && this.props.assignedOrders.length

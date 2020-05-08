@@ -86,7 +86,7 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
       `http://${server.domain}:${server.port}/pool`
     );
     //TODO: Total price calculation move to backend
-      console.log("Pool after order placing",pool)
+    console.log("Pool after order placing", pool);
     if (!_.isEmpty(pool)) {
       const payload = {
         storeId,
@@ -110,8 +110,7 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
       toast.error("Please join a pool to place order!");
     }
   } catch (err) {
-    if(err && err.response) {
-
+    if (err && err.response) {
       toast.error(err.response.data);
     } else {
       toast.error("Can't place order");
@@ -213,6 +212,24 @@ const pickupOrders = (data, ownProps) => async dispatch => {
   }
 };
 
+const updateOrder = (orderId, orderStatus) => async dispatch => {
+  try {
+    const { data: order } = await axios.get(
+      `http://${server.domain}:${server.port}/update/order/${orderId}/${orderStatus}`
+    );
+    console.log("action updateOrder !", order);
+    //toast.success("Orders added for pickup");
+    dispatch(getOrderById(orderId));
+    //ownProps.history.replace("/order/assignedorders");
+  } catch (err) {
+    if (err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error(err);
+    }
+  }
+};
+
 export {
   addToCart,
   modifyProductQntyInCart,
@@ -222,5 +239,6 @@ export {
   getAssignedOrders,
   getOrderById,
   getSimilarOrdersFromPool,
-  pickupOrders
+  pickupOrders,
+  updateOrder
 };

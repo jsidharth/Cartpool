@@ -24,10 +24,10 @@ const signUp = (userDetails, ownProps) => async dispatch => {
     ownProps.history.push("/signin");
     toast.success("Signup Sucess! Please verfiy your email!");
   } catch (err) {
-    if(err && err.response) {
+    if (err && err.response) {
       toast.error(err.response.data);
     } else {
-      toast.error("Can't place order");
+      toast.error("Something went wrong!");
     }
   }
 };
@@ -54,15 +54,15 @@ const signIn = (payload, ownProps) => async dispatch => {
       ownProps.history.push("/admin/stores");
     }
   } catch (err) {
-    if(err && err.response) {
+    if (err && err.response) {
       toast.error(err.response.data);
     } else {
-      toast.error("Can't place order");
+      toast.error("Something went wrong!");
     }
   }
 };
 
-const signOut = (ownProps) => async (dispatch) => {
+const signOut = ownProps => async dispatch => {
   try {
     await firebase.auth().signOut();
     localStorage.removeItem("idToken");
