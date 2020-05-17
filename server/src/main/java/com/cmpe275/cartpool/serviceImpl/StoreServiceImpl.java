@@ -2,6 +2,7 @@ package com.cmpe275.cartpool.serviceImpl;
 
 import com.cmpe275.cartpool.entities.Store;
 import com.cmpe275.cartpool.repos.StoreRepo;
+import com.cmpe275.cartpool.services.OrderService;
 import com.cmpe275.cartpool.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,8 +16,12 @@ public class StoreServiceImpl implements StoreService {
     @Autowired
     StoreRepo storeRepo;
 
+    @Autowired
+    OrderService orderService;
+
     @Override
     public int addStore(Store store) {
+        store.setActive(true);
         Store savedStore = storeRepo.save(store);
         return savedStore.getId();
     }
@@ -25,6 +30,9 @@ public class StoreServiceImpl implements StoreService {
     public void deleteStore(int Id) {
         //ToDo: Check if any pending orders are left before deleting
         if(storeRepo.existsById(Id)) {
+            if(orderService.existsByStoreId(Id)){
+                System.out.println("Active orders exist, can't delete");
+            }
           try{
               Store store = storeRepo.findStoreById(Id);
               store.setActive(false);

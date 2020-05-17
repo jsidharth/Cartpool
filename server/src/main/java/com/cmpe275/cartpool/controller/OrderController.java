@@ -119,6 +119,7 @@ public class OrderController {
         orders.setPlacedTime(date);
         Orders savedOrder = orderService.addOrder(orders);
         DecimalFormat df = new DecimalFormat("0.00");
+        orders.setActive(true);
 
         List<ProductStoreQuantity> productStoreQuantities = orderRequest.getProductStoreList();
 
@@ -142,17 +143,19 @@ public class OrderController {
         return new ResponseEntity(savedOrder.getId(), HttpStatus.OK);
     }
 
-    @PutMapping("/orders/{order_id}/{status}")
-    public ResponseEntity updateOrder(User user, @PathVariable int order_id, @PathVariable Status updatedStatus){
+    @PutMapping("/orders/{order_id}/{statusString}")
+    public ResponseEntity updateOrder(User user, @PathVariable int order_id, @PathVariable String statusString){
         Orders orders = orderService.getOrderById(order_id);
         Date date = new Date(System.currentTimeMillis());
-
-        if(updatedStatus.equals(Status.ORDER_DELIVERED)){
+        Status updatedStatus = Status.valueOf(statusString);
+        if(updatedStatus == Status.ORDER_DELIVERED){
+            orders.setOrderStatus(Status.ORDER_DELIVERED);
             orders.setDeliveredTime(date);
-        }else if(updatedStatus.equals(Status.ORDER_PICKED)){
+        }else if(updatedStatus == Status.ORDER_PICKED){
             orders.setPickedTime(date);
+            orders.setOrderStatus(Status.ORDER_PICKED);
         }
-
+        orderService.updateOrder(orders);
         return new ResponseEntity(HttpStatus.OK);
     }
 

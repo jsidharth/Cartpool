@@ -32,6 +32,8 @@ public interface OrderService {
 
     List<Orders> getUnassignedOrdersInPool(String pool_id);
 
+    Boolean existsByStoreId(int store_id);
+
     //List<Orders> getOrdersByPoolId(int id);
 
     /*

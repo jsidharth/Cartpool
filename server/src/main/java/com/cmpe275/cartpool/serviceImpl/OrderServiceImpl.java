@@ -97,6 +97,8 @@ public class OrderServiceImpl implements OrderService {
         if(ordersRepo.existsById(id)) {
             Orders orders = ordersRepo.findById(id).get();
             orders.setActive(false);
+            ordersRepo.save(orders);
+            System.out.println("updating order with setActive as false");
             return 0;
         }else{
             //The entry doesn't exist
@@ -147,6 +149,12 @@ public class OrderServiceImpl implements OrderService {
     public List<Orders> getUnassignedOrdersInPool(String pool_id) {
         Pool pool = poolRepo.findPoolById(pool_id).get();
         return ordersRepo.findAllByAssignedToUserIsNullAndPool(pool);
+    }
+
+    @Override
+    public Boolean existsByStoreId(int store_id) {
+        Store store = storeRepo.findStoreById(store_id);
+        return ordersRepo.existsByStoreIdAndActiveTrue(store);
     }
 
     /*
