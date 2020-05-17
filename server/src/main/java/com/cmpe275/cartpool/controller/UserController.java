@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
 @RestController
 public class UserController {
 
@@ -41,8 +41,27 @@ public class UserController {
         } else {
             user.setRole(Role.USER);
         }
+        user.setCredit(0);
+        user.setVerified(false);
         userService.createUser(user);
+        String confirmation_url = "http://localhost:3000/user/verify?userEmail="+user.getEmail();
+        emailService.sendMail("CartPool",user.getScreenName(), user.getEmail(), "Welcome to CartPool App.\nClick here to confirm your email "+confirmation_url);
         return ResponseEntity.ok("user created");
+    }
+
+    @GetMapping("/user/verify")
+    public ResponseEntity verifyUser(User user, @RequestParam String userEmail) {
+        if (user.getEmail().equals(userEmail)) {
+            if (!user.getVerified()) {
+                user.setVerified(true);
+                userService.createUser(user);
+                return ResponseEntity.ok("Verified");
+            } else {
+                return new ResponseEntity<>("Already verified", HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("Incorrect email", HttpStatus.FORBIDDEN);
+        }
     }
 
     @GetMapping("/user")
