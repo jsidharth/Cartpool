@@ -1,5 +1,6 @@
 package com.cmpe275.cartpool.controller;
 
+import com.cmpe275.cartpool.configuration.serverConfig;
 import com.cmpe275.cartpool.entities.Pool;
 import com.cmpe275.cartpool.entities.PoolMember;
 import com.cmpe275.cartpool.entities.Role;
@@ -9,6 +10,7 @@ import com.cmpe275.cartpool.services.PoolMemberService;
 import com.cmpe275.cartpool.services.PoolService;
 import com.cmpe275.cartpool.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +36,19 @@ public class PoolController {
     @Autowired
     EmailService emailService;
 
+    private String server = serverConfig.getServer();
+
     @PostMapping("/pool")
     @Transactional
     public ResponseEntity createPool( User user, @RequestBody Pool pool)
     {
         //check if this user is already having a pool
         if (user.getPoolMember()!=null) {
-            return new ResponseEntity<>("user already part of a pool", HttpStatus.BAD_REQUEST);
+            if (user.getPoolMember().getRefApproved() && user.getPoolMember().getPlApproved()){
+                return new ResponseEntity<>("user already part of a pool", HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>("You have a pending join pool request", HttpStatus.BAD_REQUEST);
+            }
         }
         //check if this pool id is unique
         if (poolService.getPoolById(pool.getId())!= null) {
@@ -108,13 +116,15 @@ public class PoolController {
         //get current user object
         //check if current user is in a pool
         //create a poolmember object to save
-
-
         PoolMember poolMember_for_user;
         String url_for_approval;
         if (user != null){
             if (user.getPoolMember() != null) {
-                return new ResponseEntity<>("user already part of a pool", HttpStatus.BAD_REQUEST);
+                if (user.getPoolMember().getPlApproved() && user.getPoolMember().getRefApproved()){
+                    return new ResponseEntity<>("user already part of a pool", HttpStatus.BAD_REQUEST);
+                } else {
+                    return new ResponseEntity<>("You already have a join request pending", HttpStatus.BAD_REQUEST);
+                }
             }
         } else {
             return new ResponseEntity<>("user does not exist in backend", HttpStatus.BAD_REQUEST);
@@ -143,12 +153,9 @@ public class PoolController {
                     //TODO email
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
-                    url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember_for_user.getId();
-                    try {
-                        emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request", "This user is requesting to join pool "+ poolMember_for_user.getId() + "\n Paste this url to approve :  "+url_for_approval);
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                    }
+                    url_for_approval = server+"/pool/approve?poolMemberId="+poolMember_for_user.getId();
+                    url_for_approval = emailService.poolJoinHtml(user.getScreenName(), url_for_approval);
+                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request", url_for_approval);
                     return ResponseEntity.ok("Email sent to user. Wait for approval");
                 } else {
                     return new ResponseEntity<>("This screen name is not in given pool", HttpStatus.BAD_REQUEST);
@@ -161,12 +168,9 @@ public class PoolController {
                 if(user_ != null) {
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
-                    url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember_for_user.getId();
-                    try {
-                        emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request", "This user is requesting to join pool. poolMemberId : "+ poolMember_for_user.getId()+ "\n Paste this url to approve :  "+url_for_approval);
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                    }
+                    url_for_approval = server+"/pool/approve?poolMemberId="+poolMember_for_user.getId();
+                    url_for_approval = emailService.poolJoinHtml(user.getScreenName(), url_for_approval);
+                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request", url_for_approval);
                     return ResponseEntity.ok("Email sent to PoolAdmin. Wait for approval");
                 } else {
                     return new ResponseEntity<>("Cannot find admin of this pool", HttpStatus.NOT_FOUND);
@@ -205,7 +209,7 @@ public class PoolController {
     }
 
     @GetMapping("/pool/approve")
-    public ResponseEntity approvePool(User user, @RequestParam Integer poolMemberId) {
+    public ResponseEntity approvePool(User user, @RequestParam Integer poolMemberId, @RequestParam Boolean accept) {
         //check if this request is there
         PoolMember poolMember = poolMemberService.getPoolMemberById(poolMemberId);
         User user_ = poolMember.getUser();
@@ -216,17 +220,33 @@ public class PoolController {
                 if (poolMember.getPlApproved() && poolMember.getRefApproved()) {
                     return new ResponseEntity<>("This request is already approved", HttpStatus.BAD_REQUEST);
                 } else {
-                    //TODO what about pool leader?
+                    //This is the leader
                     if (poolMemberApprover.getReference() == 0){
-                        poolMember.setRefApproved(true);
-                        poolMember.setPlApproved(true);
+                        if (accept) {
+                            poolMember.setRefApproved(true);
+                            poolMember.setPlApproved(true);
+                            //mail the user saying request accepted
+                            emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request Accepted", emailService.messageHtml(user.getScreenName(), "Your pool join request has been accepted"));
+                        } else {
+                            //mail the user saying request denied
+                            emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request Rejected", emailService.messageHtml(user.getScreenName(), "Your pool join request has been rejected"));
+                            //delete the request
+                            poolMemberService.deletePoolMember(poolMember);
+                        }
                     } else {
-                        poolMember.setRefApproved(true);
-                        String url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember.getId();
-                        try {
-                            emailService.sendMail(user_.getScreenName(), admin_.getScreenName(), admin_.getEmail(),"CartPool: Pool Request", "This user is requesting to join pool. You are admin. "+ poolMember.getId()+ "\n Paste this url to approve :  "+url_for_approval);
-                        } catch (MessagingException e) {
-                            e.printStackTrace();
+                        //not leader
+                        if (accept) {
+                            poolMember.setRefApproved(true);
+                            //mail the user saying request pending
+                            emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request Pending", emailService.messageHtml(user.getScreenName(), "Your pool join request is pending admin approval"));
+                            String url_for_approval = server+"/pool/approve?poolMemberId="+poolMember.getId();
+                            url_for_approval = emailService.poolJoinHtml(user_.getScreenName(), url_for_approval);
+                            emailService.sendMail(user_.getScreenName(), admin_.getScreenName(), admin_.getEmail(),"CartPool: Pool Request", url_for_approval);
+                        } else {
+                            //mail the user saying request denied
+                            emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request Rejected", emailService.messageHtml(user.getScreenName(), "Your pool join request has been rejected"));
+                            //delete the request
+                            poolMemberService.deletePoolMember(poolMember);
                         }
                     }
                     //will this save work?
@@ -256,7 +276,7 @@ public class PoolController {
                 return new ResponseEntity<>("Admin cannot leave his pool", HttpStatus.BAD_REQUEST);
             }
             poolMemberService.deletePoolMember(poolMember);
-            //if admin deletes his membership, transfer the ownership to someone else
+            //if admin deletes his membership, transfer the ownership to someone else??
             return ResponseEntity.ok("Left pool");
         } else {
             return new ResponseEntity<>("Not part of any pool", HttpStatus.NOT_FOUND);
@@ -271,7 +291,6 @@ public class PoolController {
             if (poolMember.getReference() == 0 ){
                 Pool pool = poolMember.getPool();
                 if (pool.getPoolMembers().size() == 1) {
-                    //TODO deleted Flag
                     poolMemberService.deletePoolMember(poolMember);
                     poolService.deletePool(pool);
                     return ResponseEntity.ok("Deleted pool");
@@ -288,11 +307,7 @@ public class PoolController {
 
     @GetMapping("/testemail")
     public void testEmail(User user){
-        try {
             emailService.sendMail("whatever", "lolz", "sushant.post@gmail.com","Test email",
                     "Whats uppp");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
     }
 }

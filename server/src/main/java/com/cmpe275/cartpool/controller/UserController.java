@@ -1,5 +1,6 @@
 package com.cmpe275.cartpool.controller;
 
+import com.cmpe275.cartpool.configuration.serverConfig;
 import com.cmpe275.cartpool.entities.Role;
 import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.services.EmailService;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.firebase.auth.FirebaseToken;
 import com.sun.mail.iap.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ public class UserController {
 
     @Autowired
     EmailService emailService;
+
+    private String server = serverConfig.getServer();
 
     @PostMapping("/user")
     public ResponseEntity<String> createUser(@RequestBody User user) {
@@ -45,12 +49,8 @@ public class UserController {
         user.setCredit(0);
         user.setVerified(false);
         userService.createUser(user);
-        String confirmation_url = "http://localhost:3000/user/verify?userEmail="+user.getEmail();
-        try {
-            emailService.sendMail("CartPool",user.getScreenName(), user.getEmail(),"CartPool: Email Verification", "Welcome to CartPool App.\nClick here to confirm your email "+confirmation_url);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        String confirmation_url = server+"/user/verify?userEmail="+user.getEmail();
+        emailService.sendMail("CartPool",user.getScreenName(), user.getEmail(),"CartPool: Email Verification", "Welcome to CartPool App.\nClick here to confirm your email "+confirmation_url);
         return ResponseEntity.ok("user created");
     }
 
@@ -106,13 +106,10 @@ public class UserController {
     @PostMapping("/sendMail")
     public ResponseEntity sendMail(User user, @RequestParam String screenName, String message) {
         User user2 = userService.getUserByScreenName(screenName);
+        message = emailService.messageHtml(user.getScreenName(), message);
         if (user2 != null){
             //send email
-            try {
-                emailService.sendMail(user.getScreenName(), user2.getScreenName(), user2.getEmail(), "CartPool: Message from "+user.getScreenName(),  message);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
+            emailService.sendMail(user.getScreenName(), user2.getScreenName(), user2.getEmail(), "CartPool: Message from "+user.getScreenName(), message);
             return ResponseEntity.ok("Mail send");
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);

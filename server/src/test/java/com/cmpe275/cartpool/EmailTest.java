@@ -18,12 +18,8 @@ public class EmailTest {
 
     @Test
     public void testEmail(){
-        try {
-            emailService.sendMail("whatever", "lolz", "jojojoseph09@gmail.com","Test Email",
+        emailService.sendMail("whatever", "lolz", "jojojoseph09@gmail.com","Test Email",
                     "Whats uppp");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
     }
 
 }
