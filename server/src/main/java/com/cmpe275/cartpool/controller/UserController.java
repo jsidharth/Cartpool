@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
@@ -45,7 +46,11 @@ public class UserController {
         user.setVerified(false);
         userService.createUser(user);
         String confirmation_url = "http://localhost:3000/user/verify?userEmail="+user.getEmail();
-        emailService.sendMail("CartPool",user.getScreenName(), user.getEmail(), "Welcome to CartPool App.\nClick here to confirm your email "+confirmation_url);
+        try {
+            emailService.sendMail("CartPool",user.getScreenName(), user.getEmail(),"CartPool: Email Verification", "Welcome to CartPool App.\nClick here to confirm your email "+confirmation_url);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         return ResponseEntity.ok("user created");
     }
 
@@ -103,7 +108,11 @@ public class UserController {
         User user2 = userService.getUserByScreenName(screenName);
         if (user2 != null){
             //send email
-            emailService.sendMail(user.getScreenName(), user2.getScreenName(), user2.getEmail(), message);
+            try {
+                emailService.sendMail(user.getScreenName(), user2.getScreenName(), user2.getEmail(), "CartPool: Message from "+user.getScreenName(),  message);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
             return ResponseEntity.ok("Mail send");
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);

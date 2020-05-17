@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +80,17 @@ public class PoolController {
     }
 
     @GetMapping("/pools")
-    public ResponseEntity getPools(User user) {
-
-         List<Pool> pools = poolService.getPools();
+    public ResponseEntity getPools(User user, @RequestParam(required = false) String name, @RequestParam(required = false) String neighbourhood, @RequestParam(required = false) String zipcode ) {
+        if (name == null){
+            name = "";
+        }
+        if (neighbourhood == null){
+            neighbourhood = "";
+        }
+        if (zipcode == null){
+            zipcode = "";
+        }
+        List<Pool> pools = poolService.searchPools(name,neighbourhood,zipcode);
          for (Pool pool: pools){
              List<String> memberNickNames = new ArrayList<>();
              for(PoolMember poolMember: pool.getPoolMembers()){
@@ -135,7 +144,11 @@ public class PoolController {
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
                     url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember_for_user.getId();
-                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool "+ poolMember_for_user.getId() + "\n Paste this url to approve :  "+url_for_approval);
+                    try {
+                        emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request", "This user is requesting to join pool "+ poolMember_for_user.getId() + "\n Paste this url to approve :  "+url_for_approval);
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
                     return ResponseEntity.ok("Email sent to user. Wait for approval");
                 } else {
                     return new ResponseEntity<>("This screen name is not in given pool", HttpStatus.BAD_REQUEST);
@@ -149,7 +162,11 @@ public class PoolController {
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
                     url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember_for_user.getId();
-                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool. poolMemberId : "+ poolMember_for_user.getId()+ "\n Paste this url to approve :  "+url_for_approval);
+                    try {
+                        emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request", "This user is requesting to join pool. poolMemberId : "+ poolMember_for_user.getId()+ "\n Paste this url to approve :  "+url_for_approval);
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
                     return ResponseEntity.ok("Email sent to PoolAdmin. Wait for approval");
                 } else {
                     return new ResponseEntity<>("Cannot find admin of this pool", HttpStatus.NOT_FOUND);
@@ -206,7 +223,11 @@ public class PoolController {
                     } else {
                         poolMember.setRefApproved(true);
                         String url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember.getId();
-                        emailService.sendMail(user_.getScreenName(), admin_.getScreenName(), admin_.getEmail(), "This user is requesting to join pool. You are admin. "+ poolMember.getId()+ "\n Paste this url to approve :  "+url_for_approval);
+                        try {
+                            emailService.sendMail(user_.getScreenName(), admin_.getScreenName(), admin_.getEmail(),"CartPool: Pool Request", "This user is requesting to join pool. You are admin. "+ poolMember.getId()+ "\n Paste this url to approve :  "+url_for_approval);
+                        } catch (MessagingException e) {
+                            e.printStackTrace();
+                        }
                     }
                     //will this save work?
                     poolMemberService.createPoolMember(poolMember);
@@ -250,6 +271,7 @@ public class PoolController {
             if (poolMember.getReference() == 0 ){
                 Pool pool = poolMember.getPool();
                 if (pool.getPoolMembers().size() == 1) {
+                    //TODO deleted Flag
                     poolMemberService.deletePoolMember(poolMember);
                     poolService.deletePool(pool);
                     return ResponseEntity.ok("Deleted pool");
@@ -263,9 +285,14 @@ public class PoolController {
             return new ResponseEntity<>("Not part of any pool", HttpStatus.NOT_FOUND);
         }
     }
+
     @GetMapping("/testemail")
     public void testEmail(User user){
-        emailService.sendMail("whatever", "lolz", "sushant.post@gmail.com",
-                "Whats uppp");
+        try {
+            emailService.sendMail("whatever", "lolz", "sushant.post@gmail.com","Test email",
+                    "Whats uppp");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }
