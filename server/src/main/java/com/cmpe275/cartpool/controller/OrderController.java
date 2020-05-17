@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
 @RestController
 public class OrderController {
     @Autowired
@@ -38,7 +38,14 @@ public class OrderController {
 
     @GetMapping("/order/{orderId}")
     public Orders getOrderbyId(@PathVariable int orderId){
-        return orderService.getOrderById(orderId);
+        Orders order = orderService.getOrderById(orderId);
+        User user_ = order.getOrderedByUser();
+        order.setScreenName(user_.getScreenName());
+        order.setStreet(user_.getStreet());
+        order.setState(user_.getState());
+        order.setZip(user_.getZip());
+        order.setCity(user_.getCity());
+        return order;
     }
 
     /**
@@ -157,5 +164,15 @@ public class OrderController {
         for(int order_id:order_ids) {
             orderService.changeAssignedToUser(order_id, user.getId());
         }
+    }
+
+    @GetMapping("/update/order/{orderId}/{orderStatus}")
+    public ResponseEntity putOrderPickup(User user, @PathVariable int orderId, @PathVariable String orderStatus ) {
+        //TODO transient entity
+        System.out.println("Here "+ orderId + Status.valueOf(orderStatus) + orderStatus);
+        Orders order = orderService.getOrderById(orderId);
+        order.setOrderStatus(Status.valueOf(orderStatus));
+        order = orderService.updateOrder(order);
+        return ResponseEntity.ok(order);
     }
 }

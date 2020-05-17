@@ -17,7 +17,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
 @RestController
 public class PoolController {
 
@@ -85,7 +85,9 @@ public class PoolController {
          for (Pool pool: pools){
              List<String> memberNickNames = new ArrayList<>();
              for(PoolMember poolMember: pool.getPoolMembers()){
-                 memberNickNames.add(poolMember.getUser().getNickName());
+                 if (poolMember.getRefApproved() && poolMember.getPlApproved()) {
+                     memberNickNames.add(poolMember.getUser().getNickName());
+                 }
              }
              pool.setUserNickNamesTransient(memberNickNames);
          }
@@ -132,7 +134,7 @@ public class PoolController {
                     //TODO email
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
-                    url_for_approval = "http://localhost:3000/approve_pool?poolMemberId="+poolMember_for_user.getId();
+                    url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember_for_user.getId();
                     emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool "+ poolMember_for_user.getId() + "\n Paste this url to approve :  "+url_for_approval);
                     return ResponseEntity.ok("Email sent to user. Wait for approval");
                 } else {
@@ -146,8 +148,8 @@ public class PoolController {
                 if(user_ != null) {
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
-                    url_for_approval = "http://localhost:3000/approve_pool?poolMemberId="+poolMember_for_user.getId();
-                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool. You are admin. "+ poolMember_for_user.getId()+ "\n Paste this url to approve :  "+url_for_approval);
+                    url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember_for_user.getId();
+                    emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(), "This user is requesting to join pool. poolMemberId : "+ poolMember_for_user.getId()+ "\n Paste this url to approve :  "+url_for_approval);
                     return ResponseEntity.ok("Email sent to PoolAdmin. Wait for approval");
                 } else {
                     return new ResponseEntity<>("Cannot find admin of this pool", HttpStatus.NOT_FOUND);
@@ -162,12 +164,18 @@ public class PoolController {
     public ResponseEntity getPool(User user) {
         //Return current users pool
         if (user.getPoolMember() != null ){
+            PoolMember poolMember_user = user.getPoolMember();
+            if (!(poolMember_user.getPlApproved() && poolMember_user.getRefApproved())) {
+                return new ResponseEntity<>("You are pending approvals", HttpStatus.NOT_FOUND);
+            }
             Pool pool = user.getPoolMember().getPool();
             List<String> memberNickNames = new ArrayList<>();
             List<String> memberScreenNames = new ArrayList<>();
             for(PoolMember poolMember: pool.getPoolMembers()){
-                memberNickNames.add(poolMember.getUser().getNickName());
-                memberScreenNames.add(poolMember.getUser().getScreenName());
+                if (poolMember.getRefApproved() && poolMember.getPlApproved()) {
+                    memberNickNames.add(poolMember.getUser().getNickName());
+                    memberScreenNames.add(poolMember.getUser().getScreenName());
+                }
             }
             pool.setUserNickNamesTransient(memberNickNames);
             pool.setUserScreenNamesTransient(memberScreenNames);
@@ -179,20 +187,34 @@ public class PoolController {
         }
     }
 
-    @GetMapping("/approve_pool")
+    @GetMapping("/pool/approve")
     public ResponseEntity approvePool(User user, @RequestParam Integer poolMemberId) {
         //check if this request is there
         PoolMember poolMember = poolMemberService.getPoolMemberById(poolMemberId);
+        User user_ = poolMember.getUser();
+        PoolMember poolMemberApprover = user.getPoolMember();
+        User admin_ = poolMemberApprover.getPool().getPoolLeader();
         if (poolMember != null) {
-            if (poolMember.getReference().equals(user.getId())) {
-                if (poolMember.getPlApproved() || poolMember.getRefApproved()) {
+            if ((poolMember.getReference().equals(user.getId())) || (admin_ == poolMemberApprover.getUser())) {
+                if (poolMember.getPlApproved() && poolMember.getRefApproved()) {
                     return new ResponseEntity<>("This request is already approved", HttpStatus.BAD_REQUEST);
                 } else {
                     //TODO what about pool leader?
-                    poolMember.setRefApproved(true);
+                    if (poolMemberApprover.getReference() == 0){
+                        poolMember.setRefApproved(true);
+                        poolMember.setPlApproved(true);
+                    } else {
+                        poolMember.setRefApproved(true);
+                        String url_for_approval = "http://localhost:3000/pool/approve?poolMemberId="+poolMember.getId();
+                        emailService.sendMail(user_.getScreenName(), admin_.getScreenName(), admin_.getEmail(), "This user is requesting to join pool. You are admin. "+ poolMember.getId()+ "\n Paste this url to approve :  "+url_for_approval);
+                    }
                     //will this save work?
                     poolMemberService.createPoolMember(poolMember);
-                    return ResponseEntity.ok("Approved request");
+                    if (poolMemberApprover.getReference() == 0) {
+                        return ResponseEntity.ok("Approved request");
+                    } else {
+                        return ResponseEntity.ok("Approved request and sent email to admin");
+                    }
                 }
             } else {
                 return new ResponseEntity<>("You are not authorized for this pool action", HttpStatus.UNAUTHORIZED);
