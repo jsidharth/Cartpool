@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -94,7 +95,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public int deleteById(int id) {
         if(ordersRepo.existsById(id)) {
-            ordersRepo.deleteById(id);
+            Orders orders = ordersRepo.findById(id).get();
+            orders.setActive(false);
             return 0;
         }else{
             //The entry doesn't exist

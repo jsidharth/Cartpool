@@ -22,12 +22,22 @@ public class ProductStore {
     @JoinColumn(name = "storeId",insertable=false,updatable = false)
     Store store;
 
+    private String SKU;
+
     public ProductStore() {
     }
 
     public ProductStore(Integer productId, Integer storeId) {
         this.productId = productId;
         this.storeId = storeId;
+    }
+
+    public String getSKU() {
+        return SKU;
+    }
+
+    public void setSKU(String SKU) {
+        this.SKU = SKU;
     }
 
     public Store getStore() {

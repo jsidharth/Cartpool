@@ -26,7 +26,9 @@ public class StoreServiceImpl implements StoreService {
         //ToDo: Check if any pending orders are left before deleting
         if(storeRepo.existsById(Id)) {
           try{
-              storeRepo.deleteById(Id);
+              Store store = storeRepo.findStoreById(Id);
+              store.setActive(false);
+              storeRepo.save(store);
           }catch (DataIntegrityViolationException e){
               throw new DataIntegrityViolationException("store already in use, cannot delete");
           }
