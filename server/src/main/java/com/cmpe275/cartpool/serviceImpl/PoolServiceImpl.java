@@ -33,6 +33,11 @@ public class PoolServiceImpl implements PoolService {
     }
 
     @Override
+    public List<Pool> searchPools(String name, String neighbourhood, String zipcode) {
+        return poolRepo.findByNameContainingOrNeighbourhoodContainingOrZipContainingAndDeletedFalse(name,neighbourhood,zipcode);
+    }
+
+    @Override
     public Pool getPoolByName(String poolName) {
         return poolRepo.findPoolByName(poolName);
     }

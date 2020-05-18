@@ -17,6 +17,7 @@ public class Product {
     private String brand;
     private String unit;
     private Integer price;
+    private boolean active;
 
     public Product() {
     }
@@ -28,6 +29,15 @@ public class Product {
         this.brand = brand;
         this.unit = unit;
         this.price = price;
+        active = true;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Integer getId() {

@@ -11,6 +11,7 @@ import java.util.List;
 public interface PoolService {
     Pool createPool(Pool pool);
     List<Pool> getPools();
+    List<Pool> searchPools(String name, String neighbourhood, String zipcode);
     Pool getPoolByName(String poolName);
     Pool getPoolById(String Id);
     void addToPool(Pool pool, User user, PoolMember poolMember) throws IllegalArgumentException, UnsupportedOperationException;

@@ -43,6 +43,9 @@ public class Orders {
     private Float total;
 
     @Temporal(TemporalType.TIMESTAMP)
+    private Date placedTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date pickedTime;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -52,9 +55,74 @@ public class Orders {
     @JsonIgnoreProperties({"belongsToOrder","orderedByUser", "order"})
     private List<OrderProductStore> items;
 
+    @Transient
+    private String screenName;
+
+    @Transient
+    private String street;
+
+    @Transient
+    private String city;
+
+    @Transient
+    private String state;
+
+    @Transient
+    private String zip;
+
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
     public Orders(){}
 
-    public Orders(Store store, User user, Pool pool, Status status, User assignedToUser, Float total, Date pickedTime,
+    public Orders(Store store, User user, Pool pool, Status status, User assignedToUser, Float total, Date placedTime, Date pickedTime,
                   Date deliveredTime) {
         this.storeId = store;
         this.orderedByUser = user;
@@ -62,8 +130,10 @@ public class Orders {
         this.orderStatus = status;
         this.assignedToUser = assignedToUser;
         this.total = total;
+        this.placedTime = placedTime;
         this.pickedTime = pickedTime;
         this.deliveredTime = deliveredTime;
+        active = true;
     }
 
 
@@ -116,7 +186,14 @@ public class Orders {
         this.storeId = storeId;
     }
 
-//    public Integer getUserId() {
+    public Date getPlacedTime() {
+        return placedTime;
+    }
+
+    public void setPlacedTime(Date placedTime) {
+        this.placedTime = placedTime;
+    }
+    //    public Integer getUserId() {
 //        return userId;
 //    }
 //
