@@ -18,4 +18,7 @@ public interface OrdersRepo extends JpaRepository<Orders,Integer> {
     List<Orders> findAllByAssignedToUserIsNullAndPoolAndStoreId(Pool poolId, Store store_id);
 
     List<Orders> findAllByAssignedToUserIsNullAndPool(Pool pool_id);
+
+    Boolean existsByStoreIdAndActiveTrue(Store store);
+
 }
