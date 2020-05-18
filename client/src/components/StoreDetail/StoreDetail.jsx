@@ -16,13 +16,20 @@ class StoreDetail extends Component {
     if (!store) return <p>Loading Store {this.props.match.params.storeName}</p>;
     return (
       <div>
-        <div className="row mt-5 justify-content-center">
+        <div className="row mt-3">
           <div className="col-4">
-            <img
+            {/* <img
               src={store.logoUrl}
-              class="rounded float-left img-thumbnail"
+              className=" img-fluid  float-left "
               alt="..."
-            />
+            /> */}
+            <img
+                  src={store.logoUrl}
+                  className="card-img"
+                  max-width="100%"
+                  height="250px"
+                  alt="car"
+                />
           </div>
           <div className="col-8 mt-4">
             <small>Name</small>
@@ -48,6 +55,7 @@ class StoreDetail extends Component {
             </div>
           </div>
         </div>
+        <hr />
         <div className="row m-1 justify-content-center font-weight-bold">
           Available products
         </div>
@@ -56,7 +64,7 @@ class StoreDetail extends Component {
             this.props.productsInStore.length &&
             this.props.productsInStore.map((ps) => {
               return (
-                <div className="col-4 float-left ">
+                <div className="col-3 float-left ">
                   <ProductCard
                     {...ps.product}
                     psId={ps.id}

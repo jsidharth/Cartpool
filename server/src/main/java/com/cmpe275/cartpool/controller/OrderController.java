@@ -5,11 +5,15 @@ import com.cmpe275.cartpool.DataObjects.ProductStoreQuantity;
 import com.cmpe275.cartpool.DataObjects.UserMultipleOrders;
 import com.cmpe275.cartpool.entities.*;
 import com.cmpe275.cartpool.services.*;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
@@ -71,11 +75,11 @@ public class OrderController {
      * @return status
      */
     @DeleteMapping("/orders/{id}")
-    public int deleteOrder(User user, @PathVariable int id){
+    public ResponseEntity deleteOrder(User user, @PathVariable int id){
         if(orderService.deleteById(id) == 0) {
-            return 0;
+            return new ResponseEntity(HttpStatus.OK);
         }else{
-            return -1;
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -110,8 +114,12 @@ public class OrderController {
         orders.setOrderedByUser(user);
         orders.setPool(poolService.getPoolById(orderRequest.getPoolId()));
         orders.setOrderStatus(Status.ORDER_PLACED);
-        //TODO calculate total
+        //Set the current orderedTime to now
+        Date date = new Date(System.currentTimeMillis());
+        orders.setPlacedTime(date);
         Orders savedOrder = orderService.addOrder(orders);
+        DecimalFormat df = new DecimalFormat("0.00");
+        orders.setActive(true);
 
         List<ProductStoreQuantity> productStoreQuantities = orderRequest.getProductStoreList();
 
@@ -126,9 +134,29 @@ public class OrderController {
             productStore.setQuantity(productStoreQuantity.getQuantity());
             orderProductStoreService.addOrderProductStore(productStore);
         }
-        savedOrder.setTotal(total);
+        double temp = (total + total*0.005);
+        total += total*0.0925;
+        total += temp;
+        String rounded = df.format(total);
+        savedOrder.setTotal(Float.valueOf(rounded));
         orderService.updateOrder(savedOrder);
         return new ResponseEntity(savedOrder.getId(), HttpStatus.OK);
+    }
+
+    @PutMapping("/orders/{order_id}/{statusString}")
+    public ResponseEntity updateOrder(User user, @PathVariable int order_id, @PathVariable String statusString){
+        Orders orders = orderService.getOrderById(order_id);
+        Date date = new Date(System.currentTimeMillis());
+        Status updatedStatus = Status.valueOf(statusString);
+        if(updatedStatus == Status.ORDER_DELIVERED){
+            orders.setOrderStatus(Status.ORDER_DELIVERED);
+            orders.setDeliveredTime(date);
+        }else if(updatedStatus == Status.ORDER_PICKED){
+            orders.setPickedTime(date);
+            orders.setOrderStatus(Status.ORDER_PICKED);
+        }
+        orderService.updateOrder(orders);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/getPoolAndStore/{pool_id}/{store_id}")

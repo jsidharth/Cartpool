@@ -6,7 +6,17 @@ class ProductCard extends Component {
   state = {};
 
   addToCart = () => {
-    const { psId, id, name, brand, price, unit,storeId, storeName, currentCart} = this.props;
+    const {
+      psId,
+      id,
+      name,
+      brand,
+      price,
+      unit,
+      storeId,
+      storeName,
+      currentCart,
+    } = this.props;
     this.props.addToCart({
       psId,
       id,
@@ -16,21 +26,27 @@ class ProductCard extends Component {
       unit,
       storeId,
       storeName,
-      currentCart
+      currentCart,
     });
   };
   render() {
-    const { name, desc, brand, price, unit, imageUrl } = this.props;
+    const { name, desc, brand, price, unit, imgUrl } = this.props;
     return (
       <div className="card poolcard shadow m-2">
-        <img
-          src={imageUrl || poolLogo}
-          class="rounded img-thumbnail"
+        {/* <img
+          src={imgUrl || poolLogo}
+          className="rounded img-thumbnail"
           alt="..."
           max-width="100%"
           height="150px"
+        /> */}
+        <img
+          src={imgUrl||poolLogo}
+          className="card-img"
+          max-width="100%"
+          height="180px"
+          alt="..."
         />
-
         <div className="card-body">
           <div className="row">
             <div className="col">
@@ -71,9 +87,9 @@ class ProductCard extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  currentCart: state.orderReducer.cart
-})
+const mapStateToProps = (state) => ({
+  currentCart: state.orderReducer.cart,
+});
 const mapDisPatchToProps = (dispatch) => ({
   addToCart: (payload) => dispatch(orderActions.addToCart(payload)),
 });

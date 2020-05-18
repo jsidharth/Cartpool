@@ -8,6 +8,8 @@ import com.cmpe275.cartpool.services.ProductService;
 import com.cmpe275.cartpool.services.ProductStoreService;
 import com.cmpe275.cartpool.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -63,8 +65,9 @@ public class ProductAndStoreController {
      * @param productId
      */
     @DeleteMapping("/products/{productId}")
-    public void deleteProduct(User user, @PathVariable(required = true) Integer productId){
+    public ResponseEntity deleteProduct(User user, @PathVariable(required = true) Integer productId){
          productService.deleteProduct(productId);
+         return new ResponseEntity(HttpStatus.OK);
     }
 
 
@@ -98,12 +101,11 @@ public class ProductAndStoreController {
      */
 
     @GetMapping("/store/{store}")
-    Store getStoreByName(User user, @PathVariable String store){
+    ResponseEntity<Store> getStoreByName(User user, @PathVariable String store){
         if(storeService.storeExistsByName(store)){
-            return storeService.getStoreByName(store);
+            return new ResponseEntity<>(storeService.getStoreByName(store), HttpStatus.OK);
         }
-        //TODO: Throw exception that store doesn't exist
-        return new Store();
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/store")
@@ -117,8 +119,9 @@ public class ProductAndStoreController {
      * @return storeId
      */
     @DeleteMapping("/store/{id}")
-    void deleteStoreById(User user, @PathVariable int id){
+    ResponseEntity deleteStoreById(User user, @PathVariable int id){
         storeService.deleteStore(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     /**

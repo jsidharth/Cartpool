@@ -3,33 +3,54 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
 import { orderActions } from "./../../js/actions/index";
+import Modal from "react-modal";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import { toast } from "react-toastify";
+
+Modal.setAppElement("#root");
 class OrderConfirmed extends Component {
   state = {
-    selectedOrders: []
+    selectedOrders: [],
+    showModal: false
   };
 
   componentDidMount() {
-    // if (
-    //   _.isEmpty(this.props.currentOrder) ||
-    //   this.props.currentOrder.id != this.props.match.params.orderId
-    // ) {
-    this.setState({ orderId: this.props.match.params.orderId });
+    this.setState({
+      orderId: this.props.match.params.orderId,
+      selectedOrders: [parseInt(this.props.match.params.orderId)]
+    });
     this.props.getOrderById(this.props.match.params.orderId);
     this.props.getSimilarOrdersFromPool(this.props.match.params.orderId);
-    //}
   }
 
   handleCardClick = orderId => {
-    //alert(orderId);
     const orders = [...this.state.selectedOrders];
     if (orders.indexOf(orderId) < 0) {
-      //not there
-      orders.push(orderId);
+      if (this.state.selectedOrders.length <= 9) {
+        orders.push(orderId);
+      } else {
+        toast.error("Max limit for pickup is 10");
+      }
     } else {
-      //there
-      orders.splice(orders.indexOf(orderId), 1);
+      if (orderId !== parseInt(this.props.match.params.orderId))
+        orders.splice(orders.indexOf(orderId), 1);
     }
     this.setState({ selectedOrders: orders });
+  };
+
+  handleOpenModal = () => {
+    //alert("here");
+    this.setState({ showModal: true });
+  };
+  handleCloseModal = () => {
+    this.setState({ showModal: false });
+  };
+
+  handlePickupClick = () => {
+    const data = {};
+    data["order_ids"] = [...this.state.selectedOrders];
+    this.props.pickupOrders(data);
   };
 
   render() {
@@ -39,7 +60,7 @@ class OrderConfirmed extends Component {
       _.isEmpty(this.props.similarOrders)
     )
       return <p>Invalid order</p>;
-
+    console.log("currentUser", this.props.currentUser);
     console.log("similarOrders", this.props.similarOrders);
     const { similarOrders } = this.props;
     return (
@@ -60,14 +81,22 @@ class OrderConfirmed extends Component {
               </h6>
               <hr />
               Select orders to pickup
-              <div className="row">
+              <div className="row mt-2">
                 {similarOrders.map(order => (
                   <div key={order.id} className="col-3 float-left ">
                     <div
                       onClick={() => this.handleCardClick(order.id)}
-                      className={"card " + this.addCardClass(order.id)}
+                      className={"card mt-2" + this.addCardClass(order.id)}
                     >
-                      <div className="card-header">#{order.id}</div>
+                      <div className="card-header">
+                        #{order.id}{" "}
+                        {order.id ===
+                          parseInt(this.props.match.params.orderId) && (
+                          <span className="badge badge-primary float-right">
+                            Your order
+                          </span>
+                        )}
+                      </div>
                       <div className="card-body ">
                         <h5 className="card-title">{order.storeId.name}</h5>
                         <p className="card-text">
@@ -84,20 +113,71 @@ class OrderConfirmed extends Component {
               </div>
               <div className="row mt-4">
                 <div className="col">
-                  <button className="btn btn-secondary btn-block">
+                  <button
+                    onClick={this.handleOpenModal}
+                    className="btn btn-secondary btn-block"
+                  >
                     Place your order in pool
                   </button>
                 </div>
                 <div className="col">
-                  <button className="btn btn-primary btn-block">
+                  <button
+                    onClick={this.handlePickupClick}
+                    className="btn btn-primary btn-block"
+                  >
                     Pickup your order along with{" "}
-                    {this.state.selectedOrders.length} order(s)
+                    {this.state.selectedOrders.length - 1} order(s) from pool
                   </button>
                 </div>
               </div>
             </div>
           </div>
         </React.Fragment>
+        <Modal
+          isOpen={this.state.showModal}
+          contentLabel="Minimal Modal Example"
+        >
+          <button
+            onClick={() => this.handleCloseModal()}
+            className="btn btn-light float-right"
+          >
+            x
+          </button>
+
+          <div className="row justify-content-center">
+            <div className="col-2">
+              <CircularProgressbar value={50} text={"1"} />
+            </div>
+            <div className="col-5">
+              <p>Note: Your current credit is 4.</p>
+              <hr />
+              <p>Placing order in pool will reduce your credit score.</p>
+              <p>
+                Do you still want to proceed with placing the order in pool?
+              </p>
+              <div className="row">
+                <div className="col">
+                  <button
+                    onClick={() =>
+                      this.props.history.replace("/order/myorders")
+                    }
+                    className="btn btn-secondary"
+                  >
+                    Yes, place my order in pool
+                  </button>
+                </div>
+                <div className="col">
+                  <button
+                    onClick={() => this.handleCloseModal()}
+                    className="btn btn-primary btn-block"
+                  >
+                    No, go back
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </React.Fragment>
     );
   }
@@ -108,6 +188,7 @@ class OrderConfirmed extends Component {
   }
 }
 const mapStateToProps = state => ({
+  currentUser: state.auth.user,
   currentOrder: state.orderReducer.currentOrder,
   similarOrders: state.orderReducer.similarOrders
 });
@@ -119,7 +200,8 @@ const mapDisPatchToProps = (dispatch, ownProps) => ({
   // placeOrder: (orderDetails) => dispatch(orderActions.placeOrder(orderDetails, ownProps)),
   getOrderById: id => dispatch(orderActions.getOrderById(id)),
   getSimilarOrdersFromPool: id =>
-    dispatch(orderActions.getSimilarOrdersFromPool(id))
+    dispatch(orderActions.getSimilarOrdersFromPool(id)),
+  pickupOrders: data => dispatch(orderActions.pickupOrders(data, ownProps))
 });
 export default withRouter(
   connect(mapStateToProps, mapDisPatchToProps)(OrderConfirmed)

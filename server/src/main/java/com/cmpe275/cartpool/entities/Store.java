@@ -16,6 +16,7 @@ public class Store {
     private String city;
     private String state;
     private String zip;
+    private boolean active;
 
     public Store() {
     }
@@ -27,6 +28,15 @@ public class Store {
         this.city = city;
         this.state = state;
         this.zip = zip;
+        active = true;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Integer getId() {
