@@ -37,6 +37,8 @@ public class OrderController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    EmailService emailService;
 
     @GetMapping("/order/{orderId}")
     public Orders getOrderbyId(@PathVariable int orderId){
@@ -140,6 +142,9 @@ public class OrderController {
         String rounded = df.format(total);
         savedOrder.setTotal(Float.valueOf(rounded));
         orderService.updateOrder(savedOrder);
+        //send email that its placed
+        String html = emailService.orderHtml(Status.ORDER_PLACED, savedOrder.getId());
+        emailService.sendMail("",user.getScreenName(),user.getEmail(),"CartPool: Order "+savedOrder.getId()+" placed",html);
         return new ResponseEntity(savedOrder.getId(), HttpStatus.OK);
     }
 
@@ -156,6 +161,24 @@ public class OrderController {
             orders.setOrderStatus(Status.ORDER_PICKED);
         }
         orderService.updateOrder(orders);
+        //send email
+        //send only if assigned and this user are not same
+        String html;
+        if(updatedStatus == Status.ORDER_NOT_DELIVERED) {
+            html = emailService.orderHtml(Status.ORDER_NOT_DELIVERED, orders.getId());
+            emailService.sendMail(user.getScreenName(),orders.getAssignedToUser().getScreenName(),orders.getAssignedToUser().getEmail(),"CartPool: Order "+orders.getId()+" not delivered",html);
+        } else {
+            //send these only if the user and assigned are different
+            if (!user.getScreenName().equals(orders.getScreenName())){
+                if (updatedStatus == Status.ORDER_PICKED) {
+                    html = emailService.orderHtml(Status.ORDER_PICKED, orders.getId());
+                    emailService.sendMail(user.getScreenName(),orders.getAssignedToUser().getScreenName(),orders.getAssignedToUser().getEmail(),"CartPool: Order "+orders.getId()+" picked",html);
+                } else {
+                    html = emailService.orderHtml(Status.ORDER_DELIVERED, orders.getId());
+                    emailService.sendMail(user.getScreenName(),orders.getAssignedToUser().getScreenName(),orders.getAssignedToUser().getEmail(),"CartPool: Order "+orders.getId()+" delivered",html);
+                }
+            }
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 

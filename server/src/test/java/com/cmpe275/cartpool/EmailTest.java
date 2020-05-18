@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import javax.mail.MessagingException;
+
 public class EmailTest {
     //@Autowired
     EmailService emailService;
@@ -16,8 +18,8 @@ public class EmailTest {
 
     @Test
     public void testEmail(){
-        emailService.sendMail("whatever", "lolz", "sushant.post@gmail.com",
-                "Whats uppp");
+        emailService.sendMail("whatever", "lolz", "jojojoseph09@gmail.com","Test Email",
+                    "Whats uppp");
     }
 
 }

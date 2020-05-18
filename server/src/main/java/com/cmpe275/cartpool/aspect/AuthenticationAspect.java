@@ -1,5 +1,6 @@
 package com.cmpe275.cartpool.aspect;
 
+import com.cmpe275.cartpool.entities.Role;
 import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.services.UserService;
 import com.google.firebase.auth.FirebaseAuth;
@@ -8,11 +9,14 @@ import com.google.firebase.auth.FirebaseToken;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -20,6 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 
 @Aspect
@@ -50,6 +55,17 @@ public class AuthenticationAspect {
                             System.out.println("Not an instance of user"+ newargs[0].getClass().getSimpleName());
                         }
                         System.out.println("Auth went with no issues");
+                        //Check if admin and this request os not a GET => Then don't allow unless verified
+                        if (user.getRole().equals(Role.ADMIN)){
+                            MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+                            Method method = methodSignature .getMethod();
+                            RequestMethod[] requestMethods = method.getAnnotation(RequestMapping.class).method();
+                            if (requestMethods[0] != RequestMethod.GET ) {
+                                if (!user.getVerified()) {
+                                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please verify your email before proceeding");
+                                }
+                            }
+                        }
                         return joinPoint.proceed(newargs);
                     } else {
                         //Do this only if joinPoint is not register
