@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { BsPlusCircle } from "react-icons/bs";
 
+
+
 class AdminStoreHome extends Component {
-  //state = {};
   componentDidMount() {
     if (this.props.stores.length === 0) {
       this.props.getStores();
@@ -17,6 +18,7 @@ class AdminStoreHome extends Component {
     this.props.deleteStore(storeId);
   }
 
+  
   render() {
     return (
       <React.Fragment>

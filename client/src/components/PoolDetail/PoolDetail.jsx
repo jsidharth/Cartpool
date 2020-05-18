@@ -7,6 +7,15 @@ class Pool extends Component {
   componentDidMount() {
     this.props.getUserPool();
   }
+  leavePool = () => {
+    const userid = this.props.user.id;
+    this.props.leavePool(userid)
+  }
+
+  deletePool = () => {
+    const userid = this.props.user.id;
+    this.props.deletePool(userid)
+  }
   render() {
     const {
       id,
@@ -131,6 +140,18 @@ class Pool extends Component {
                         : null}
                     </ul>
                   </div>
+                  <div className="row">
+                    {this.props.user.screenName ===
+                    poolLeaderScreenNameTransient ? (
+                      <button type="button" className="btn btn-danger" onClick={() => this.leavePool}>
+                        Delete
+                      </button>
+                    ) : (
+                      <button type="button" className="btn btn-danger" onClick={() => this.deletePool}>
+                        Leave
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             ) : null}
@@ -143,8 +164,11 @@ class Pool extends Component {
 
 const mapStateToPros = (state) => ({
   poolDetail: state.poolReducer.userPool,
+  user: state.auth.user,
 });
 const mapDispatchToProps = (dispatch) => ({
   getUserPool: () => dispatch(poolActions.getUserPool()),
+  leavePool: (userId) => dispatch(poolActions.leavePool(userId)),
+  deletePool: (userId) => dispatch(poolActions.deletePool(userId))
 });
 export default connect(mapStateToPros, mapDispatchToProps)(Pool);

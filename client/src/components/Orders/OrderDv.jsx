@@ -12,11 +12,11 @@ class OrderDv extends Component {
 
   handleUpdateOrder = (orderStatus, id) => {
     if (orderStatus === "ORDER_PLACED") {
-      alert("ORDER_PLACED " + orderStatus + " + " + id);
+      // alert("ORDER_PLACED " + orderStatus + " + " + id);
       this.props.updateOrder(id, "ORDER_PICKED");
     }
     if (orderStatus === "ORDER_PICKED") {
-      alert("ORDER_PLACED " + orderStatus + " + " + id);
+      // alert("ORDER_PLACED " + orderStatus + " + " + id);
       this.props.updateOrder(id, "ORDER_DELIVERED");
     }
   };

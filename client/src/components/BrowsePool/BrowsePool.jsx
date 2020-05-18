@@ -3,18 +3,31 @@ import { connect } from "react-redux";
 import PoolCard from "../Pool/PoolCard";
 import { Link } from "react-router-dom";
 import { poolActions } from "../../js/actions";
+import _ from "lodash";
 class BrowsePool extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchfield: "",
+      pools: [],
+    };
+  }
   componentDidMount() {
-    this.props.getPools();
+    const pools = this.props.getPools();
+    this.setState({
+      pools,
+    });
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.pools.length !== this.props.pools.length) {
-      this.props.getPools();
+    if (!_.isEqual(prevProps.pools, this.props.pools)) {
+      this.setState({
+        pools: this.props.pools,
+      });
     }
   }
 
-  requestPoolLeader = id => {
+  requestPoolLeader = (id) => {
     //alert(id);
     this.props.requestToJoinPool(id, "");
   };
@@ -24,6 +37,27 @@ class BrowsePool extends Component {
     this.props.requestToJoinPool(id, screenName);
   };
 
+  setSearch = (field) => {
+    this.setState({
+      searchfield: field,
+    });
+  };
+
+  searchPool = e => {
+    if (this.state.searchfield && this.props.pools && this.props.pools.length) {
+      const serachParam = `^${e.target.value}.*$`;
+      const regex = new RegExp(serachParam, "i");
+      const searchField = this.state.searchfield;
+      const searchResults = this.props.pools.filter((pool) => {
+        const match = pool[searchField].match(regex);
+        return match && match.length && pool;
+      });
+      this.setState({
+        pools: searchResults
+      });
+    }
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -31,10 +65,49 @@ class BrowsePool extends Component {
           Create pool
         </Link>
         <h2>Browse Pools</h2>
-
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <button
+              className="btn btn-outline-secondary dropdown-toggle"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {this.state.searchfield || "Search By"}
+            </button>
+            <div className="dropdown-menu">
+              <p
+                className="dropdown-item"
+                onClick={() => this.setSearch("name")}
+              >
+                Name
+              </p>
+              <p
+                className="dropdown-item"
+                onClick={() => this.setSearch("neighbourhood")}
+              >
+                Neighborhood
+              </p>
+              <p
+                className="dropdown-item"
+                onClick={() => this.setSearch("zip")}
+              >
+                Zipcode
+              </p>
+            </div>
+            <input
+              type="text"
+              className="form-control"
+              aria-label="Text input with dropdown button"
+              onChange={this.searchPool}
+              // onKeyDown={this.searchPool}
+            />
+          </div>
+        </div>
         <div className="row">
-          {this.props.pools && this.props.pools.length
-            ? this.props.pools.map(pool => {
+          {this.state.pools && this.state.pools.length
+            ? this.state.pools.map((pool) => {
                 return (
                   <div className="col-6 float-left">
                     <PoolCard
@@ -51,12 +124,12 @@ class BrowsePool extends Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  pools: state.poolReducer.pools
+const mapStateToProps = (state) => ({
+  pools: state.poolReducer.pools,
 });
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getPools: () => dispatch(poolActions.getPools()),
   requestToJoinPool: (id, screenName) =>
-    dispatch(poolActions.requestToJoinPool(id, screenName))
+    dispatch(poolActions.requestToJoinPool(id, screenName)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(BrowsePool);
