@@ -6,8 +6,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class serverConfig {
 
-    @Value( "${carpool.server}" )
-    private static String server;
+    private static final String server = "http://locahost:3000/";
 
     public static String getServer() {
         return server;
