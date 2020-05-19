@@ -3,6 +3,7 @@ import Card from "../Card/Card";
 import { connect } from "react-redux";
 import { adminActions } from "../../js/actions";
 import { withRouter } from "react-router-dom";
+import requireAuth from "./../RequireAuth/RequireAuth";
 class Browse extends Component {
   state = {};
 
@@ -51,4 +52,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Browse));
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(withRouter(Browse)));

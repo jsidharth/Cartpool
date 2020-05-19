@@ -4,6 +4,7 @@ import { adminActions } from "../../js/actions";
 import { Link } from "react-router-dom";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { BsPlusCircle } from "react-icons/bs";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 class AdminStoreHome extends Component {
   componentDidMount() {
@@ -98,4 +99,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminStoreHome);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(AdminStoreHome));

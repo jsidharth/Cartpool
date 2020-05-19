@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { toast } from "react-toastify";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 Modal.setAppElement("#root");
 class OrderConfirmed extends Component {
@@ -238,6 +239,6 @@ const mapDisPatchToProps = (dispatch, ownProps) => ({
     dispatch(orderActions.getSimilarOrdersFromPool(id)),
   pickupOrders: (data) => dispatch(orderActions.pickupOrders(data, ownProps)),
 });
-export default withRouter(
+export default requireAuth(withRouter(
   connect(mapStateToProps, mapDisPatchToProps)(OrderConfirmed)
-);
+));

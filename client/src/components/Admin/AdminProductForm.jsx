@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { adminActions } from "../../js/actions";
-
+import requireAuth from "./../RequireAuth/RequireAuth";
 class AdminProductForm extends Component {
   state = {
     data: {
@@ -189,4 +189,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(adminActions.updateProduct(payload, ownProps))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminProductForm);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(AdminProductForm));

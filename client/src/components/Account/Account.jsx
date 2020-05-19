@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { userActions } from "./../../js/actions";
 import _ from "lodash";
+import requireAuth from "./../RequireAuth/RequireAuth";
+
 class Account extends Component {
   state = {
     screenName: "",
@@ -267,4 +269,4 @@ const mapDispatchToProps = (dispatch) => ({
   updateProfile: (payload) => dispatch(userActions.updateProfile(payload)),
   getDetails: () => dispatch(userActions.getDetails()),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Account);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(Account));

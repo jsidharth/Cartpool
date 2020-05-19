@@ -3,7 +3,7 @@ import OrderCard from "./OrderCard";
 import { connect } from "react-redux";
 import { orderActions } from "../../js/actions";
 import { withRouter } from "react-router-dom";
-
+import requireAuth from "./../RequireAuth/RequireAuth";
 class AssignedOrders extends Component {
   state = {};
   componentDidMount() {
@@ -47,6 +47,6 @@ const mapDispatchToProps = (dispatch) => ({
   getAssignedOrders: (userId) =>
     dispatch(orderActions.getAssignedOrders(userId)),
 });
-export default withRouter(
+export default requireAuth(withRouter(
   connect(mapStateToProps, mapDispatchToProps)(AssignedOrders)
-);
+));

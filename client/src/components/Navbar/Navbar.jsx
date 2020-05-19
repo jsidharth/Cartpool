@@ -4,7 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { authActions } from "../../js/actions";
 import _ from "lodash";
-
+import requireAuth from "./../RequireAuth/RequireAuth";
 class Navbar extends Component {
   state = {};
 
@@ -167,4 +167,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   signOut: () => dispatch(authActions.signOut(ownProps)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar));
+export default requireAuth(withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar)));

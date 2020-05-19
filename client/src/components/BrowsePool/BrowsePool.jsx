@@ -4,6 +4,7 @@ import PoolCard from "../Pool/PoolCard";
 import { Link } from "react-router-dom";
 import { poolActions } from "../../js/actions";
 import _ from "lodash";
+import requireAuth from "./../RequireAuth/RequireAuth";
 class BrowsePool extends Component {
   constructor(props) {
     super(props);
@@ -137,4 +138,4 @@ const mapDispatchToProps = (dispatch) => ({
   requestToJoinPool: (id, screenName) =>
     dispatch(poolActions.requestToJoinPool(id, screenName)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(BrowsePool);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(BrowsePool));
