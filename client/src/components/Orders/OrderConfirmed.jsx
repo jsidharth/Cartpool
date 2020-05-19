@@ -12,19 +12,19 @@ Modal.setAppElement("#root");
 class OrderConfirmed extends Component {
   state = {
     selectedOrders: [],
-    showModal: false
+    showModal: false,
   };
 
   componentDidMount() {
     this.setState({
       orderId: this.props.match.params.orderId,
-      selectedOrders: [parseInt(this.props.match.params.orderId)]
+      selectedOrders: [parseInt(this.props.match.params.orderId)],
     });
     this.props.getOrderById(this.props.match.params.orderId);
     this.props.getSimilarOrdersFromPool(this.props.match.params.orderId);
   }
 
-  handleCardClick = orderId => {
+  handleCardClick = (orderId) => {
     const orders = [...this.state.selectedOrders];
     if (orders.indexOf(orderId) < 0) {
       if (this.state.selectedOrders.length <= 9) {
@@ -82,34 +82,37 @@ class OrderConfirmed extends Component {
               <hr />
               Select orders to pickup
               <div className="row mt-2">
-                {similarOrders.map(order => (
-                  <div key={order.id} className="col-3 float-left ">
-                    <div
-                      onClick={() => this.handleCardClick(order.id)}
-                      className={"card mt-2" + this.addCardClass(order.id)}
-                    >
-                      <div className="card-header">
-                        #{order.id}{" "}
-                        {order.id ===
-                          parseInt(this.props.match.params.orderId) && (
-                          <span className="badge badge-primary float-right">
-                            Your order
-                          </span>
-                        )}
-                      </div>
-                      <div className="card-body ">
-                        <h5 className="card-title">{order.storeId.name}</h5>
-                        <p className="card-text">
-                          {order.items.map(item => (
-                            <span className="badge badge-info m-1">
-                              {item.productStore.product.name}
+                {_.chain(similarOrders)
+                  .sortBy(["id"])
+                  .map((order) => (
+                    <div key={order.id} className="col-3 float-left ">
+                      <div
+                        onClick={() => this.handleCardClick(order.id)}
+                        className={"card mt-2" + this.addCardClass(order.id)}
+                      >
+                        <div className="card-header">
+                          #{order.id}{" "}
+                          {order.id ===
+                            parseInt(this.props.match.params.orderId) && (
+                            <span className="badge badge-primary float-right">
+                              Your order
                             </span>
-                          ))}
-                        </p>
+                          )}
+                        </div>
+                        <div className="card-body ">
+                          <h5 className="card-title">{order.storeId.name}</h5>
+                          <p className="card-text">
+                            {order.items.map((item) => (
+                              <span className="badge badge-info m-1">
+                                {item.productStore.product.name}
+                              </span>
+                            ))}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                  .value()}
               </div>
               <div className="row mt-4">
                 <div className="col">
@@ -145,11 +148,40 @@ class OrderConfirmed extends Component {
           </button>
 
           <div className="row justify-content-center">
-            <div className="col-2">
+            {/* <div className="col-2">
               <CircularProgressbar value={50} text={"1"} />
-            </div>
+            </div> */}
             <div className="col-5">
-              <p>Note: Your current credit is 4.</p>
+              {parseInt(this.props.currentUser.credit) + 1 > -4 ? (
+                // Normal
+                <p className="text-success">
+                  Note: Your current credit is
+                  <strong>
+                    {" "}
+                    {parseInt(this.props.currentUser.credit) + 1}
+                  </strong>
+                  .
+                </p>
+              ) : parseInt(this.props.currentUser.credit) + 1 > -6 ? (
+                <p className="text-warning">
+                  Note: Your current credit is
+                  <strong>
+                    {" "}
+                    {parseInt(this.props.currentUser.credit) + 1}
+                  </strong>
+                  .
+                </p>
+              ) : (
+                <p className="text-danger">
+                  Note: Your current credit is
+                  <strong>
+                    {" "}
+                    {parseInt(this.props.currentUser.credit) + 1}
+                  </strong>
+                  .
+                </p>
+              )}
+
               <hr />
               <p>Placing order in pool will reduce your credit score.</p>
               <p>
@@ -158,9 +190,12 @@ class OrderConfirmed extends Component {
               <div className="row">
                 <div className="col">
                   <button
-                    onClick={() =>
-                      this.props.history.replace("/order/myorders")
-                    }
+                    onClick={() => {
+                      toast.success(
+                        "Your contribution credit has been reduced by one!"
+                      );
+                      return this.props.history.replace("/order/myorders");
+                    }}
                     className="btn btn-secondary"
                   >
                     Yes, place my order in pool
@@ -187,10 +222,10 @@ class OrderConfirmed extends Component {
       : "";
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentUser: state.auth.user,
   currentOrder: state.orderReducer.currentOrder,
-  similarOrders: state.orderReducer.similarOrders
+  similarOrders: state.orderReducer.similarOrders,
 });
 const mapDisPatchToProps = (dispatch, ownProps) => ({
   // modifyProductQntyInCart: (productId, cart, step) =>
@@ -198,10 +233,10 @@ const mapDisPatchToProps = (dispatch, ownProps) => ({
   // deleteProductFromCart: (productId, cart) =>
   //   dispatch(orderActions.deleteProductFromCart(productId, cart)),
   // placeOrder: (orderDetails) => dispatch(orderActions.placeOrder(orderDetails, ownProps)),
-  getOrderById: id => dispatch(orderActions.getOrderById(id)),
-  getSimilarOrdersFromPool: id =>
+  getOrderById: (id) => dispatch(orderActions.getOrderById(id)),
+  getSimilarOrdersFromPool: (id) =>
     dispatch(orderActions.getSimilarOrdersFromPool(id)),
-  pickupOrders: data => dispatch(orderActions.pickupOrders(data, ownProps))
+  pickupOrders: (data) => dispatch(orderActions.pickupOrders(data, ownProps)),
 });
 export default withRouter(
   connect(mapStateToProps, mapDisPatchToProps)(OrderConfirmed)

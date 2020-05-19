@@ -7,10 +7,10 @@ import { withRouter } from "react-router-dom";
 class AssignedOrders extends Component {
   state = {};
   componentDidMount() {
-    this.props.getAssignedOrders();
+    this.props.getAssignedOrders(this.props.userId);
   }
 
-  goToOrderDetail = orderId => {
+  goToOrderDetail = (orderId) => {
     this.props.history.push(`/order/dv/${orderId}?assigned=true`);
   };
 
@@ -22,7 +22,7 @@ class AssignedOrders extends Component {
         <hr />
         <div className="row ">
           {this.props.assignedOrders && this.props.assignedOrders.length
-            ? this.props.assignedOrders.map(order => {
+            ? this.props.assignedOrders.map((order) => {
                 return (
                   <div className="col-3 float-left mt-3">
                     <OrderCard
@@ -39,11 +39,13 @@ class AssignedOrders extends Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  assignedOrders: state.orderReducer.assignedOrders
+const mapStateToProps = (state) => ({
+  userId: state.auth.user.id,
+  assignedOrders: state.orderReducer.assignedOrders,
 });
-const mapDispatchToProps = dispatch => ({
-  getAssignedOrders: () => dispatch(orderActions.getAssignedOrders())
+const mapDispatchToProps = (dispatch) => ({
+  getAssignedOrders: (userId) =>
+    dispatch(orderActions.getAssignedOrders(userId)),
 });
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(AssignedOrders)

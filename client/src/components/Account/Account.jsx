@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { userActions } from "./../../js/actions";
-import _ from 'lodash';
+import _ from "lodash";
 class Account extends Component {
   state = {
     screenName: "",
@@ -17,8 +17,8 @@ class Account extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if(!_.isEqual(props.user.screenName, state.screenName)) {
-      return {...props.user}
+    if (!_.isEqual(props.user.screenName, state.screenName)) {
+      return { ...props.user };
     }
   }
 
@@ -27,13 +27,13 @@ class Account extends Component {
   }
 
   // componentDidUpdate(prevProps) {
-  //   if(!_.isEqual(this.props.user, prevProps.user)) 
+  //   if(!_.isEqual(this.props.user, prevProps.user))
   //   {
   //     this.setState({
   //       ...this.props.user
   //     });
   //   }
-  // } 
+  // }
 
   handleChange = (e) => {
     console.log(e.target);
@@ -48,7 +48,6 @@ class Account extends Component {
     this.props.updateProfile(payload);
   };
   render() {
-    
     return (
       <div className="mt-5 ">
         <div className="card">
@@ -83,12 +82,28 @@ class Account extends Component {
                     Contribution Credit
                   </label>
                   <div className="col-sm-8">
-                    <input
-                      type="text"
-                      className="form-control-plaintext"
-                      disabled
-                      value={this.state.credit}
-                    />
+                    {this.state.credit > -4 ? (
+                      <input
+                        type="text"
+                        className="form-control-plaintext text-success"
+                        disabled
+                        value={this.state.credit}
+                      />
+                    ) : this.state.credit > -6 ? (
+                      <input
+                        type="text"
+                        className="form-control-plaintext text-warning"
+                        disabled
+                        value={this.state.credit}
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        className="form-control-plaintext text-danger"
+                        disabled
+                        value={this.state.credit}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -250,6 +265,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   updateProfile: (payload) => dispatch(userActions.updateProfile(payload)),
-  getDetails: () => dispatch(userActions.getDetails())
+  getDetails: () => dispatch(userActions.getDetails()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Account);

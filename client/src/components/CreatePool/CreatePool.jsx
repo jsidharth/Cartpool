@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { poolActions } from "./../../js/actions/index";
 import { connect } from "react-redux";
+import { toast } from "react-toastify";
 
 class CreatePool extends Component {
   state = {
@@ -18,8 +19,13 @@ class CreatePool extends Component {
 
   createPool = (e) => {
     e.preventDefault();
-    const payload = { ...this.state };
-    this.props.createPool(payload);
+    if(!this.props.user.screenName || !this.props.user.street || !this.props.user.city || !this.props.user.state|| !this.props.user.zip) {
+      toast.error("Incomplete account info. Please fill account details!")
+    } else {
+      const payload = { ...this.state };
+      this.props.createPool(payload);
+    }
+    
   };
   render() {
     return (
@@ -132,8 +138,12 @@ class CreatePool extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  user: state.auth.user
+});
+
 const mapDispatchToProps = (dispatch, ownProps) => ({
   createPool: (payload) => dispatch(poolActions.createPool(payload, ownProps)),
 });
 
-export default connect(null, mapDispatchToProps)(CreatePool);
+export default connect(mapStateToProps, mapDispatchToProps)(CreatePool);
