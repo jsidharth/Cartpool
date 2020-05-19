@@ -9,22 +9,23 @@ class BrowsePool extends Component {
     super(props);
     this.state = {
       searchfield: "",
-      pools: [],
+      pools: []
     };
   }
   componentDidMount() {
-    const pools = this.props.getPools();
-    this.setState({
-      pools,
-    });
+    this.props.getPools();
   }
 
   componentDidUpdate(prevProps) {
-    if (!_.isEqual(prevProps.pools, this.props.pools)) {
+    if (!_.isEqual(prevProps.pools, this.props.pools) )  {
       this.setState({
-        pools: this.props.pools,
+        pools: this.props.pools
       });
     }
+  }
+
+  componentWillUnmount() {
+    this.props.clearPools();
   }
 
   requestPoolLeader = (id) => {
@@ -43,8 +44,10 @@ class BrowsePool extends Component {
     });
   };
 
-  searchPool = e => {
+  searchPool = (e) => {
+    console.log(this.state.searchfield, this.props.pools )
     if (this.state.searchfield && this.props.pools && this.props.pools.length) {
+      console.log('hre')
       const serachParam = `^${e.target.value}.*$`;
       const regex = new RegExp(serachParam, "i");
       const searchField = this.state.searchfield;
@@ -52,8 +55,9 @@ class BrowsePool extends Component {
         const match = pool[searchField].match(regex);
         return match && match.length && pool;
       });
+      console.log(searchResults)
       this.setState({
-        pools: searchResults
+        pools: searchResults,
       });
     }
   };
@@ -129,6 +133,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
   getPools: () => dispatch(poolActions.getPools()),
+  clearPools: () => dispatch(poolActions.clearPools()),
   requestToJoinPool: (id, screenName) =>
     dispatch(poolActions.requestToJoinPool(id, screenName)),
 });

@@ -8,7 +8,8 @@ class VerifyPool extends Component {
   componentDidMount() {
     const queryParams = queryString.parse(this.props.location.search);
     const poolMemberId = queryParams.poolMemberId;
-    this.props.verifyPool(poolMemberId)
+    const accept = queryParams.accept;
+    this.props.verifyPool(poolMemberId, accept)
   }
   render() {
     
@@ -22,6 +23,6 @@ class VerifyPool extends Component {
 
 
 const mapDispatchToProps = dispatch => ({
-    verifyPool: (poolMemberId) => dispatch(userActions.verifyPool(poolMemberId))
+    verifyPool: (poolMemberId, accept) => dispatch(userActions.verifyPool(poolMemberId, accept))
 })
 export default connect(null, mapDispatchToProps)(VerifyPool);

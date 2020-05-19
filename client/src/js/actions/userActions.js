@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import server from "./../../config/server";
 
-const updateProfile = userDetails => async dispatch => {
+const updateProfile = (userDetails) => async (dispatch) => {
   try {
     const updatedUser = await axios.put(
       `http://${server.domain}:${server.port}/user`,
@@ -12,8 +12,8 @@ const updateProfile = userDetails => async dispatch => {
     dispatch({
       type: actionTypes.SET_USER,
       payload: {
-        user: updatedUser.data
-      }
+        user: updatedUser.data,
+      },
     });
     toast.success("Account details updated!");
   } catch (err) {
@@ -21,35 +21,38 @@ const updateProfile = userDetails => async dispatch => {
   }
 };
 
-const verifyEmail = (userEmail) => async dispatch => {
+const verifyEmail = (userEmail) => async (dispatch) => {
   try {
-    await axios.get(`http://${server.domain}:${server.port}/user/verify?userEmail=${userEmail}`);
+    await axios.get(
+      `http://${server.domain}:${server.port}/user/verify?userEmail=${userEmail}`
+    );
     dispatch(getDetails());
   } catch (err) {
     toast.error(err.response.data);
   }
-}
+};
 
-const verifyPool = (poolMemberId) => async dispatch => {
+const verifyPool = (poolMemberId, accept) => async (dispatch) => {
   try {
-    await axios.get(`http://${server.domain}:${server.port}/pool/approve?poolMemberId=${poolMemberId}`)
+    await axios.get(
+      `http://${server.domain}:${server.port}/pool/approve?poolMemberId=${poolMemberId}&accept=${accept}`
+    );
   } catch (err) {
     toast.error(err.response.data);
   }
-}
+};
 
-const getDetails = () => async dispatch => {
+const getDetails = () => async (dispatch) => {
   try {
     const user = await axios.get(`http://${server.domain}:${server.port}/user`);
     dispatch({
       type: actionTypes.SET_USER,
       payload: {
-        user: user.data
-      }
+        user: user.data,
+      },
     });
-
-  } catch(err) {
+  } catch (err) {
     toast.error(err.response.data);
   }
-}
-export { updateProfile, verifyEmail, verifyPool, getDetails};
+};
+export { updateProfile, verifyEmail, verifyPool, getDetails };

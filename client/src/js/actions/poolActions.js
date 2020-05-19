@@ -116,6 +116,15 @@ const sendMessage = data => async dispatch => {
   }
 };
 
+const clearPools = () => dispatch => {
+  try {
+    dispatch({
+      type: actionTypes.CLEAR_POOLS
+    });
+  }catch(err) {
+    toast.error(err.response.data);
+  }
+}
 export {
   createPool,
   getPools,
@@ -123,5 +132,6 @@ export {
   requestToJoinPool,
   leavePool,
   deletePool,
-  sendMessage
+  sendMessage,
+  clearPools
 };
