@@ -11,7 +11,8 @@ class AdminProductForm extends Component {
       imgUrl: "",
       brand: "",
       unit: "",
-      price: ""
+      price: "",
+      sku: ""
     },
     edit: false
   };
@@ -109,7 +110,20 @@ class AdminProductForm extends Component {
                         ></textarea>
                       </div>
                     </div>
+
                     <div className="col">
+                      <div className="form-group">
+                        <label>Product SKU</label>
+                        <input
+                          name="sku"
+                          onChange={this.handleChange}
+                          required
+                          type="text"
+                          className="form-control"
+                          placeholder="Enter Product SKU"
+                          value={data.sku}
+                        />
+                      </div>
                       <div className="form-group">
                         <label>Image URL</label>
                         <input

@@ -18,7 +18,7 @@ class PoolCard extends Component {
         <div className="">
           <div className="card shadow">
             <div className="card-header">
-              {this.props.name}
+            <strong>{this.props.name}</strong>
               <button
                 className="btn btn-primary  btn-sm  mt-1 float-right "
                 onClick={() => this.props.requestPoolLeader(this.props.id)}
