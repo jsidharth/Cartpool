@@ -125,7 +125,7 @@ class Signup extends Component {
                 Sign Up
               </button>
             </div>
-            <div className="input-group mt-3">
+            {/* <div className="input-group mt-3">
               <button
                 type="button"
                 className="btn btn-outline-success btn-block"
@@ -136,7 +136,7 @@ class Signup extends Component {
                 </span>{" "}
                 Google Sign Up
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
