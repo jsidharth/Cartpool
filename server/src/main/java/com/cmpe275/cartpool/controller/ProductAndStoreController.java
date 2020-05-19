@@ -37,8 +37,8 @@ public class ProductAndStoreController {
      * @return
      */
     @GetMapping("/products/{productId}")
-    public Product getProductById(User user, @PathVariable(required = true) Integer productId){
-        return productService.getProductById(productId);
+    public ResponseEntity getProductById(User user, @PathVariable(required = true) Integer productId){
+        return ResponseEntity.ok(productService.getProductById(productId));
     }
 
     /**
@@ -46,8 +46,9 @@ public class ProductAndStoreController {
      * @return
      */
     @GetMapping("/products")
-    public List<Product> allProducts(User user){
-        return productService.getAllProducts();
+    public ResponseEntity allProducts(User user){
+
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     /**
@@ -56,8 +57,8 @@ public class ProductAndStoreController {
      * @return
      */
     @PostMapping("/products")
-    public Product addProduct(User user, @RequestBody Product product){
-        return productService.addProduct(product);
+    public ResponseEntity addProduct(User user, @RequestBody Product product){
+        return ResponseEntity.ok(productService.addProduct(product));
     }
 
     /**
@@ -72,8 +73,8 @@ public class ProductAndStoreController {
 
 
     @PutMapping("/products")
-    public Product modifyProduct(User user, @RequestBody Product product){
-        return productService.modifyProduct(product);
+    public ResponseEntity modifyProduct(User user, @RequestBody Product product){
+        return ResponseEntity.ok(productService.modifyProduct(product));
     }
 
     // Store endpoints
@@ -84,14 +85,13 @@ public class ProductAndStoreController {
      * @return storeId
     * */
     @PostMapping("/store")
-    public int addStore(User user, @RequestBody Store store){
+    public ResponseEntity addStore(User user, @RequestBody Store store){
         if(storeService.storeExistsByName(store.getName())){
             //Throw exception
+            return new ResponseEntity<>("Store already exists", HttpStatus.BAD_REQUEST);
         }else{
-            return storeService.addStore(store);
+            return ResponseEntity.ok(storeService.addStore(store));
         }
-        //TODO: Throw exception that store already exists
-        return -1;
     }
 
     /**

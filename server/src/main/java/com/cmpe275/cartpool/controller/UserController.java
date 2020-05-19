@@ -38,7 +38,7 @@ public class UserController {
         }
         //is screen name unique
         if (userService.getUserByScreenName(user.getScreenName())!= null) {
-            return new ResponseEntity<>("Screen name exisits", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Screen name exists", HttpStatus.BAD_REQUEST);
         }
         //Assign role here
         if (user.getEmail().endsWith("@sjsu.edu")){
@@ -104,12 +104,12 @@ public class UserController {
     }
 
     @PostMapping("/sendMail")
-    public ResponseEntity sendMail(User user, @RequestParam String screenName, String message) {
+    public ResponseEntity sendMail(User user, @RequestParam String screenName, @RequestParam String message) {
         User user2 = userService.getUserByScreenName(screenName);
-        message = emailService.messageHtml(user.getScreenName(), message);
+        String message2 = emailService.messageHtml(user.getScreenName(), message);
         if (user2 != null){
             //send email
-            emailService.sendMail(user.getScreenName(), user2.getScreenName(), user2.getEmail(), "CartPool: Message from "+user.getScreenName(), message);
+            emailService.sendMail(user.getScreenName(), user2.getScreenName(), user2.getEmail(), "CartPool: Message from "+user.getScreenName(), message2);
             return ResponseEntity.ok("Mail send");
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
