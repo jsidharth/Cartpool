@@ -56,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
         updatedProduct.setImgUrl(product.getImgUrl());
         updatedProduct.setPrice(product.getPrice());
         updatedProduct.setUnit(product.getUnit());
+        updatedProduct.setSku(product.getSku());
 
         Product toSend = productRepo.save(updatedProduct);
 

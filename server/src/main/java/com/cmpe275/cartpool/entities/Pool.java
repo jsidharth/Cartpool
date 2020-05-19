@@ -19,6 +19,8 @@ public class Pool {
     private String description;
     private String zip;
 
+    private Boolean deleted;
+
     public List<String> getUserNickNamesTransient() {
         return userNickNamesTransient;
     }
@@ -63,7 +65,7 @@ public class Pool {
     private List<PoolMember> poolMembers;
 
 
-    @OneToMany(mappedBy = "pool")
+    @OneToMany(mappedBy = "pool",cascade=CascadeType.ALL)
     private List<Orders> ordersInPool;
 
     public Pool(){
@@ -77,6 +79,7 @@ public class Pool {
         this.neighbourhood = neighbourhood;
         this.description = description;
         this.zip = zip;
+        this.deleted = false;
     }
 
     public List<Orders> getOrdersInPool() {
@@ -144,4 +147,11 @@ public class Pool {
     }
 
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 }

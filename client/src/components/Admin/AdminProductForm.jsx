@@ -11,7 +11,8 @@ class AdminProductForm extends Component {
       imgUrl: "",
       brand: "",
       unit: "",
-      price: ""
+      price: "",
+      sku: ""
     },
     edit: false
   };
@@ -26,7 +27,10 @@ class AdminProductForm extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       JSON.stringify(this.props.productToEdit) !==
-      JSON.stringify(prevProps.productToEdit)
+        JSON.stringify(prevProps.productToEdit) ||
+      (JSON.stringify(this.props.productToEdit) ===
+        JSON.stringify(prevProps.productToEdit) &&
+        this.state.data.name === "")
     ) {
       const data = { ...this.props.productToEdit };
       this.setState({ data });
@@ -109,7 +113,20 @@ class AdminProductForm extends Component {
                         ></textarea>
                       </div>
                     </div>
+
                     <div className="col">
+                      <div className="form-group">
+                        <label>Product SKU</label>
+                        <input
+                          name="sku"
+                          onChange={this.handleChange}
+                          required
+                          type="text"
+                          className="form-control"
+                          placeholder="Enter Product SKU"
+                          value={data.sku}
+                        />
+                      </div>
                       <div className="form-group">
                         <label>Image URL</label>
                         <input

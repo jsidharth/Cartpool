@@ -130,7 +130,11 @@ const getUserOrders = id => async dispatch => {
       }
     });
   } catch (err) {
-    toast.error(err.message);
+    if(err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error("Can't place order");
+    }
   }
 };
 
@@ -146,7 +150,11 @@ const getAssignedOrders = () => async dispatch => {
       }
     });
   } catch (err) {
-    toast.error(err.message);
+    if(err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error("Can't place order");
+    }
   }
 };
 
@@ -162,7 +170,11 @@ const getOrderById = orderId => async dispatch => {
       payload: { currentOrder: order }
     });
   } catch (err) {
-    toast.error(err.response.data);
+    if(err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error("Can't place order");
+    }
   }
 };
 

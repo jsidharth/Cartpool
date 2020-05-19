@@ -1,5 +1,6 @@
 package com.cmpe275.cartpool.controller;
 
+import com.cmpe275.cartpool.configuration.serverConfig;
 import com.cmpe275.cartpool.entities.Role;
 import com.cmpe275.cartpool.entities.User;
 import com.cmpe275.cartpool.services.EmailService;
@@ -8,10 +9,12 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.firebase.auth.FirebaseToken;
 import com.sun.mail.iap.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
@@ -24,6 +27,8 @@ public class UserController {
     @Autowired
     EmailService emailService;
 
+    private String server = serverConfig.getServer();
+
     @PostMapping("/user")
     public ResponseEntity<String> createUser(@RequestBody User user) {
         //input validations before hand
@@ -33,7 +38,7 @@ public class UserController {
         }
         //is screen name unique
         if (userService.getUserByScreenName(user.getScreenName())!= null) {
-            return new ResponseEntity<>("Screen name exisits", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Screen name exists", HttpStatus.BAD_REQUEST);
         }
         //Assign role here
         if (user.getEmail().endsWith("@sjsu.edu")){
@@ -44,8 +49,8 @@ public class UserController {
         user.setCredit(0);
         user.setVerified(false);
         userService.createUser(user);
-        String confirmation_url = "http://localhost:3000/user/verify?userEmail="+user.getEmail();
-        emailService.sendMail("CartPool",user.getScreenName(), user.getEmail(), "Welcome to CartPool App.\nClick here to confirm your email "+confirmation_url);
+        String confirmation_url = server+"/user/verify?userEmail="+user.getEmail();
+        emailService.sendMail("CartPool",user.getScreenName(), user.getEmail(),"CartPool: Email Verification", "Welcome to CartPool App.\nClick here to confirm your email "+confirmation_url);
         return ResponseEntity.ok("user created");
     }
 
@@ -99,11 +104,12 @@ public class UserController {
     }
 
     @PostMapping("/sendMail")
-    public ResponseEntity sendMail(User user, @RequestParam String screenName, String message) {
+    public ResponseEntity sendMail(User user, @RequestParam String screenName, @RequestParam String message) {
         User user2 = userService.getUserByScreenName(screenName);
+        String message2 = emailService.messageHtml(user.getScreenName(), message);
         if (user2 != null){
             //send email
-            emailService.sendMail(user.getScreenName(), user2.getScreenName(), user2.getEmail(), message);
+            emailService.sendMail(user.getScreenName(), user2.getScreenName(), user2.getEmail(), "CartPool: Message from "+user.getScreenName(), message2);
             return ResponseEntity.ok("Mail send");
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);

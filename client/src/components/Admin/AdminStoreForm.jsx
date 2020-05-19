@@ -25,9 +25,12 @@ class AdminStoreForm extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.state.edit &&
-      JSON.stringify(this.props.storeToEdit) !==
-        JSON.stringify(prevProps.storeToEdit)
+      (this.state.edit &&
+        JSON.stringify(this.props.storeToEdit) !==
+          JSON.stringify(prevProps.storeToEdit)) ||
+      (JSON.stringify(this.props.storeToEdit) ===
+        JSON.stringify(prevProps.storeToEdit) &&
+        this.state.data.name === "")
     ) {
       const data = { ...this.props.storeToEdit };
       this.setState({ data });

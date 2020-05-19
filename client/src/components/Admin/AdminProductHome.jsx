@@ -4,8 +4,64 @@ import { adminActions } from "../../js/actions";
 import { Link } from "react-router-dom";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { BsPlusCircle } from "react-icons/bs";
+import BootstrapTable from "react-bootstrap-table-next";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 
 class AdminProductHome extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      column_names: [
+        {
+          dataField: "id",
+          text: "ID",
+          filter: textFilter()
+        },
+        {
+          dataField: "name",
+          text: "Name",
+          formatter: this.productNameFormatter,
+          filter: textFilter()
+        },
+        {
+          dataField: "sku",
+          text: "SKU",
+          filter: textFilter()
+        },
+        {
+          dataField: "brand",
+          text: "Brand"
+        },
+        {
+          dataField: "price",
+          text: "Price"
+        },
+        {
+          dataField: "unit",
+          text: "Unit"
+        },
+        {
+          dataField: "id",
+          text: "Edit",
+          formatter: this.editProductFormatter
+        },
+        {
+          text: "Delete",
+          formatter: (cell, row) => {
+            return (
+              <button
+                onClick={() => this.handleDeleteProduct(row.id)}
+                className="btn btn-link"
+              >
+                <MdDeleteForever />
+              </button>
+            );
+          }
+        }
+      ]
+    };
+  }
+
   componentDidMount() {
     if (this.props.products.length === 0) {
       console.log("before this.props.getProducts");
@@ -16,6 +72,30 @@ class AdminProductHome extends Component {
   handleDeleteProduct(pId) {
     this.props.deleteProduct(pId);
   }
+
+  productNameFormatter = (cell, row) => {
+    return (
+      <Link className="btn btn-link" to={`/admin/products/dv/${row.id}`}>
+        {cell}
+      </Link>
+    );
+  };
+
+  editProductFormatter = (cell, row) => {
+    return (
+      <Link className="btn btn-link" to={`/admin/products/edit/${row.id}`}>
+        <MdModeEdit />
+      </Link>
+    );
+  };
+
+  editProductFormatter = (cell, row) => {
+    return (
+      <Link className="btn btn-link" to={`/admin/products/edit/${cell}`}>
+        <MdModeEdit />
+      </Link>
+    );
+  };
 
   render() {
     console.log(this.props.products);
@@ -28,7 +108,7 @@ class AdminProductHome extends Component {
         >
           <BsPlusCircle /> Add Product
         </Link>
-        <table className="table">
+        {/* <table className="table">
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -41,7 +121,7 @@ class AdminProductHome extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.products.map(p => (
+            {this.props.products.map((p) => (
               <tr key={p.id}>
                 <td>{p.id}</td>
                 <td>
@@ -74,7 +154,14 @@ class AdminProductHome extends Component {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
+        <BootstrapTable
+          keyField="id"
+          data={this.props.products}
+          columns={this.state.column_names}
+          filter={filterFactory()}
+          bordered={true}
+        />
       </React.Fragment>
     );
   }

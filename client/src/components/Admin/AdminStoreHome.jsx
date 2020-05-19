@@ -6,7 +6,6 @@ import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { BsPlusCircle } from "react-icons/bs";
 
 class AdminStoreHome extends Component {
-  //state = {};
   componentDidMount() {
     if (this.props.stores.length === 0) {
       this.props.getStores();
@@ -45,12 +44,13 @@ class AdminStoreHome extends Component {
               <tr key={s.id}>
                 <td>{s.id}</td>
                 <td>
-                  <Link
+                  {/* <Link
                     className="btn btn-link"
                     to={`/admin/stores/dv/${s.id}`}
                   >
                     {s.name}
-                  </Link>
+                  </Link> */}
+                  {s.name}
                 </td>
                 <td>{s.street}</td>
                 <td>{s.city}</td>
