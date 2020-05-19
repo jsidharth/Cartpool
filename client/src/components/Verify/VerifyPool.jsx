@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import queryString from "query-string";
 import { userActions } from "../../js/actions";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 class VerifyPool extends Component {
   state = {};
   componentDidMount() {
     const queryParams = queryString.parse(this.props.location.search);
     const poolMemberId = queryParams.poolMemberId;
-    this.props.verifyPool(poolMemberId)
+    const accept = queryParams.accept;
+    this.props.verifyPool(poolMemberId, accept)
   }
   render() {
     
@@ -22,6 +24,7 @@ class VerifyPool extends Component {
 
 
 const mapDispatchToProps = dispatch => ({
-    verifyPool: (poolMemberId) => dispatch(userActions.verifyPool(poolMemberId))
-})
-export default connect(null, mapDispatchToProps)(VerifyPool);
+    verifyPool: (poolMemberId, accept) => dispatch(userActions.verifyPool(poolMemberId, accept))
+});
+
+export default requireAuth(connect(null, mapDispatchToProps)(VerifyPool));

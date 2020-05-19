@@ -1,7 +1,7 @@
 import actionTypes from "../constants/index";
 const intialState = {
   pools: [],
-  userPool: {}
+  userPool: {},
 };
 const poolReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -12,8 +12,9 @@ const poolReducer = (state = intialState, action) => {
       const { userPool } = action.payload;
       return { ...state, userPool };
     case actionTypes.CLEAR_USER_POOL:
-      //const userPool = {};
       return { ...state, userPool: {} };
+    case actionTypes.CLEAR_POOLS:
+      return { ...state, pools: {} };
     default:
       break;
   }

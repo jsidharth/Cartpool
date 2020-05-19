@@ -4,7 +4,7 @@ import axios from "axios";
 import server from "./../../config/server";
 import actionTypes from "../constants";
 
-const addToCart = productDetails => dispatch => {
+const addToCart = (productDetails) => (dispatch) => {
   console.log("Here", productDetails);
   try {
     const { storeId, storeName, currentCart, ...curProduct } = productDetails;
@@ -17,9 +17,9 @@ const addToCart = productDetails => dispatch => {
         products: [
           {
             qty: 1,
-            ...curProduct
-          }
-        ]
+            ...curProduct,
+          },
+        ],
       };
     } else {
       // Cart has items. Clear cart and add new product
@@ -30,16 +30,16 @@ const addToCart = productDetails => dispatch => {
           products: [
             {
               qty: 1,
-              ...curProduct
-            }
-          ]
+              ...curProduct,
+            },
+          ],
         };
       } else {
         // Add products to cart
         cart = { ...currentCart };
         cart.products.push({
           qty: 1,
-          ...curProduct
+          ...curProduct,
         });
         cart.products = _.uniqBy(cart.products, "psId");
       }
@@ -47,8 +47,8 @@ const addToCart = productDetails => dispatch => {
     dispatch({
       type: actionTypes.UPDATE_CART,
       payload: {
-        cart
-      }
+        cart,
+      },
     });
     toast.success(`${curProduct.name} added to cart`);
   } catch (err) {
@@ -56,9 +56,9 @@ const addToCart = productDetails => dispatch => {
   }
 };
 
-const modifyProductQntyInCart = (prodId, cart, step) => dispatch => {
+const modifyProductQntyInCart = (prodId, cart, step) => (dispatch) => {
   const updatedCart = { ...cart };
-  updatedCart.products = updatedCart.products.map(p => {
+  updatedCart.products = updatedCart.products.map((p) => {
     if (p.id === prodId) {
       p.qty = p.qty + step;
     }
@@ -66,20 +66,20 @@ const modifyProductQntyInCart = (prodId, cart, step) => dispatch => {
   });
   dispatch({
     type: actionTypes.UPDATE_CART,
-    payload: { cart: updatedCart }
+    payload: { cart: updatedCart },
   });
 };
 
-const deleteProductFromCart = (prodId, cart) => dispatch => {
+const deleteProductFromCart = (prodId, cart) => (dispatch) => {
   const currCart = { ...cart };
-  currCart.products = currCart.products.filter(p => p.id !== prodId);
+  currCart.products = currCart.products.filter((p) => p.id !== prodId);
   dispatch({
     type: actionTypes.UPDATE_CART,
-    payload: { cart: currCart }
+    payload: { cart: currCart },
   });
 };
 
-const placeOrder = (orderDetails, ownProps) => async dispatch => {
+const placeOrder = (orderDetails, ownProps) => async (dispatch) => {
   try {
     const { userId, storeId, productStore, total } = orderDetails;
     const { data: pool } = await axios.get(
@@ -93,7 +93,7 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
         userId: userId,
         poolId: pool.id,
         total,
-        productStoreList: productStore
+        productStoreList: productStore,
       };
       const { data: currentOrder } = await axios.post(
         `http://${server.domain}:${server.port}/orders`,
@@ -102,9 +102,19 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
       // CLEAR THE CART
       dispatch({
         type: actionTypes.UPDATE_CART,
-        payload: { cart: {} }
+        payload: { cart: {} },
       });
       toast.success(`Your Order has been placed!`);
+      // Fetch the user details again to get the updated contribution credit
+      const user = await axios.get(
+        `http://${server.domain}:${server.port}/user`
+      );
+      dispatch({
+        type: actionTypes.SET_USER,
+        payload: {
+          user: user.data,
+        },
+      });
       ownProps.history.replace(`/order_placed/${currentOrder}`);
     } else {
       toast.error("Please join a pool to place order!");
@@ -118,7 +128,7 @@ const placeOrder = (orderDetails, ownProps) => async dispatch => {
   }
 };
 
-const getUserOrders = id => async dispatch => {
+const getUserOrders = (id) => async (dispatch) => {
   try {
     const { data: userOrders } = await axios.get(
       `http://${server.domain}:${server.port}/orders/${id}`
@@ -126,11 +136,11 @@ const getUserOrders = id => async dispatch => {
     dispatch({
       type: actionTypes.SET_USER_ORDERS,
       payload: {
-        userOrders
-      }
+        userOrders,
+      },
     });
   } catch (err) {
-    if(err && err.response) {
+    if (err && err.response) {
       toast.error(err.response.data);
     } else {
       toast.error("Can't place order");
@@ -138,19 +148,24 @@ const getUserOrders = id => async dispatch => {
   }
 };
 
-const getAssignedOrders = () => async dispatch => {
+const getAssignedOrders = (userId) => async (dispatch) => {
   try {
-    const { data: assignedOrders } = await axios.get(
+    let { data: assignedOrders } = await axios.get(
       `http://${server.domain}:${server.port}/getAllOrdersAssignedTo`
     );
+    const { data: userOrders } = await axios.get(
+      `http://${server.domain}:${server.port}/orders/${userId}`
+    );
+    assignedOrders = _.differenceBy(assignedOrders, userOrders, "id");
+
     dispatch({
       type: actionTypes.SET_ASSIGNED_ORDERS,
       payload: {
-        assignedOrders
-      }
+        assignedOrders,
+      },
     });
   } catch (err) {
-    if(err && err.response) {
+    if (err && err.response) {
       toast.error(err.response.data);
     } else {
       toast.error("Can't place order");
@@ -158,7 +173,7 @@ const getAssignedOrders = () => async dispatch => {
   }
 };
 
-const getOrderById = orderId => async dispatch => {
+const getOrderById = (orderId) => async (dispatch) => {
   try {
     const { data: order } = await axios.get(
       `http://${server.domain}:${server.port}/order/${orderId}`
@@ -167,10 +182,10 @@ const getOrderById = orderId => async dispatch => {
     //toast.success("Product added with id" + product.id);
     dispatch({
       type: actionTypes.SET_CURRENT_ORDER,
-      payload: { currentOrder: order }
+      payload: { currentOrder: order },
     });
   } catch (err) {
-    if(err && err.response) {
+    if (err && err.response) {
       toast.error(err.response.data);
     } else {
       toast.error("Can't place order");
@@ -178,7 +193,7 @@ const getOrderById = orderId => async dispatch => {
   }
 };
 
-const getSimilarOrdersFromPool = orderId => async dispatch => {
+const getSimilarOrdersFromPool = (orderId) => async (dispatch) => {
   try {
     const { data: orders } = await axios.get(
       `http://${server.domain}:${server.port}/getUnassignedOrdersOfStoreInPool/${orderId}`
@@ -187,32 +202,39 @@ const getSimilarOrdersFromPool = orderId => async dispatch => {
     //toast.success("Product added with id" + product.id);
     dispatch({
       type: actionTypes.SET_SIMILAR_ORDERS,
-      payload: { similarOrders: orders }
+      payload: { similarOrders: orders },
     });
   } catch (err) {
     toast.error(err.response.data);
   }
 };
 
-const pickupOrders = (data, ownProps) => async dispatch => {
+const pickupOrders = (data, ownProps) => async (dispatch) => {
   try {
     await axios.put(
       `http://${server.domain}:${server.port}/orders/assignToUser/`,
       data
     );
     console.log("action pickupOrders completed!");
-    toast.success("Orders added for pickup");
-    // dispatch({
-    //   type: actionTypes.SET_SIMILAR_ORDERS,
-    //   payload: { similarOrders: orders }
-    // });
+    const numOrders = data.order_ids && data.order_ids.length - 1;
+
+    toast.success(
+      `Orders added for pickup! Contribution credit increased by ${numOrders}`
+    );
+    const user = await axios.get(`http://${server.domain}:${server.port}/user`);
+    dispatch({
+      type: actionTypes.SET_USER,
+      payload: {
+        user: user.data,
+      },
+    });
     ownProps.history.replace("/order/assignedorders");
   } catch (err) {
     toast.error(err.response.data);
   }
 };
 
-const updateOrder = (orderId, orderStatus) => async dispatch => {
+const updateOrder = (orderId, orderStatus) => async (dispatch) => {
   try {
     const { data: order } = await axios.get(
       `http://${server.domain}:${server.port}/update/order/${orderId}/${orderStatus}`
@@ -240,5 +262,5 @@ export {
   getOrderById,
   getSimilarOrdersFromPool,
   pickupOrders,
-  updateOrder
+  updateOrder,
 };
