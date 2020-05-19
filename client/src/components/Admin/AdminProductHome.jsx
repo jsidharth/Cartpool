@@ -4,8 +4,8 @@ import { adminActions } from "../../js/actions";
 import { Link } from "react-router-dom";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { BsPlusCircle } from "react-icons/bs";
-import BootstrapTable from 'react-bootstrap-table-next';
-import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import BootstrapTable from "react-bootstrap-table-next";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 
 class AdminProductHome extends Component {
   constructor(props) {
@@ -24,21 +24,26 @@ class AdminProductHome extends Component {
           filter: textFilter()
         },
         {
+          dataField: "sku",
+          text: "SKU",
+          filter: textFilter()
+        },
+        {
           dataField: "brand",
-          text: "Brand",
+          text: "Brand"
         },
         {
           dataField: "price",
-          text: "Price",
+          text: "Price"
         },
         {
           dataField: "unit",
-          text: "Unit",
+          text: "Unit"
         },
         {
           dataField: "id",
           text: "Edit",
-          formatter: this.editProductFormatter,
+          formatter: this.editProductFormatter
         },
         {
           text: "Delete",
@@ -51,9 +56,9 @@ class AdminProductHome extends Component {
                 <MdDeleteForever />
               </button>
             );
-          },
-        },
-      ],
+          }
+        }
+      ]
     };
   }
 
@@ -154,7 +159,7 @@ class AdminProductHome extends Component {
           keyField="id"
           data={this.props.products}
           columns={this.state.column_names}
-          filter={ filterFactory() }
+          filter={filterFactory()}
           bordered={true}
         />
       </React.Fragment>
@@ -162,17 +167,17 @@ class AdminProductHome extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  products: state.adminReducer.products,
+const mapStateToProps = state => ({
+  products: state.adminReducer.products
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   getProducts: () => {
     dispatch(adminActions.getProducts());
   },
-  deleteProduct: (productId) => {
+  deleteProduct: productId => {
     dispatch(adminActions.deleteProduct(productId));
-  },
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminProductHome);

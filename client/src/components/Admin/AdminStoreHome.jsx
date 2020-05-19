@@ -5,8 +5,6 @@ import { Link } from "react-router-dom";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { BsPlusCircle } from "react-icons/bs";
 
-
-
 class AdminStoreHome extends Component {
   componentDidMount() {
     if (this.props.stores.length === 0) {
@@ -18,7 +16,6 @@ class AdminStoreHome extends Component {
     this.props.deleteStore(storeId);
   }
 
-  
   render() {
     return (
       <React.Fragment>
@@ -47,12 +44,13 @@ class AdminStoreHome extends Component {
               <tr key={s.id}>
                 <td>{s.id}</td>
                 <td>
-                  <Link
+                  {/* <Link
                     className="btn btn-link"
                     to={`/admin/stores/dv/${s.id}`}
                   >
                     {s.name}
-                  </Link>
+                  </Link> */}
+                  {s.name}
                 </td>
                 <td>{s.street}</td>
                 <td>{s.city}</td>
