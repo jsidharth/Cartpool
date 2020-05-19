@@ -28,3 +28,11 @@ For backend : either import the project in intellij and build CartPoolApplicatio
    mvn install
    java -jar target/
 ```
+# Commit History
+
+Use:
+
+```
+git log
+```
+To view the commit history, a cartpool.csv file has been provided in the root directory too which contains the commit history.
