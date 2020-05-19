@@ -58,6 +58,10 @@ public class PoolController {
         if (poolService.getPoolByName(pool.getName())!= null) {
             return new ResponseEntity<>("pool with same name exists", HttpStatus.BAD_REQUEST);
         }
+        //Check if user is verified
+        if (!user.getVerified()){
+            return new ResponseEntity<>("Please verify your email", HttpStatus.BAD_REQUEST);
+        }
         System.out.println("User is " + user.getEmail());
         System.out.println("Checking if pool with "+ pool.getId() + " exists");
         System.out.println("Pool "+ poolService.getPoolById(pool.getId()));
@@ -126,6 +130,9 @@ public class PoolController {
                     return new ResponseEntity<>("You already have a join request pending", HttpStatus.BAD_REQUEST);
                 }
             }
+            if (!user.getVerified()) {
+                return new ResponseEntity<>("Please verify your email", HttpStatus.BAD_REQUEST);
+            }
         } else {
             return new ResponseEntity<>("user does not exist in backend", HttpStatus.BAD_REQUEST);
         }
@@ -153,7 +160,7 @@ public class PoolController {
                     //TODO email
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
-                    url_for_approval = server+"/pool/approve?poolMemberId="+poolMember_for_user.getId();
+                    url_for_approval = server+"pool/approve?poolMemberId="+poolMember_for_user.getId();
                     url_for_approval = emailService.poolJoinHtml(user.getScreenName(), url_for_approval);
                     emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request", url_for_approval);
                     return ResponseEntity.ok("Email sent to user. Wait for approval");
@@ -168,7 +175,7 @@ public class PoolController {
                 if(user_ != null) {
                     poolMember_for_user = new PoolMember(user, user_.getId(), false, false, pool);
                     poolMember_for_user = poolMemberService.createPoolMember(poolMember_for_user);
-                    url_for_approval = server+"/pool/approve?poolMemberId="+poolMember_for_user.getId();
+                    url_for_approval = server+"pool/approve?poolMemberId="+poolMember_for_user.getId();
                     url_for_approval = emailService.poolJoinHtml(user.getScreenName(), url_for_approval);
                     emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request", url_for_approval);
                     return ResponseEntity.ok("Email sent to PoolAdmin. Wait for approval");
@@ -204,7 +211,7 @@ public class PoolController {
             pool.setPoolLeaderScreenNameTransient(leaderScreenName);
             return ResponseEntity.ok(pool);
         } else {
-            return new ResponseEntity<>("No pools found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("You are not part of any pools", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -239,7 +246,7 @@ public class PoolController {
                             poolMember.setRefApproved(true);
                             //mail the user saying request pending
                             emailService.sendMail(user.getScreenName(), user_.getScreenName(), user_.getEmail(),"CartPool: Pool Request Pending", emailService.messageHtml(user.getScreenName(), "Your pool join request is pending admin approval"));
-                            String url_for_approval = server+"/pool/approve?poolMemberId="+poolMember.getId();
+                            String url_for_approval = server+"pool/approve?poolMemberId="+poolMember.getId();
                             url_for_approval = emailService.poolJoinHtml(user_.getScreenName(), url_for_approval);
                             emailService.sendMail(user_.getScreenName(), admin_.getScreenName(), admin_.getEmail(),"CartPool: Pool Request", url_for_approval);
                         } else {
