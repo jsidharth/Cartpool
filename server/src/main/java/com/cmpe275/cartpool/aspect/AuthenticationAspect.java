@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -25,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 @Aspect
@@ -41,9 +40,14 @@ public class AuthenticationAspect {
         System.out.println("authheader "+ authHeader);
         if (authHeader!=null) {
             System.out.println("Auth header : " +authHeader);
+            User user;
             try {
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(authHeader);
-                User user = userService.getUserByEmail(decodedToken.getEmail());
+                 user = userService.getUserByEmail(decodedToken.getEmail());
+            } catch (Exception e) {
+                    e.printStackTrace();
+                    return new ResponseEntity("Firebase authorized failed", HttpStatus.UNAUTHORIZED);
+                }
                 //System.out.println("User object from firebase :"+ user.getEmail());
                 if (joinPoint.getSignature().getName() != "createUser"){
                     if (user!= null){
@@ -55,14 +59,13 @@ public class AuthenticationAspect {
                             System.out.println("Not an instance of user"+ newargs[0].getClass().getSimpleName());
                         }
                         System.out.println("Auth went with no issues");
-                        //Check if admin and this request os not a GET => Then don't allow unless verified
+                        //Check if admin and this request is not a GET => Then don't allow unless verified
                         if (user.getRole().equals(Role.ADMIN)){
                             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-                            Method method = methodSignature .getMethod();
-                            RequestMethod[] requestMethods = method.getAnnotation(RequestMapping.class).method();
-                            if (requestMethods[0] != RequestMethod.GET ) {
+                            Method method = methodSignature.getMethod();
+                            if ((method.getAnnotation(PostMapping.class) != null) || (method.getAnnotation(PutMapping.class) != null) || (method.getAnnotation(DeleteMapping.class) != null)) {
                                 if (!user.getVerified()) {
-                                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please verify your email before proceeding");
+                                    return new ResponseEntity("Please verify your email before proceeding" ,HttpStatus.FORBIDDEN);
                                 }
                             }
                         }
@@ -70,18 +73,13 @@ public class AuthenticationAspect {
                     } else {
                         //Do this only if joinPoint is not register
                         //register should proceed
-                        System.out.println("Indside other block");
-                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Not authorized");
+                        System.out.println("Inside other block");
+                        return new ResponseEntity("Not authorized", HttpStatus.UNAUTHORIZED);
                     }
                 } else {
                     System.out.println("Following other path");
                     return joinPoint.proceed();
                 }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Firebase authorized failed");
-            }
         } else {
             Enumeration headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {

@@ -17,19 +17,30 @@ public class Product {
     private String brand;
     private String unit;
     private Integer price;
+    private String sku;
     private boolean active;
 
     public Product() {
     }
 
-    public Product(String name, String description, String imgUrl, String brand, String unit, Integer price) {
+    public Product(String name, String description, String imgUrl, String brand, String unit, Integer price, String sku) {
         this.name = name;
         this.description = description;
         this.imgUrl = imgUrl;
         this.brand = brand;
         this.unit = unit;
         this.price = price;
+        this.sku = sku;
         active = true;
+    }
+
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public boolean isActive() {
