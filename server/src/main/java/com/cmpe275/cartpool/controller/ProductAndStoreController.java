@@ -66,8 +66,11 @@ public class ProductAndStoreController {
      */
     @DeleteMapping("/products/{productId}")
     public ResponseEntity deleteProduct(User user, @PathVariable(required = true) Integer productId){
-         productService.deleteProduct(productId);
-         return new ResponseEntity(HttpStatus.OK);
+         if(productService.deleteProduct(productId) == 0){
+             return new ResponseEntity(HttpStatus.OK);
+         }else{
+             return new ResponseEntity(HttpStatus.NOT_FOUND);
+         }
     }
 
 
