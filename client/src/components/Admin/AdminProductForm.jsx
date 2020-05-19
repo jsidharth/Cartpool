@@ -27,7 +27,10 @@ class AdminProductForm extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       JSON.stringify(this.props.productToEdit) !==
-      JSON.stringify(prevProps.productToEdit)
+        JSON.stringify(prevProps.productToEdit) ||
+      (JSON.stringify(this.props.productToEdit) ===
+        JSON.stringify(prevProps.productToEdit) &&
+        this.state.data.name === "")
     ) {
       const data = { ...this.props.productToEdit };
       this.setState({ data });
