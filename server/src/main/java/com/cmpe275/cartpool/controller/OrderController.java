@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,8 +41,11 @@ public class OrderController {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("/order/{orderId}")
-    public Orders getOrderbyId(@PathVariable int orderId){
+    public ResponseEntity getOrderbyId(@PathVariable int orderId){
         Orders order = orderService.getOrderById(orderId);
         User user_ = order.getOrderedByUser();
         order.setScreenName(user_.getScreenName());
@@ -49,7 +53,7 @@ public class OrderController {
         order.setState(user_.getState());
         order.setZip(user_.getZip());
         order.setCity(user_.getCity());
-        return order;
+        return ResponseEntity.ok(order);
     }
 
     /**
@@ -58,8 +62,8 @@ public class OrderController {
      * @return
      */
     @PutMapping("/orders")
-    public Orders updateOrders(User user, @RequestBody Orders orders){
-        return orderService.updateOrder(orders);
+    public ResponseEntity updateOrders(User user, @RequestBody Orders orders){
+        return ResponseEntity.ok(orderService.updateOrder(orders));
     }
 
     /**
@@ -67,8 +71,8 @@ public class OrderController {
      * @return orderList
      */
     @GetMapping("/orders")
-    public List<Orders> getAllOrders(User user){
-        return orderService.getOrders();
+    public ResponseEntity getAllOrders(User user){
+        return ResponseEntity.ok(orderService.getOrders());
     }
 
     /**
@@ -91,8 +95,8 @@ public class OrderController {
      * @return Order
      */
     @GetMapping("/orders/{id}")
-    public List<Orders> getOrderByUserId(User user, @PathVariable int id){
-        return orderService.getOrdersByUserId(id);
+    public ResponseEntity getOrderByUserId(User user, @PathVariable int id){
+        return ResponseEntity.ok(orderService.getOrdersByUserId(id));
     }
 
     /*
@@ -121,7 +125,7 @@ public class OrderController {
         orders.setPlacedTime(date);
         Orders savedOrder = orderService.addOrder(orders);
         DecimalFormat df = new DecimalFormat("0.00");
-        orders.setActive(true);
+        savedOrder.setActive(true);
 
         List<ProductStoreQuantity> productStoreQuantities = orderRequest.getProductStoreList();
 
@@ -141,8 +145,11 @@ public class OrderController {
         total += temp;
         String rounded = df.format(total);
         savedOrder.setTotal(Float.valueOf(rounded));
-        orderService.updateOrder(savedOrder);
+        savedOrder = orderService.updateOrder(savedOrder);
         //send email that its placed
+        //update credit
+        user.setCredit(user.getCredit()-1);
+        userService.createUser(user);
         String html = emailService.orderHtml(Status.ORDER_PLACED, savedOrder.getId());
         emailService.sendMail("",user.getScreenName(),user.getEmail(),"CartPool: Order "+savedOrder.getId()+" placed",html);
         return new ResponseEntity(savedOrder.getId(), HttpStatus.OK);
@@ -173,6 +180,8 @@ public class OrderController {
                 if (updatedStatus == Status.ORDER_PICKED) {
                     html = emailService.orderHtml(Status.ORDER_PICKED, orders.getId());
                     emailService.sendMail(user.getScreenName(),orders.getAssignedToUser().getScreenName(),orders.getAssignedToUser().getEmail(),"CartPool: Order "+orders.getId()+" picked",html);
+                    String htmlDelivery = emailService.deliveryHtml(orders.getId());
+                    emailService.sendMail("", user.getScreenName(), user.getEmail(), "CartPool: Order "+orders.getId()+" delivery instructions ",htmlDelivery);
                 } else {
                     html = emailService.orderHtml(Status.ORDER_DELIVERED, orders.getId());
                     emailService.sendMail(user.getScreenName(),orders.getAssignedToUser().getScreenName(),orders.getAssignedToUser().getEmail(),"CartPool: Order "+orders.getId()+" delivered",html);
@@ -183,31 +192,54 @@ public class OrderController {
     }
 
     @GetMapping("/getPoolAndStore/{pool_id}/{store_id}")
-    public List<Orders> getOrdersByPoolAndUser(User user, @PathVariable String pool_id, @PathVariable int store_id){
-        return orderService.getOrderByPoolAndStore(pool_id, store_id);
+    public ResponseEntity getOrdersByPoolAndUser(User user, @PathVariable String pool_id, @PathVariable int store_id){
+        return ResponseEntity.ok(orderService.getOrderByPoolAndStore(pool_id, store_id));
     }
 
     @GetMapping("/getUnassignedOrdersOfStoreInPool/{order_id}")
-    public List<Orders> getUnassignedOrdersOfStoreInPool(User user, @PathVariable int order_id){
-        return orderService.getUnassignedOrdersForStoreInPool(order_id);
+    public ResponseEntity getUnassignedOrdersOfStoreInPool(User user, @PathVariable int order_id){
+        return ResponseEntity.ok(orderService.getUnassignedOrdersForStoreInPool(order_id));
     }
 
     @GetMapping("/getUnassignedOrdersInPool/{pool_id}")
-    public List<Orders> getUnassignedOrdersInPool(User user, @PathVariable String pool_id){
-        return orderService.getUnassignedOrdersInPool(pool_id);
+    public ResponseEntity getUnassignedOrdersInPool(User user, @PathVariable String pool_id){
+        return ResponseEntity.ok(orderService.getUnassignedOrdersInPool(pool_id));
     }
 
     @GetMapping("/getAllOrdersAssignedTo")
-    public List<Orders> getOrdersAssignedToUser(User user){
-        return orderService.getAllOrdersAssignedToUser(user.getId());
+    public ResponseEntity getOrdersAssignedToUser(User user){
+        return ResponseEntity.ok(orderService.getAllOrdersAssignedToUser(user.getId()));
     }
 
     @PutMapping("/orders/assignToUser/")
-    public void editAssignedToUser(User user, @RequestBody UserMultipleOrders userMultipleOrders){
+    public ResponseEntity editAssignedToUser(User user, @RequestBody UserMultipleOrders userMultipleOrders){
         List<Integer> order_ids = userMultipleOrders.getOrder_ids();
+        List<Orders> orders = new ArrayList<>();
+        List<User> customers = new ArrayList<>();
         for(int order_id:order_ids) {
             orderService.changeAssignedToUser(order_id, user.getId());
+            orders.add(orderService.findOrderById(order_id));
         }
+        int credit_upgrade = order_ids.size();
+        user.setCredit(user.getCredit() + credit_upgrade);
+        userService.createUser(user);
+        //sendemail to 2 guys
+        Boolean flag = false;
+        for (Orders order: orders) {
+            //email to this customer
+            User customer = order.getOrderedByUser();
+            if (user != customer){
+                flag = true;
+                String html = emailService.orderAssignedHtml(order.getId(), user.getScreenName());
+                emailService.sendMail("",customer.getScreenName(),customer.getEmail(),"CartPool: Your order has been assigned", html);
+            }
+        }
+        //send this guy the pickup instructions
+        if (flag) {
+            String html = emailService.orderAssigneeHtml(orders);
+            emailService.sendMail("",user.getScreenName(),user.getEmail(),"CartPool: orders to pickup", html);
+        }
+        return ResponseEntity.ok("Order assigned");
     }
 
     @GetMapping("/update/order/{orderId}/{orderStatus}")
