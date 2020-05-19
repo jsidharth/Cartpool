@@ -63,4 +63,65 @@ const requestToJoinPool = (id, screenName) => async dispatch => {
   }
 };
 
-export { createPool, getPools, getUserPool, requestToJoinPool };
+const leavePool = ownProps => async dispatch => {
+  try {
+    const { data: response } = await axios.delete(
+      `http://${server.domain}:${server.port}/leavepool`
+    );
+    toast.success(response);
+    ownProps.history.push("/pool/browse");
+    dispatch({
+      type: actionTypes.CLEAR_USER_POOL
+    });
+  } catch (err) {
+    if (err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error("Something went wrong!");
+    }
+  }
+};
+
+const deletePool = ownProps => async dispatch => {
+  try {
+    const { data: response } = await axios.delete(
+      `http://${server.domain}:${server.port}/deletepool`
+    );
+    toast.success(response);
+    ownProps.history.push("/pool/browse");
+    dispatch({
+      type: actionTypes.CLEAR_USER_POOL
+    });
+  } catch (err) {
+    if (err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error("Something went wrong!");
+    }
+  }
+};
+
+const sendMessage = data => async dispatch => {
+  try {
+    const { data: response } = await axios.post(
+      `http://${server.domain}:${server.port}/sendMail?screenName=${data["screenName"]}&message=${data["message"]}`
+    );
+    toast.success("Message sent to " + data["screenName"]);
+  } catch (err) {
+    if (err && err.response) {
+      toast.error(err.response.data);
+    } else {
+      toast.error("Something went wrong!");
+    }
+  }
+};
+
+export {
+  createPool,
+  getPools,
+  getUserPool,
+  requestToJoinPool,
+  leavePool,
+  deletePool,
+  sendMessage
+};
