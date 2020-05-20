@@ -10,7 +10,10 @@ const getProducts = () => async (dispatch) => {
       `http://${server.domain}:${server.port}/products`
     );
     console.log("action get products", products);
-    dispatch({ type: actionTypes.SET_PRODUCTS, payload: { products } });
+    dispatch({
+      type: actionTypes.SET_PRODUCTS,
+      payload: { products: products.filter((product) => product.active) },
+    });
   } catch (err) {
     toast.error(err.response.data);
   }
