@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 export default ChildComponent => {
   const ComposedComponent = props => {
     useEffect(() => {
-      if (props.auth.isLoaded && props.auth.isEmpty) return props.history.push("/signin");
+      if (props.auth.isLoaded && props.auth.isEmpty) return props.history.push("/");
     }, [props.auth, props.history]);
 
     return <ChildComponent {...props} />;
@@ -16,5 +17,5 @@ export default ChildComponent => {
     };
   }
 
-  return connect(mapStateToProps)(ComposedComponent);
+  return connect(mapStateToProps)(withRouter(ComposedComponent));
 };
