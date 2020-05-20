@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class serverConfig {
 
-    private static final String server = "http://localhost:3000/";
+    private static final String server = "http://cartpoolcmpe275.herokuapp.com/";
 
     public static String getServer() {
         return server;
