@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
 @RestController
 public class OrderController {
     @Autowired
@@ -162,10 +161,13 @@ public class OrderController {
         Status updatedStatus = Status.valueOf(statusString);
         if(updatedStatus == Status.ORDER_DELIVERED){
             orders.setOrderStatus(Status.ORDER_DELIVERED);
+            orders.setActive(false);
             orders.setDeliveredTime(date);
         }else if(updatedStatus == Status.ORDER_PICKED){
             orders.setPickedTime(date);
             orders.setOrderStatus(Status.ORDER_PICKED);
+        } else if (updatedStatus == Status.ORDER_NOT_DELIVERED){
+            orders.setOrderStatus(Status.ORDER_NOT_DELIVERED);
         }
         orderService.updateOrder(orders);
         //send email
@@ -174,18 +176,22 @@ public class OrderController {
         if(updatedStatus == Status.ORDER_NOT_DELIVERED) {
             html = emailService.orderHtml(Status.ORDER_NOT_DELIVERED, orders.getId());
             emailService.sendMail(user.getScreenName(),orders.getAssignedToUser().getScreenName(),orders.getAssignedToUser().getEmail(),"CartPool: Order "+orders.getId()+" not delivered",html);
+            System.out.println("Here at not delivered - "+ html + "\n from " + user.getScreenName() + " to "+ orders.getAssignedToUser().getScreenName() + " email: "+orders.getAssignedToUser().getEmail());
         } else {
             //send these only if the user and assigned are different
-            if (!user.getScreenName().equals(orders.getScreenName())){
+            if (!user.getScreenName().equals(orders.getOrderedByUser().getScreenName())){
                 if (updatedStatus == Status.ORDER_PICKED) {
                     html = emailService.orderHtml(Status.ORDER_PICKED, orders.getId());
-                    emailService.sendMail(user.getScreenName(),orders.getAssignedToUser().getScreenName(),orders.getAssignedToUser().getEmail(),"CartPool: Order "+orders.getId()+" picked",html);
+                    emailService.sendMail(user.getScreenName(),orders.getOrderedByUser().getScreenName(),orders.getOrderedByUser().getEmail(),"CartPool: Order "+orders.getId()+" picked",html);
                     String htmlDelivery = emailService.deliveryHtml(orders.getId());
                     emailService.sendMail("", user.getScreenName(), user.getEmail(), "CartPool: Order "+orders.getId()+" delivery instructions ",htmlDelivery);
+                    System.out.println("Here at delivery instructions - "+ htmlDelivery + "\n from " + " to "+user.getScreenName() + " email: "+user.getEmail());
                 } else {
                     html = emailService.orderHtml(Status.ORDER_DELIVERED, orders.getId());
-                    emailService.sendMail(user.getScreenName(),orders.getAssignedToUser().getScreenName(),orders.getAssignedToUser().getEmail(),"CartPool: Order "+orders.getId()+" delivered",html);
+                    emailService.sendMail(user.getScreenName(),orders.getOrderedByUser().getScreenName(),orders.getOrderedByUser().getEmail(),"CartPool: Order "+orders.getId()+" delivered",html);
                 }
+            } else {
+                System.out.println("Not in loop "+user.getEmail()+" order"+orders.getOrderedByUser().getScreenName());
             }
         }
         return new ResponseEntity(HttpStatus.OK);
@@ -223,7 +229,7 @@ public class OrderController {
         int credit_upgrade = order_ids.size();
         user.setCredit(user.getCredit() + credit_upgrade);
         userService.createUser(user);
-        //sendemail to 2 guys
+        //send email to 2 guys
         Boolean flag = false;
         for (Orders order: orders) {
             //email to this customer

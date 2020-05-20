@@ -118,7 +118,7 @@ public class EmailService {
         } else if (orderStatus == Status.ORDER_DELIVERED) {
             htmlBuilder.append("<p>Your order has been delivered at "+orders.getDeliveredTime()+"</p>");
         } else if (orderStatus == Status.ORDER_NOT_DELIVERED) {
-            htmlBuilder.append("<p>"+orders.getScreenName()+" reported the order as not delivered </p>");
+            htmlBuilder.append("<p>"+orders.getOrderedByUser().getScreenName()+" reported the order as not delivered </p>");
         }
         htmlBuilder.append("</body>");
         htmlBuilder.append("</html>");

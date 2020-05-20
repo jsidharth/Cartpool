@@ -1,9 +1,7 @@
 package com.cmpe275.cartpool.controller;
 
-import com.cmpe275.cartpool.entities.Product;
-import com.cmpe275.cartpool.entities.ProductStore;
-import com.cmpe275.cartpool.entities.Store;
-import com.cmpe275.cartpool.entities.User;
+import com.cmpe275.cartpool.entities.*;
+import com.cmpe275.cartpool.services.OrderProductStoreService;
 import com.cmpe275.cartpool.services.ProductService;
 import com.cmpe275.cartpool.services.ProductStoreService;
 import com.cmpe275.cartpool.services.StoreService;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
 @RestController
 public class ProductAndStoreController {
 
@@ -28,6 +25,9 @@ public class ProductAndStoreController {
 
     @Autowired
     ProductStoreService productStoreService;
+
+    @Autowired
+    OrderProductStoreService orderProductStoreService;
 
     //Product endpoints
 
@@ -67,6 +67,13 @@ public class ProductAndStoreController {
      */
     @DeleteMapping("/products/{productId}")
     public ResponseEntity deleteProduct(User user, @PathVariable(required = true) Integer productId){
+        //checking if this product is there in an active order
+         List<ProductStore> productStores = productStoreService.getAllProductsByProduct(productId);
+         //for these check if there are active orders
+        List<OrderProductStore> activeOrders = orderProductStoreService.findOrderProductStoreByProductStoresAndActive(productStores);
+        if (activeOrders.size() > 0) {
+            return new ResponseEntity<>("Cannot delete. Product has active orders", HttpStatus.BAD_REQUEST);
+        }
          productService.deleteProduct(productId);
          return new ResponseEntity(HttpStatus.OK);
     }
@@ -120,8 +127,12 @@ public class ProductAndStoreController {
      */
     @DeleteMapping("/store/{id}")
     ResponseEntity deleteStoreById(User user, @PathVariable int id){
-        storeService.deleteStore(id);
-        return new ResponseEntity(HttpStatus.OK);
+        if (storeService.checkStore(id)) {
+            return new ResponseEntity<>("This store has active orders", HttpStatus.BAD_REQUEST);
+        } else {
+            storeService.deleteStore(id);
+            return new ResponseEntity(HttpStatus.OK);
+        }
     }
 
     /**

@@ -65,7 +65,7 @@ public class Pool {
     private List<PoolMember> poolMembers;
 
 
-    @OneToMany(mappedBy = "pool",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "pool",cascade=CascadeType.REMOVE)
     private List<Orders> ordersInPool;
 
     public Pool(){

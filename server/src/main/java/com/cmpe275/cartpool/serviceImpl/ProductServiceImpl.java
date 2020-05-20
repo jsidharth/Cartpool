@@ -33,6 +33,8 @@ public class ProductServiceImpl implements ProductService {
         Product productToDel = productRepo.findById(productId).get();
         if (productToDel != null){
             try {
+                // check here for products being there in active orders
+
                 productRepo.delete(productToDel);
             }catch (DataIntegrityViolationException e){
                 throw new DataIntegrityViolationException("product already in use, cannot delete");

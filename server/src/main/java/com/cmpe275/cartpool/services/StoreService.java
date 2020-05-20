@@ -21,4 +21,6 @@ public interface StoreService {
     Store updateStore(Store store);
 
     Store getStoreById(int id);
+
+    Boolean checkStore(int id);
 }

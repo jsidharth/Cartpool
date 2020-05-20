@@ -29,10 +29,6 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void deleteStore(int Id) {
         //ToDo: Check if any pending orders are left before deleting
-        if(storeRepo.existsById(Id)) {
-            if(orderService.existsByStoreId(Id)){
-                System.out.println("Active orders exist, can't delete");
-            }
           try{
               Store store = storeRepo.findStoreById(Id);
               store.setActive(false);
@@ -40,7 +36,6 @@ public class StoreServiceImpl implements StoreService {
           }catch (DataIntegrityViolationException e){
               throw new DataIntegrityViolationException("store already in use, cannot delete");
           }
-        }
     }
 
     @Override
@@ -81,5 +76,19 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Store getStoreById(int id) {
         return storeRepo.findStoreById(id);
+    }
+
+    @Override
+    public Boolean checkStore(int Id) {
+        if(storeRepo.existsById(Id)) {
+            if(orderService.existsByStoreId(Id)){
+                System.out.println("Active orders exist, can't delete");
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
