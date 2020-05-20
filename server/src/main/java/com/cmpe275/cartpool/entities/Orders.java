@@ -51,7 +51,7 @@ public class Orders {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deliveredTime;
 
-    @OneToMany(mappedBy = "belongsToOrder")
+    @OneToMany(mappedBy = "belongsToOrder", cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({"belongsToOrder","orderedByUser", "order"})
     private List<OrderProductStore> items;
 
@@ -73,6 +73,10 @@ public class Orders {
     private boolean active;
 
     public boolean isActive() {
+        return active;
+    }
+
+    public boolean getActive() {
         return active;
     }
 

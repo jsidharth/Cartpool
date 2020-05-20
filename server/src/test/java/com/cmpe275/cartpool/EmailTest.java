@@ -8,18 +8,18 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.mail.MessagingException;
 
-public class EmailTest {
-    //@Autowired
-    EmailService emailService;
-
-    EmailTest(){
-      emailService = new EmailService();
-    }
-
-    @Test
-    public void testEmail(){
-        emailService.sendMail("whatever", "lolz", "jojojoseph09@gmail.com","Test Email",
-                    "Whats uppp");
-    }
-
-}
+//public class EmailTest {
+//    //@Autowired
+//    EmailService emailService;
+//
+//    EmailTest(){
+//      emailService = new EmailService();
+//    }
+//
+//    @Test
+//    public void testEmail(){
+//        emailService.sendMail("whatever", "lolz", "jojojoseph09@gmail.com","Test Email",
+//                    "Whats uppp");
+//    }
+//
+//}

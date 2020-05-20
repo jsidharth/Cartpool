@@ -27,6 +27,8 @@ public class PoolMemberServiceImpl implements PoolMemberService {
 
     @Override
     public void deletePoolMember(PoolMember poolMember) {
+
+        System.out.println("Deleting pool member"+poolMember.getUser().getScreenName());
         poolMemberRepo.delete(poolMember);
     }
 }

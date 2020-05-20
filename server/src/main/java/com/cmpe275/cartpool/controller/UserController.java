@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://10.0.0.155:3000"})
 @RestController
 public class UserController {
 
@@ -49,7 +48,7 @@ public class UserController {
         user.setCredit(0);
         user.setVerified(false);
         userService.createUser(user);
-        String confirmation_url = server+"/user/verify?userEmail="+user.getEmail();
+        String confirmation_url = server+"user/verify?userEmail="+user.getEmail();
         emailService.sendMail("CartPool",user.getScreenName(), user.getEmail(),"CartPool: Email Verification", "Welcome to CartPool App.\nClick here to confirm your email "+confirmation_url);
         return ResponseEntity.ok("user created");
     }

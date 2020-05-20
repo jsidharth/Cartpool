@@ -20,6 +20,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Boolean isVerified;
+    @Column(length = 500)
     private String imgUrl;
     private Integer credit;
     private String street;
