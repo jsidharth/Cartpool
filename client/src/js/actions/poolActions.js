@@ -46,6 +46,12 @@ const getUserPool = () => async dispatch => {
       }
     });
   } catch (err) {
+    dispatch({
+      type: actionTypes.SET_USER_POOL,
+      payload: {
+        userPool: {}
+      }
+    });
     toast.error(err.response.data);
   }
 };

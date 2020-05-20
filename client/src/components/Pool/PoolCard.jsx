@@ -16,7 +16,7 @@ class PoolCard extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="">
+        <div className="mt-3">
           <div className="card shadow">
             <div className="card-header">
               <strong>{this.props.name}</strong>

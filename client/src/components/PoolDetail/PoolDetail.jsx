@@ -20,18 +20,15 @@ class Pool extends Component {
   };
 
   leavePool = () => {
-    alert("You are about to leave pool");
     const userid = this.props.user.id;
     this.props.leavePool(userid);
   };
 
   deletePool = () => {
-    alert("You are about to delete pool");
     const userid = this.props.user.id;
     this.props.deletePool(userid);
   };
   onSendMessage = () => {
-    alert("send message clicked");
     const data = {};
     data["screenName"] = this.state.screenName;
     data["message"] = this.state.message;

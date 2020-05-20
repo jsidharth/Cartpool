@@ -20,6 +20,10 @@ class OrderDv extends Component {
       // alert("ORDER_PLACED " + orderStatus + " + " + id);
       this.props.updateOrder(id, "ORDER_DELIVERED");
     }
+    if (orderStatus === "ORDER_DELIVERED") {
+      // alert("ORDER_PLACED " + orderStatus + " + " + id);
+      this.props.updateOrder(id, "ORDER_NOT_DELIVERED");
+    }
   };
 
   render() {
@@ -108,6 +112,14 @@ class OrderDv extends Component {
                 onClick={() => this.handleUpdateOrder(orderStatus, id)}
               >
                 Order Delivered
+              </button>
+            )}
+            {!assigned && orderStatus === "ORDER_DELIVERED" && (
+              <button
+                className="btn btn-danger"
+                onClick={() => this.handleUpdateOrder(orderStatus, id)}
+              >
+                Order Not Delivered
               </button>
             )}
           </div>
