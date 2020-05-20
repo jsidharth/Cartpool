@@ -11,7 +11,7 @@ An application for grocery shopper pooling.
 
 # Url for accessing the application
 
-Front end URL : 
+Front end URL : http://cartpoolcmpe275.herokuapp.com/
 Backend url : 
 
 Access the application through front end only. 
