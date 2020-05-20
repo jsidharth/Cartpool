@@ -29,14 +29,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Integer productId) {
+    public int deleteProduct(Integer productId) {
         Product productToDel = productRepo.findById(productId).get();
         if (productToDel != null){
-            try {
-                productRepo.delete(productToDel);
-            }catch (DataIntegrityViolationException e){
-                throw new DataIntegrityViolationException("product already in use, cannot delete");
-            }
+            productToDel.setActive(false);
+            productRepo.save(productToDel);
+            return 0;
+        }else{
+            return -1;
         }
     }
 
