@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 export default ChildComponent => {
   const ComposedComponent = props => {
     useEffect(() => {
-      if (props.auth.isLoaded && props.auth.isEmpty) return props.history.push("/");
+      if (props.auth.isLoaded && props.auth.isEmpty) return props.history.push("/signin");
     }, [props.auth, props.history]);
 
     return <ChildComponent {...props} />;

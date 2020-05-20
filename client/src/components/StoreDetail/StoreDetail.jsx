@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ProductCard from "./../ProductCard/ProductCard";
 import { connect } from "react-redux";
 import { adminActions } from "../../js/actions";
-
+import requireAuth from "./../RequireAuth/RequireAuth";
 class StoreDetail extends Component {
   state = {};
 
@@ -94,4 +94,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(adminActions.getProductsInStore(productId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StoreDetail);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(StoreDetail));

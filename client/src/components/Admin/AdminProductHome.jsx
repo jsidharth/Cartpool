@@ -6,6 +6,7 @@ import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { BsPlusCircle } from "react-icons/bs";
 import BootstrapTable from "react-bootstrap-table-next";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 class AdminProductHome extends Component {
   constructor(props) {
@@ -180,4 +181,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminProductHome);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(AdminProductHome));

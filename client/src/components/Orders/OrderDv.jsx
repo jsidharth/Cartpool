@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import queryString from "query-string";
 import QRcode from "qrcode.react";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 class OrderDv extends Component {
   componentDidMount() {
@@ -123,4 +124,4 @@ const mapDispatchToProps = dispatch => ({
   updateOrder: (orderId, orderStatus) =>
     dispatch(orderActions.updateOrder(orderId, orderStatus))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(OrderDv);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(OrderDv));

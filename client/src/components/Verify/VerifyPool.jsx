@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import queryString from "query-string";
 import { userActions } from "../../js/actions";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 class VerifyPool extends Component {
   state = {};
@@ -24,5 +25,6 @@ class VerifyPool extends Component {
 
 const mapDispatchToProps = dispatch => ({
     verifyPool: (poolMemberId, accept) => dispatch(userActions.verifyPool(poolMemberId, accept))
-})
-export default connect(null, mapDispatchToProps)(VerifyPool);
+});
+
+export default requireAuth(connect(null, mapDispatchToProps)(VerifyPool));

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { poolActions } from "./../../js/actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-
+import requireAuth from "./../RequireAuth/RequireAuth";
 class CreatePool extends Component {
   state = {
     id: "",
@@ -146,4 +146,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   createPool: (payload) => dispatch(poolActions.createPool(payload, ownProps)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreatePool);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(CreatePool));
