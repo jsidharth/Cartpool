@@ -24,6 +24,7 @@ const signUp = (userDetails, ownProps) => async dispatch => {
     ownProps.history.push("/signin");
     toast.success("Signup Sucess! Please verfiy your email!");
   } catch (err) {
+    console.log(err)
     if (err && err.response) {
       toast.error(err.response.data);
     } else {
