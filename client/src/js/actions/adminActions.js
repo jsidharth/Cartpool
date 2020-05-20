@@ -196,7 +196,7 @@ const getProductsInStore = (storeId) => async (dispatch) => {
     //toast.success("Product added with id" + product.id);
     dispatch({
       type: actionTypes.SET_PRODUCTS_OF_STORE,
-      payload: { products },
+      payload: { products: products.filter(product => product.active)},
     });
   } catch (err) {
     toast.error(err.response.data);
