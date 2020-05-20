@@ -98,7 +98,6 @@ public class OrderServiceImpl implements OrderService {
             Orders orders = ordersRepo.findById(id).get();
             orders.setActive(false);
             ordersRepo.save(orders);
-            System.out.println("updating order with setActive as false");
             return 0;
         }else{
             //The entry doesn't exist
