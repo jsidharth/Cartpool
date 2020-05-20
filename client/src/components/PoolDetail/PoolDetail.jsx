@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { poolActions } from "../../js/actions";
 import _ from "lodash";
 import Modal from "react-modal";
+import requireAuth from "./../RequireAuth/RequireAuth";
+
 Modal.setAppElement("#root");
 class Pool extends Component {
   state = { showModal: false, message: "" };
@@ -155,20 +157,18 @@ class Pool extends Component {
                                   <li className="list-group-item d-flex justify-content-around align-items-center">
                                     <div className="row">
                                       <div className="col">{screenName}</div>
-                                      {screenName !==
-                                        poolLeaderScreenNameTransient && (
-                                        <div className="col">
-                                          <button
-                                            type="button"
-                                            className="btn btn-outline-primary btn-sm"
-                                            onClick={() =>
-                                              this.handleOpenModal(screenName)
-                                            }
-                                          >
-                                            Message
-                                          </button>
-                                        </div>
-                                      )}
+
+                                      <div className="col">
+                                        <button
+                                          type="button"
+                                          className="btn btn-outline-primary btn-sm"
+                                          onClick={() =>
+                                            this.handleOpenModal(screenName)
+                                          }
+                                        >
+                                          Message
+                                        </button>
+                                      </div>
                                     </div>
                                   </li>
                                 );
@@ -244,4 +244,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   deletePool: userId => dispatch(poolActions.deletePool(ownProps)),
   sendMessage: data => dispatch(poolActions.sendMessage(data))
 });
-export default connect(mapStateToPros, mapDispatchToProps)(Pool);
+export default requireAuth(connect(mapStateToPros, mapDispatchToProps)(Pool));

@@ -1,14 +1,15 @@
 import React, { Component } from "react";
-
+import { connect } from "react-redux";
+import { toast } from "react-toastify";
 class PoolCard extends Component {
   state = {
-    screenName: ""
+    screenName: "",
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     //console.log(e.target);
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -18,10 +19,24 @@ class PoolCard extends Component {
         <div className="">
           <div className="card shadow">
             <div className="card-header">
-            <strong>{this.props.name}</strong>
+              <strong>{this.props.name}</strong>
               <button
                 className="btn btn-primary  btn-sm  mt-1 float-right "
-                onClick={() => this.props.requestPoolLeader(this.props.id)}
+                onClick={() => {
+                  if (
+                    !this.props.user.screenName ||
+                    !this.props.user.street ||
+                    !this.props.user.city ||
+                    !this.props.user.state ||
+                    !this.props.user.zip
+                  ) {
+                    toast.error(
+                      "Incomplete account info. Please fill account details!"
+                    );
+                  } else {
+                    this.props.requestPoolLeader(this.props.id);
+                  }
+                }}
               >
                 Request PoolLeader {this.props.poolLeader.nickName}
               </button>
@@ -35,7 +50,7 @@ class PoolCard extends Component {
                 <strong>Members</strong>
                 {this.props.userNickNamesTransient &&
                 this.props.userNickNamesTransient.length
-                  ? this.props.userNickNamesTransient.map(member => {
+                  ? this.props.userNickNamesTransient.map((member) => {
                       return (
                         <span className="badge badge-light ml-2">{member}</span>
                       );
@@ -77,4 +92,8 @@ class PoolCard extends Component {
   }
 }
 
-export default PoolCard;
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(PoolCard);

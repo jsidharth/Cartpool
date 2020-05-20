@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import _ from "lodash";
 import { orderActions } from "./../../js/actions/index";
 import { Link } from "react-router-dom";
+import requireAuth from "./../RequireAuth/RequireAuth";
 class Cart extends Component {
   state = {};
 
@@ -149,4 +150,4 @@ const mapDisPatchToProps = (dispatch, ownProps) => ({
   placeOrder: orderDetails =>
     dispatch(orderActions.placeOrder(orderDetails, ownProps))
 });
-export default withRouter(connect(mapStateToProps, mapDisPatchToProps)(Cart));
+export default requireAuth(withRouter(connect(mapStateToProps, mapDisPatchToProps)(Cart)));

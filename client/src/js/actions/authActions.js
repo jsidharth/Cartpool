@@ -76,38 +76,45 @@ const signOut = ownProps => async dispatch => {
     toast.error(err.response.data);
   }
 };
-//TODO: Check if we can remove this
-const googleSignUp = ownProps => async dispatch => {
-  try {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    await firebase.auth().signInWithPopup(provider);
-    dispatch({
-      type: actionTypes.SIGNUP_SUCCESS,
-      payload: {
-        signup: true
-      }
-    });
-    ownProps.history.push("/signin");
-  } catch (err) {
-    toast.error("Google signup failed!");
-  }
-};
 
 const googleSignIn = ownProps => async dispatch => {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
     const signedInUser = await firebase.auth().signInWithPopup(provider);
-    console.log(signedInUser);
+    const idToken = await firebase.auth().currentUser.getIdToken();
+    const serializedidToken = JSON.stringify(idToken);
+    localStorage.setItem("idToken", serializedidToken);
+
+    const email = signedInUser.user.email;
+    const screenName = signedInUser.user.displayName;
+    const userPayload = {
+      email,
+      screenName,
+      nickName: screenName
+    };
+    if (signedInUser.additionalUserInfo.isNewUser) {
+      await axios.post(
+        `http://${server.domain}:${server.port}/user`,
+        userPayload
+      );
+    }
+    const user = await axios.get(`http://${server.domain}:${server.port}/user`);
     dispatch({
-      type: actionTypes.SIGNIN_SUCCESS,
+      type: actionTypes.SET_USER,
       payload: {
-        user: signedInUser
+        user: user.data
       }
     });
-    ownProps.history.push("/home");
+    // dispatch({
+    //   type: actionTypes.SIGNIN_SUCCESS,
+    //   payload: {
+    //     user: signedInUser,
+    //   },
+    // });
+    ownProps.history.push("/browse/stores");
   } catch (err) {
     toast.error("Google signup failed!");
   }
 };
 
-export { signIn, signUp, googleSignIn, googleSignUp, signOut };
+export { signIn, signUp, googleSignIn, signOut };

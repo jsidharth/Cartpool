@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { adminActions } from "../../js/actions";
 //import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 import _ from "lodash";
 class AdminProductDV extends Component {
@@ -181,4 +182,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(adminActions.addProductToStore(payload, productId))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminProductDV);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(AdminProductDV));

@@ -251,7 +251,6 @@ public class OrderController {
     @GetMapping("/update/order/{orderId}/{orderStatus}")
     public ResponseEntity putOrderPickup(User user, @PathVariable int orderId, @PathVariable String orderStatus ) {
         //TODO transient entity
-        System.out.println("Here "+ orderId + Status.valueOf(orderStatus) + orderStatus);
         Orders order = orderService.getOrderById(orderId);
         order.setOrderStatus(Status.valueOf(orderStatus));
         order = orderService.updateOrder(order);

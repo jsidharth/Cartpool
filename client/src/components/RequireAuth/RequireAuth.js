@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 export default ChildComponent => {
   const ComposedComponent = props => {
@@ -16,5 +17,5 @@ export default ChildComponent => {
     };
   }
 
-  return connect(mapStateToProps)(ComposedComponent);
+  return connect(mapStateToProps)(withRouter(ComposedComponent));
 };

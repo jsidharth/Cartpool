@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { adminActions } from "../../js/actions";
 import { connect } from "react-redux";
+import requireAuth from "./../RequireAuth/RequireAuth";
 
 class AdminStoreForm extends Component {
   state = {
@@ -25,9 +26,12 @@ class AdminStoreForm extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.state.edit &&
-      JSON.stringify(this.props.storeToEdit) !==
-        JSON.stringify(prevProps.storeToEdit)
+      (this.state.edit &&
+        JSON.stringify(this.props.storeToEdit) !==
+          JSON.stringify(prevProps.storeToEdit)) ||
+      (JSON.stringify(this.props.storeToEdit) ===
+        JSON.stringify(prevProps.storeToEdit) &&
+        this.state.data.name === "")
     ) {
       const data = { ...this.props.storeToEdit };
       this.setState({ data });
@@ -170,4 +174,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   updateStore: payload => dispatch(adminActions.updateStore(payload, ownProps))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminStoreForm);
+export default requireAuth(connect(mapStateToProps, mapDispatchToProps)(AdminStoreForm));

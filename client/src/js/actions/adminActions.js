@@ -4,19 +4,22 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import server from "./../../config/server";
 
-const getProducts = () => async dispatch => {
+const getProducts = () => async (dispatch) => {
   try {
     const { data: products } = await axios.get(
       `http://${server.domain}:${server.port}/products`
     );
     console.log("action get products", products);
-    dispatch({ type: actionTypes.SET_PRODUCTS, payload: { products } });
+    dispatch({
+      type: actionTypes.SET_PRODUCTS,
+      payload: { products: products.filter((product) => product.active) },
+    });
   } catch (err) {
     toast.error(err.response.data);
   }
 };
 
-const addProduct = (payload, ownProps) => async dispatch => {
+const addProduct = (payload, ownProps) => async (dispatch) => {
   try {
     const { data: product } = await axios.post(
       `http://${server.domain}:${server.port}/products`,
@@ -33,7 +36,7 @@ const addProduct = (payload, ownProps) => async dispatch => {
   }
 };
 
-const getProductById = productId => async dispatch => {
+const getProductById = (productId) => async (dispatch) => {
   try {
     const { data: product } = await axios.get(
       `http://${server.domain}:${server.port}/products/${productId}`
@@ -42,14 +45,14 @@ const getProductById = productId => async dispatch => {
     //toast.success("Product added with id" + product.id);
     dispatch({
       type: actionTypes.SET_CURRENT_PRODUCT,
-      payload: { product }
+      payload: { product },
     });
   } catch (err) {
     toast.error(err.response.data);
   }
 };
 
-const updateProduct = (payload, ownProps) => async dispatch => {
+const updateProduct = (payload, ownProps) => async (dispatch) => {
   try {
     const { data: product } = await axios.put(
       `http://${server.domain}:${server.port}/products`,
@@ -64,7 +67,7 @@ const updateProduct = (payload, ownProps) => async dispatch => {
     toast.error(err.response.data);
   }
 };
-const deleteProduct = productId => async dispatch => {
+const deleteProduct = (productId) => async (dispatch) => {
   try {
     await axios.delete(
       `http://${server.domain}:${server.port}/products/${productId}`
@@ -76,7 +79,7 @@ const deleteProduct = productId => async dispatch => {
   }
 };
 
-const addStore = (payload, ownProps) => async dispatch => {
+const addStore = (payload, ownProps) => async (dispatch) => {
   try {
     const { data: store } = await axios.post(
       `http://${server.domain}:${server.port}/store`,
@@ -92,19 +95,22 @@ const addStore = (payload, ownProps) => async dispatch => {
   }
 };
 
-const getStores = () => async dispatch => {
+const getStores = () => async (dispatch) => {
   try {
     const { data: stores } = await axios.get(
       `http://${server.domain}:${server.port}/store`
     );
     console.log("action get stores", stores);
-    dispatch({ type: actionTypes.SET_STORES, payload: { stores } });
+    dispatch({
+      type: actionTypes.SET_STORES,
+      payload: { stores: stores.filter((store) => store.active) },
+    });
   } catch (err) {
-    toast.error(err.response ? err.response.data : 'Eror occured');
+    toast.error(err.response ? err.response.data : "Eror occured");
   }
 };
 
-const getStoreByName = storeName => async dispatch => {
+const getStoreByName = (storeName) => async (dispatch) => {
   try {
     const { data: store } = await axios.get(
       `http://${server.domain}:${server.port}/store/${storeName}`
@@ -113,7 +119,7 @@ const getStoreByName = storeName => async dispatch => {
     //toast.success("Product added with id" + product.id);
     dispatch({
       type: actionTypes.SET_CURRENT_STORE,
-      payload: { store }
+      payload: { store },
     });
     dispatch(getProductsInStore(store.id));
   } catch (err) {
@@ -121,7 +127,7 @@ const getStoreByName = storeName => async dispatch => {
   }
 };
 
-const updateStore = (payload, ownProps) => async dispatch => {
+const updateStore = (payload, ownProps) => async (dispatch) => {
   try {
     const { data: store } = await axios.put(
       `http://${server.domain}:${server.port}/store`,
@@ -137,7 +143,7 @@ const updateStore = (payload, ownProps) => async dispatch => {
   }
 };
 
-const deleteStore = storeId => async dispatch => {
+const deleteStore = (storeId) => async (dispatch) => {
   try {
     await axios.delete(
       `http://${server.domain}:${server.port}/store/${storeId}`
@@ -149,7 +155,7 @@ const deleteStore = storeId => async dispatch => {
   }
 };
 
-const getStoresWithProduct = productId => async dispatch => {
+const getStoresWithProduct = (productId) => async (dispatch) => {
   try {
     const { data: stores } = await axios.get(
       `http://${server.domain}:${server.port}/productstore/allstores/${productId}`
@@ -158,14 +164,14 @@ const getStoresWithProduct = productId => async dispatch => {
     //toast.success("Product added with id" + product.id);
     dispatch({
       type: actionTypes.SET_STORES_WITH_PRODUCT,
-      payload: { stores }
+      payload: { stores },
     });
   } catch (err) {
     toast.error(err.response.data);
   }
 };
 
-const addProductToStore = (payload, productId) => async dispatch => {
+const addProductToStore = (payload, productId) => async (dispatch) => {
   try {
     await axios.post(
       `http://${server.domain}:${server.port}/productstore/multiadd`,
@@ -181,7 +187,7 @@ const addProductToStore = (payload, productId) => async dispatch => {
   }
 };
 
-const getProductsInStore = storeId => async dispatch => {
+const getProductsInStore = (storeId) => async (dispatch) => {
   try {
     const { data: products } = await axios.get(
       `http://${server.domain}:${server.port}/productstore/${storeId}`
@@ -190,7 +196,7 @@ const getProductsInStore = storeId => async dispatch => {
     //toast.success("Product added with id" + product.id);
     dispatch({
       type: actionTypes.SET_PRODUCTS_OF_STORE,
-      payload: { products }
+      payload: { products },
     });
   } catch (err) {
     toast.error(err.response.data);
@@ -210,5 +216,5 @@ export {
   deleteStore,
   getStoresWithProduct,
   addProductToStore,
-  getProductsInStore
+  getProductsInStore,
 };
