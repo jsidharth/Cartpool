@@ -58,6 +58,7 @@ public class ProductAndStoreController {
      */
     @PostMapping("/products")
     public ResponseEntity addProduct(User user, @RequestBody Product product){
+	product.setActive(true);
         return ResponseEntity.ok(productService.addProduct(product));
     }
 

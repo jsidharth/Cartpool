@@ -31,7 +31,7 @@ public class Product {
         this.unit = unit;
         this.price = price;
         this.sku = sku;
-        active = true;
+        this.active = true;
     }
 
 
