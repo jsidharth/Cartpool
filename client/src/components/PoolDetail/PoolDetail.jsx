@@ -155,20 +155,18 @@ class Pool extends Component {
                                   <li className="list-group-item d-flex justify-content-around align-items-center">
                                     <div className="row">
                                       <div className="col">{screenName}</div>
-                                      {screenName !==
-                                        poolLeaderScreenNameTransient && (
-                                        <div className="col">
-                                          <button
-                                            type="button"
-                                            className="btn btn-outline-primary btn-sm"
-                                            onClick={() =>
-                                              this.handleOpenModal(screenName)
-                                            }
-                                          >
-                                            Message
-                                          </button>
-                                        </div>
-                                      )}
+
+                                      <div className="col">
+                                        <button
+                                          type="button"
+                                          className="btn btn-outline-primary btn-sm"
+                                          onClick={() =>
+                                            this.handleOpenModal(screenName)
+                                          }
+                                        >
+                                          Message
+                                        </button>
+                                      </div>
                                     </div>
                                   </li>
                                 );
